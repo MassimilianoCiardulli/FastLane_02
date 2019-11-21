@@ -42,3 +42,14 @@ class CompanyCustomer(db.Model):
 
     def __repr__(self):
         return '<Customer %s>' % self.username_company
+
+
+class Rating(db.Model):
+    __tablename__ = 'ratings'
+    id_review = db.Column(db.Integer, primary_key=True)
+    id_reviewer = db.Column(db.String(64), nullable=False)
+    type = db.Column(db.String(64), nullable=False)
+    review = db.Column(db.String(128))
+
+    def __repr__(self):
+        return '<Review %s>' % self.id_review

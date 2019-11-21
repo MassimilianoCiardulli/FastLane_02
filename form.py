@@ -74,6 +74,10 @@ class loginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
+class RatingForm(FlaskForm):
+    submit = SubmitField('Leave a review!')
+
+
 class UpdateAccountFormPrivate(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])

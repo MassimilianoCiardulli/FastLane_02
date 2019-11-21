@@ -442,13 +442,15 @@ h6, .h6 {
   font-size: 4.5rem;
   font-weight: 400;
   line-height: 1.2;
-    /*text-shadow: 1px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;*/
-  background: -webkit-linear-gradient(left, white , goldenrod);
-   background: -o-linear-gradient(right, white, goldenrod);
-   background: -moz-linear-gradient(right, white, goldenrod);
-   background: linear-gradient(to right, white , goldenrod);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  text-shadow:
+    0.03em 0 black,
+        0 0.03em black,
+        -0.03em 0 black,
+        0 -0.03em black,
+        -0.03em -0.03em black,
+        -0.03em 0.03em black,
+        0.03em -0.03em black,
+        0.03em 0.03em black;
 }
 
 .display-4 {
@@ -10063,7 +10065,6 @@ a.text-dark:hover, a.text-dark:focus {
   }
   .container {
     min-width: 992px !important;
-
   }
   .navbar {
     display: none;

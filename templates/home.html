@@ -9,7 +9,6 @@
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
-
 <header>
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
@@ -33,10 +32,10 @@
         </div>
       </div>
       <!-- Slide Three - Set the background image for this slide in the line below -->
-      <div class="carousel-item" style="background-image: url('https://source.unsplash.com/O7fzqFEfLlo/1920x1080')">
+      <div class="carousel-item"> <img src="/static/img/happy_customer.jpg" >
         <div class="carousel-caption d-none d-md-block">
-          <h3 class="display-4">Third Slide</h3>
-          <p class="lead">This is a description for the third slide.</p>
+          <h3 class="display-4">Never leave the customer alone</h3>
+          <p class="lead">To deeply understand the customer's needs.</p>
         </div>
       </div>
     </div>
@@ -51,10 +50,10 @@
   </div>
 </header>
 
-
+<div style="padding-left: 15px; padding-right: 15px;">
 
     <!--Feedback received-->
-    <h5 style="padding-top: 30px;">What people say about us</h5>
+    <h5 style="padding-top: 30px;"><span class="glyphicon glyphicon-user">What people say about us</span></h5>
   <div class="container" style="padding-top: 15px;">
 
 	<div class="row text-center">
@@ -110,19 +109,14 @@
 				</div>
 </div>
 
-
+</div>
     <!--Leave a review-->
-    <div class="container">
-	<div class="row" style="margin-top:40px;">
-		<div class="col-md-6">
-    	<div class="well well-sm">
-            <div class="text-right">
-                <a class="btn btn-primary" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
-            </div>
-        </div>
+    <div class="container" style="align-content: center !important;">
 
-		</div>
-	</div>
+            <div class="text-center">
+            {{ form_rating.submit(class='btn btn-primary') }}
+
+	        </div>
 </div>
 
 {% endblock content %}

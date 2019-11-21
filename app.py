@@ -15,7 +15,8 @@ Bootstrap(app)
 bcrypt = Bcrypt(app)
 
 
-from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, UpdateAccountFormPrivate, UpdateAccountFormCompany
+from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, UpdateAccountFormPrivate, \
+    UpdateAccountFormCompany, RatingForm
 
 
 @app.before_first_request
@@ -116,10 +117,13 @@ def login():
 #                            image_file=image_file, form=form)
 
 
-@app.route('/')
-@app.route('/home')
+@app.route('/', methods=['POST', 'GET'])
+@app.route('/home', methods=['POST', 'GET'])
 def home():
-    return render_template('home.html')
+    form_rating = RatingForm()
+    if form_rating.is_submitted():
+        return redirect('rating')
+    return render_template('home.html', form_rating=form_rating)
 
 
 if __name__ == '__main__':
