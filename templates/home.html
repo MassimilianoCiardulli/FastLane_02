@@ -3,6 +3,13 @@
 {% block content %}
 
 
+{#<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">#}
+
+
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+
 <header>
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
@@ -12,17 +19,17 @@
     </ol>
     <div class="carousel-inner" role="listbox">
       <!-- Slide One - Set the background image for this slide in the line below -->
-      <div class="carousel-item active"> <img src="/static/img/traffic_night_01.jpg" >
+      <div class="carousel-item active"> <img src="/static/img/traffic_night_01.jpg">
         <div class="carousel-caption d-none d-md-block">
-          <h3 class="display-4">FastLane</h3>
-          <p class="lead">Connect your business</p>
+          <h3 class="display-3">FastLane</h3>
+            <p class="lead-cyb">Connect your business</p>
         </div>
       </div>
       <!-- Slide Two - Set the background image for this slide in the line below -->
-      <div class="carousel-item"> <img src="https://source.unsplash.com/wfh8dDlNFOk/1920x1080" height="1080" width="1920">
+      <div class="carousel-item"> <img src="/static/img/teamwork.jpg" >
         <div class="carousel-caption d-none d-md-block">
-          <h3 class="display-4">Second Slide</h3>
-          <p class="lead">This is a description for the second slide.</p>
+          <h3 class="display-4">Internal Cohesion</h3>
+          <p class="lead">Organization. Effective Communication. Now it's everything in one place.</p>
         </div>
       </div>
       <!-- Slide Three - Set the background image for this slide in the line below -->
@@ -44,5 +51,94 @@
   </div>
 </header>
 
+
+
+    <!--Feedback received-->
+    <h5 style="padding-top: 30px;">What people say about us</h5>
+  <div class="container" style="padding-top: 15px;">
+
+	<div class="row text-center">
+					<div class="col-sm-6 col-md-4">
+						<div class="testimonial-box">
+							<img src="https://images.pexels.com/photos/206615/pexels-photo-206615.jpeg?w=940&h=650&auto=compress&cs=tinysrgb" class="img-responsive" alt="" width="90">
+							<div class="ratings-icons">
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+							</div>
+							<h4 style="padding-top: 10px;">Julia Roberts</h4>
+							<p style="color: white; font-style: oblique;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sapien augue, dictum et gravida et</p>
+
+						</div>
+					</div> <!-- End Col -->
+
+					<div class="col-sm-6 col-md-4">
+						<div class="testimonial-box">
+							<img src="https://images.pexels.com/photos/478544/pexels-photo-478544.jpeg?w=940&h=650&auto=compress&cs=tinysrgb" class="img-responsive" alt="" width="90">
+							<div class="ratings-icons">
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+							</div>
+							<h4 style="padding-top: 10px;">Kate Middleton</h4>
+							<p style="color: white; font-style: oblique;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sapien augue, dictum et gravida et</p>
+
+						</div>
+					</div> <!-- End Col -->
+
+					<div class="col-sm-6 col-md-4">
+						<div class="testimonial-box">
+							<img src="https://images.pexels.com/photos/478544/pexels-photo-478544.jpeg?w=940&h=650&auto=compress&cs=tinysrgb" class="img-responsive" alt="" width="90">
+							<div class="ratings-icons">
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+							</div>
+							<h4 style="padding-top: 10px;">Jennifer Lawrence</h4>
+							<p style="color: white; font-style: oblique;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sapien augue, dictum et gravida et</p>
+
+						</div>
+					</div> <!-- End Col -->
+
+
+				</div>
+</div>
+
+
+    <!--Leave a review-->
+    <div class="container">
+	<div class="row" style="margin-top:40px;">
+		<div class="col-md-6">
+    	<div class="well well-sm">
+            <div class="text-right">
+                <a class="btn btn-primary" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
+            </div>
+
+            <div class="row" id="post-review-box" style="display:none;">
+                <div class="col-md-12">
+                    <form accept-charset="UTF-8" action="" method="post">
+                        <input id="ratings-hidden" name="rating" type="hidden">
+                        <textarea class="form-control animated" cols="50" id="new-review" name="comment" placeholder="Enter your review here..." rows="5"></textarea>
+
+                        <div class="text-right">
+                            <div class="stars starrr" data-rating="0"></div>
+                            <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">
+                            <span class="glyphicon glyphicon-remove"></span>Cancel</a>
+                            <button class="btn btn-success btn-lg" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+		</div>
+	</div>
+</div>
 
 {% endblock content %}

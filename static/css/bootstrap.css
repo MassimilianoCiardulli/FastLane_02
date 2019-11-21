@@ -61,6 +61,7 @@ body {
   line-height: 1.5;
   color: #212529;
   text-align: left;
+  background-image: url("/static/img/sfondo_rosso.png");
 
 }
 
@@ -395,7 +396,34 @@ h6, .h6 {
 .lead {
   font-size: 1.25rem;
   font-weight: 300;
-  text-shadow: 1px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
+  text-shadow:
+        0.03em 0 black,
+        0 0.03em black,
+        -0.03em 0 black,
+        0 -0.03em black,
+        -0.03em -0.03em black,
+        -0.03em 0.03em black,
+        0.03em -0.03em black,
+        0.03em 0.03em black;
+}
+
+.lead-cyb {
+  font-style: italic;
+  font-size: 1.7rem;
+  font-weight: 500;
+  text-shadow:
+        0.03em 0 white,
+        0 0.03em white,
+        -0.03em 0 white,
+        0 -0.03em white,
+        -0.03em -0.05em white,
+        -0.03em 0.05em white,
+        0.03em -0.05em white,
+        0.03em 0.05em white;
+  color: red;
+  /*text-shadow: 0.4px 0 0 brown, -0.4px 0 0 brown, 0 0.4px 0 brown, 0 -0.4px 0 brown, 0.4px 0.4px brown, -0.4px -0.4px 0 brown, 0.4px -0.4px 0 brown, -0.4px 0.4px 0 brown;
+  color: red;
+  backdrop-filter: blur(3px);*/
 }
 
 .display-1 {
@@ -412,8 +440,15 @@ h6, .h6 {
 
 .display-3 {
   font-size: 4.5rem;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.2;
+    /*text-shadow: 1px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;*/
+  background: -webkit-linear-gradient(left, white , goldenrod);
+   background: -o-linear-gradient(right, white, goldenrod);
+   background: -moz-linear-gradient(right, white, goldenrod);
+   background: linear-gradient(to right, white , goldenrod);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .display-4 {
@@ -421,6 +456,7 @@ h6, .h6 {
   font-weight: 300;
   line-height: 1.2;
   text-shadow: 1px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
+  color: white;
 }
 
 hr {
@@ -555,7 +591,6 @@ pre code {
   padding-left: 15px;*/
   margin-right: auto;
   margin-left: auto;
-  background-image: url("/static/img/sfondo_rosso.png") !important;
   background-repeat: no-repeat !important;
   background-size: cover !important;
 }
@@ -10103,7 +10138,37 @@ a.text-dark:hover, a.text-dark:focus {
      color: #f39c12;
  }
 
+.testimonial-box img {
+    display: inline-block;
+    width: 90px;
+    height:90px;
+    border-radius: 50%;
+    margin: 0 0 15px;
+}
+.testimonial-box h4 {
+    color: #fe4819;
+}
+.testimonial-box p {
+    margin-bottom: 20px;
+    font-size: 17px;
+    font-style: italic;
+    font-weight: 400;
+}
+.ratings-icons {
+    color: #fec42d;
+    margin-bottom: 15px;
+}
+ .animated {
+    -webkit-transition: height 0.2s;
+    -moz-transition: height 0.2s;
+    transition: height 0.2s;
+}
 
-
+.stars
+{
+    margin: 20px 0;
+    font-size: 24px;
+    color: #d17581;
+}
 }
 /*# sourceMappingURL=bootstrap.css.map */
