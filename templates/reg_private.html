@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="row">
+    <div class="col"></div>
+    <div class="col">
+        <p><h1>Sign up. It's free.</h1></p>
+        <form action="" method="post">
+          <div class="form-group">
+            {{ formReg.name.label }}
+              {{ formReg.name(class='form-control',placeholder='Please enter your name') }}
+              {% for error in formReg.name.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+          <div class="form-group">
+              {{ formReg.username.label }}
+              {{ formReg.username(class='form-control',placeholder='Please enter your username') }}
+              {% for error in formReg.username.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        <div class="form-group">
+            {{ formReg.email.label }}
+              {{ formReg.email(class='form-control',placeholder='Please enter your email') }}
+                {% for error in formReg.email.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+          <div class="form-group">
+            {{ formReg.password.label }}
+              {{ formReg.password(class='form-control',placeholder='Please enter your password') }}
+                {% for error in formReg.password.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+                  <div class="form-group">
+            {{ formReg.confirm_password.label }}
+              {{ formReg.confirm_password(class='form-control',placeholder='Please enter again your password') }}
+                {% for error in formReg.confirm_password.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        <div class="form-group">
+            {{ formReg.phone.label }}
+              {{ formReg.phone(class='form-control',placeholder='Please enter your phone number') }}
+                {% for error in formReg.phone.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        <div class="form-group">
+            {{ formReg.country.label }}
+              {{ formReg.country(class='form-control') }}
+        </div>
+        <div class="form-group">
+            {{ formReg.address.label }}
+              {{ formReg.address(class='form-control',placeholder='Please enter your address') }}
+                {% for error in formReg.address.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+            {{ formReg.submit(class='btn btn-primary') }}
+            {{ formReg.hidden_tag() }}
+        </form>
+    </div>
+      <div class="col"></div>
+
+    </div>
+{% endblock content %}

@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ image_file }}">
+        <div class="media-body">
+          <h2 class="account-heading">{{ current_user.username }}</h2>
+          <p class="text-secondary">{{ current_user.email }}</p>
+        </div>
+      </div>
+      <form action="" method="post">
+          <div class="form-group">
+            {{ formReg.name.label }}
+              {{ formReg.name(class='form-control',placeholder='please write your name') }}
+              {% for error in formReg.name.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+          <div class="form-group">
+              {{ formReg.username.label }}
+              {{ formReg.username(class='form-control',placeholder='please write your username') }}
+              {% for error in formReg.username.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        <div class="form-group">
+            {{ formReg.email.label }}
+              {{ formReg.email(class='form-control',placeholder='please provide your email') }}
+                {% for error in formReg.email.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        <div class="form-group">
+            {{ formReg.phone.label }}
+              {{ formReg.phone(class='form-control',placeholder='please provide your phone number') }}
+                {% for error in formReg.phone.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        {#<div class="form-group">
+            {{ formReg.country.label }}
+                <p><select>
+                    {% for country in countries_list %}
+                    <option value="{{ country }}"{% if loop.first %} {% endif %}>{{ country }}</option>
+                {% endfor %}
+                {% for error in formReg.country.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+                </select></p>
+         </div>#}
+        <div class="form-group">
+            {{ formReg.address.label }}
+              {{ formReg.address(class='form-control',placeholder='please provide your address') }}
+                {% for error in formReg.address.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+            {{ formReg.submit(class='btn btn-primary') }}
+            {{ formReg.hidden_tag() }}
+        </form>
+    </div>
+{% endblock %}
