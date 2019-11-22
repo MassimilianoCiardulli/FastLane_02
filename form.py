@@ -75,7 +75,7 @@ class loginForm(FlaskForm):
 
 
 class RatingForm(FlaskForm):
-    submit = SubmitField('Leave a review!')
+    submit = SubmitField('Give us a feedback')
 
 
 class UpdateAccountFormPrivate(FlaskForm):
