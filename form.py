@@ -1,10 +1,13 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, validators, SubmitField, ValidationError, IntegerField, SelectField
+from wtforms import StringField, PasswordField, validators, SubmitField, ValidationError, IntegerField, SelectField, \
+    TextAreaField
 from wtforms.fields.html5 import EmailField, URLField
 from wtforms.validators import DataRequired, Length, Email, InputRequired
+from wtforms.widgets import TextArea
+
 from app import PrivateCustomer, CompanyCustomer
-from utilities import COUNTRIES
+from utilities import COUNTRIES, TYPES
 
 
 # @LoginManager.user_loader
@@ -75,7 +78,14 @@ class loginForm(FlaskForm):
 
 
 class RatingForm(FlaskForm):
+    review = TextAreaField()
+    id_reviewer = StringField("Your name (if you're a Company) or username (if you're a private customer):", validators=[DataRequired()])
+    type = SelectField('You are a...', choices=TYPES)
     submit = SubmitField('Give us a feedback')
+
+    def validate_reviewer(self, id_reviewer):
+        if not PrivateCustomer.query.filter_by(username=self.id_reviewer.data).first() and not CompanyCustomer.query.filter_by(name_company=self.id_reviewer.data).first():
+            ValidationError('"%s" does not exist, please insert a valid name or username' % id_reviewer.data)
 
 
 class UpdateAccountFormPrivate(FlaskForm):

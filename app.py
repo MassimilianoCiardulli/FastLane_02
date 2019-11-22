@@ -6,7 +6,7 @@ from flask_login import current_user
 from sqlalchemy_utils import database_exists
 from flask_bcrypt import Bcrypt
 from PIL import Image
-from models import app, db, CompanyCustomer, PrivateCustomer
+from models import app, db, CompanyCustomer, PrivateCustomer, Rating
 
 app.config['SECRET_KEY'] = 'ldjashfjahef;jhasef;jhase;jfhae;'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fastlane.db'
@@ -82,48 +82,21 @@ def login():
         return render_template('login.html', formReg=formRed)
 
 
-# def save_picture(form_picture):
-#     #random_hex = secrets.token_hex(8)
-#     random_hex = md5(current_user.email.lower().encode('utf-8')).hexdigest()
-#     _, f_ext = os.path.splitext(form_picture.filename)
-#     picture_fn = random_hex + f_ext
-#     picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
-#
-#     output_size = (125, 125)
-#     i = Image.open(form_picture)
-#     i.thumbnail(output_size)
-#     i.save(picture_path)
-#
-#     return picture_fn
-
-
-# @app.route('/profile_private')
-# def profile_private():
-#     form = UpdateAccountFormPrivate()
-#     if form.validate_on_submit():
-#         if form.picture.data:
-#             picture_file = save_picture(form.picture.data)
-#             current_user.image_file = picture_file
-#         current_user.username = form.username.data
-#         current_user.email = form.email.data
-#         db.session.commit()
-#         flash('Your account has been updated!', 'success')
-#         return redirect(url_for('account'))
-#     elif request.method == 'GET':
-#         form.username.data = current_user.username
-#         form.email.data = current_user.email
-#     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-#     return render_template('profile_private.html', title='Account',
-#                            image_file=image_file, form=form)
-
-
-@app.route('/', methods=['POST', 'GET'])
-@app.route('/home', methods=['POST', 'GET'])
-def home():
+@app.route('/feedback', methods=['POST', 'GET'])
+def feedback():
     form_rating = RatingForm()
     if form_rating.is_submitted():
-        return redirect('rating')
-    return render_template('home.html', form_rating=form_rating)
+        new_review = Rating(id_reviewer=form_rating.id_reviewer.data, type=form_rating.type.data, review=form_rating.review.data)
+        db.session.add(new_review)
+        db.session.commit()
+        return redirect('home')
+    return render_template('feedback.html', form_rating=form_rating)
+
+
+@app.route('/', )
+@app.route('/home')
+def home():
+    return render_template('home.html')
 
 
 if __name__ == '__main__':

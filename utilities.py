@@ -225,3 +225,6 @@ COUNTRIES =[('AFG', 'Afghanistan'),
             ('ZMB', 'Zambia'),
             ('ZBW', 'Zimbabwe')
             ]
+
+TYPES = [('Private', 'Private Customer'),
+         ('Company', 'Company Customer')]
