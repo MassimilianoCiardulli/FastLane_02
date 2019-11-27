@@ -24,9 +24,9 @@
                 <div class="navbar-nav">
                   <a class="nav-item nav-link" href="/home">Home</a>
 
-                    {% if session.get('username') %}
-                         <a class="nav-item nav-link" href="/profile_private">profile</a>
-                         <a class="nav-item nav-link" href="/logout">logout</a>
+                    {% if session.get('email') %}
+                         <a class="nav-item nav-link" href="/order">Profile</a>
+                         <a class="nav-item nav-link" href="/logout">Logout</a>
                     {% else %}
                           <a class="nav-item nav-link" href="/login">Login</a>
                     <div class="dropdown">

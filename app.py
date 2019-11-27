@@ -1,22 +1,16 @@
-import os
-from hashlib import md5
-from flask import Flask, render_template, redirect, session, flash, url_for, request
+from flask import render_template, redirect, session
 from flask_bootstrap import Bootstrap
-from flask_login import current_user
 from sqlalchemy_utils import database_exists
 from flask_bcrypt import Bcrypt
-from PIL import Image
-from models import app, db, CompanyCustomer, PrivateCustomer, Rating
+from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order
+from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, RatingForm, RegistrationProduct, \
+    OrderCreation
 
 app.config['SECRET_KEY'] = 'ldjashfjahef;jhasef;jhase;jfhae;'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fastlane.db'
 
 Bootstrap(app)
 bcrypt = Bcrypt(app)
-
-
-from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, UpdateAccountFormPrivate, \
-    UpdateAccountFormCompany, RatingForm
 
 
 @app.before_first_request
@@ -68,32 +62,91 @@ def register_company():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if session.get('email'):
-        return redirect('profile_private')
+        return redirect('order')
     else:
         formRed = loginForm()
         if formRed.validate_on_submit():
             customer_selected = CompanyCustomer.query.filter_by(email=formRed.email.data).first()
-            if bcrypt.check_password_hash(customer_selected.password, formRed.password.data):
-                session['email'] = customer_selected.email
-                return redirect('profile_private')
-            else:
-                error = 'ERROR: username or password should be incorrect. Please Try again'
-                return redirect('login.html')
+            if CompanyCustomer.query.filter_by(email=formRed.email.data).first():
+                if bcrypt.check_password_hash(customer_selected.password, formRed.password.data):
+                    session['email'] = customer_selected.email
+                    session['id_user'] = customer_selected.name_company
+                    session['type'] = 'COMPANY'
+                    return redirect('order')
+                else:
+                    error = 'ERROR: username or password should be incorrect. Please Try again'
+                    return redirect('login.html')
+            elif PrivateCustomer.query.filter_by(email=formRed.email.data).first():
+                customer_selected = PrivateCustomer.query.filter_by(email=formRed.email.data).first()
+                if bcrypt.check_password_hash(customer_selected.password, formRed.password.data):
+                    session['email'] = customer_selected.email
+                    session['id_user'] = customer_selected.name
+                    session['type'] = 'PRIVATE'
+                    return redirect('order')
+                else:
+                    error = 'ERROR: username or password should be incorrect. Please Try again'
+                    return redirect('home')
         return render_template('login.html', formReg=formRed)
+
+
+@app.route('/logout')
+def logout():
+    session_exists = True
+    session.pop('email')
+    session.pop('id_user')
+    session.pop('type')
+
+    try:
+        session['email']
+    except KeyError:
+        session_exists = False
+
+    if not session_exists:
+        return redirect('home')
+    return render_template('logout.html')
 
 
 @app.route('/feedback', methods=['POST', 'GET'])
 def feedback():
     form_rating = RatingForm()
     if form_rating.is_submitted():
-        new_review = Rating(id_reviewer=form_rating.id_reviewer.data, type=form_rating.type.data, review=form_rating.review.data)
+        new_review = Rating(id_reviewer=form_rating.id_reviewer.data, type=form_rating.type.data,
+                            review=form_rating.review.data)
         db.session.add(new_review)
         db.session.commit()
         return redirect('home')
     return render_template('feedback.html', form_rating=form_rating)
 
 
-@app.route('/', )
+@app.route('/order')
+def order():
+    return render_template('order.html')
+
+#TODO
+@app.route('/order_creation')
+def order_creation():
+    form_order_creation = OrderCreation()
+    if form_order_creation.is_submitted():
+        new_order = Order()
+        return redirect('home')
+    return render_template('order_creation.html', form_order_creation=form_order_creation)
+
+
+@app.route('/register_product', methods=['POST', 'GET'])
+def register_product():
+    form_product = RegistrationProduct()
+    if form_product.validate_on_submit():
+        new_product = Product(name=form_product.name.data, quantity=form_product.quantity.data,
+                              price=form_product.price.data,
+                              availability=form_product.availability.data,
+                              type=form_product.type.data)
+        db.session.add(new_product)
+        db.session.commit()
+        return redirect('order.html')
+    return render_template('reg_product.html', formReg=form_product)
+
+
+@app.route('/')
 @app.route('/home')
 def home():
     return render_template('home.html')

@@ -397,10 +397,10 @@ h6, .h6 {
   font-size: 1.25rem;
   font-weight: 300;
   text-shadow:
-        0.03em 0 black,
-        0 0.03em black,
-        -0.03em 0 black,
-        0 -0.03em black,
+        0.04em 0 black,
+        0 0.04em black,
+        -0.04em 0 black,
+        0 -0.04em black,
         -0.03em -0.03em black,
         -0.03em 0.03em black,
         0.03em -0.03em black,

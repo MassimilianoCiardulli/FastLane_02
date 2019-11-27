@@ -1,87 +1,65 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <div style="padding-left: 30px; padding-right: 30px;">
-    <div class="row">
-        <div class="col">
-        <!--***********************************LEFT SIDE OF THE PAGE-->
-            <div class="container mt-5">
-              <div class="row">
-                <div class="col d-flex justify-content-center">
-                    <img src="/static/img/feedback.png" class="img-fluid">
-                    </div>
-                </div>
-              </div>
+<div style="padding-left: 7%; padding-right: 7%;">
 
+   <div class="row">
+    <div class="col"></div>
+    <div class="col">
+
+<div class="col-sm-12 form-group">
+    <div class="row">
+        <p class="form-group">How do you rate your overall experience?</p></br>
+        <div class="col">
+          <div class="star-rating">
+            <span class="fa fa-star-o" data-rating="1"></span>
+            <span class="fa fa-star-o" data-rating="2"></span>
+            <span class="fa fa-star-o" data-rating="3"></span>
+            <span class="fa fa-star-o" data-rating="4"></span>
+            <span class="fa fa-star-o" data-rating="5"></span>
+            <input type="hidden" name="whatever1" class="rating-value" value="2.56">
+          </div>
         </div>
 
-        <!--***********************************FEEDBACK FORM-->
-            <div class="col">
+      </div>
 
-            <!-- STAR RATE -->
-            <div class="row">
-                <div class="col-sm-12 form-group">
-                <label>How do you rate your overall experience?</label>
-                <p>
-                    <div class="star-rating">
-                        <span class="fa fa-star-o" data-rating="1"></span>
-                        <span class="fa fa-star-o" data-rating="2"></span>
-                        <span class="fa fa-star-o" data-rating="3"></span>
-                        <span class="fa fa-star-o" data-rating="4"></span>
-                        <span class="fa fa-star-o" data-rating="5"></span>
-                        <input type="hidden" name="whatever3" class="rating-value" value="4.1">
-                      </div>
-                </p>
-                </div>
-            </div>
-
-            <!-- FORM -->
-              <form action="" method="post">
-                <div class="row">
-                    <div class="col-sm-12 form-group">
-                    {{ form_rating.review.label }}
-                     {{ form_rating.review(class='form-control') }}
-                    {% for error in form_rating.review.errors %}
-                        <div class="alert alert-danger" role="alert">
-                          {{ error }}
-                        </div>
-                    {% endfor %}                </div>
-                </div>
-            <div class="row">
-                <div class="col-sm-12 form-group">
-                {{ form_rating.id_reviewer.label }}
-                 {{ form_rating.id_reviewer(class='form-control') }}
+</div>
+    <form action="" method="post">
+    <div class="form-group">
+            {{ form_rating.review.label }}
+              {{ form_rating.review(class='form-control') }}
+                {% for error in form_rating.review.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+    </div>
+    <div class="form-group">
+            {{ form_rating.id_reviewer.label }}
+              {{ form_rating.id_reviewer(class='form-control') }}
                 {% for error in form_rating.id_reviewer.errors %}
                     <div class="alert alert-danger" role="alert">
                       {{ error }}
                     </div>
-                {% endfor %}                </div>
-                <div class="col-sm-6 form-group">
-                    {{ form_rating.type.label }}
-                 {{ form_rating.type(class='form-control') }}
+                {% endfor %}
+    </div>
+    <div class="form-group">
+            {{ form_rating.type.label }}
+              {{ form_rating.type(class='form-control') }}
                 {% for error in form_rating.type.errors %}
                     <div class="alert alert-danger" role="alert">
                       {{ error }}
                     </div>
-                {% endfor %}                </div>
-                </div>
-
-                <button type="submit" class="btn btn-lg btn-warning btn-block" >Post </button>
-
-            </div>
-
-        </form>
-        <div id="success_message" style="width:100%; height:100%; display:none; ">
-            <h3>Posted your feedback successfully!</h3>
-        </div>
-        <div id="error_message"
-                style="width:100%; height:100%; display:none; ">
-                    <h3>Error</h3>
-                    Sorry there was an error sending your form.
-
-
-            </div>
-        </div>
+                {% endfor %}
     </div>
+    {{ form_rating.submit(class='btn btn-lg btn-warning btn-block') }}
+            {{ form_rating.hidden_tag() }}
+    </form>
+
+
+</div>
+      <div class="col"></div>
+
     </div>
+
 {% endblock content %}

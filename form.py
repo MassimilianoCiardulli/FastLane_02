@@ -1,18 +1,12 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, validators, SubmitField, ValidationError, IntegerField, SelectField, \
-    TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, ValidationError, IntegerField, SelectField, \
+    TextAreaField, FloatField, DateTimeField
 from wtforms.fields.html5 import EmailField, URLField
-from wtforms.validators import DataRequired, Length, Email, InputRequired
-from wtforms.widgets import TextArea
-
+from wtforms.validators import DataRequired, Length, Email
 from app import PrivateCustomer, CompanyCustomer
+from models import Product
 from utilities import COUNTRIES, TYPES
-
-
-# @LoginManager.user_loader
-# def load_private_customer(id):
-#     return PrivateCustomer.query.get(int(id))
 
 
 def load_company_customer(id_company):
@@ -70,6 +64,12 @@ class RegistrationFormCompany(FlaskForm):
         if email_admin:
             raise ValidationError('This email is already associated to another account.')
 
+    # def validate_checkbox(self, check_buyer, check_seller):
+    #     buyer = check_buyer.data
+    #     seller = check_seller.data
+    #     if buyer and seller:
+    #         raise ValidationError("Please select if you're a seller or a buyer or both")
+
 
 class loginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
@@ -86,6 +86,29 @@ class RatingForm(FlaskForm):
     def validate_reviewer(self, id_reviewer):
         if not PrivateCustomer.query.filter_by(username=self.id_reviewer.data).first() and not CompanyCustomer.query.filter_by(name_company=self.id_reviewer.data).first():
             ValidationError('"%s" does not exist, please insert a valid name or username' % id_reviewer.data)
+
+
+class RegistrationProduct(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    quantity = IntegerField('Quantity', validators=[DataRequired()])
+    type = StringField('Type', validators=[DataRequired()])
+    availability = StringField('Availability', validators=[DataRequired()])
+    price = FloatField('Price',validators=[DataRequired()])
+    submit = SubmitField('Register')
+
+    def validate_product(self, name):
+        if Product.query.filter_by(username=self.name.data).first():
+            ValidationError('"%s" already exists' % name.data)
+
+
+class OrderCreation(FlaskForm):
+    product_name = StringField('Product name', validators=[DataRequired()])
+    product_id = StringField('Product id', validators=[DataRequired()])
+    customer_id = StringField('Customer id', validators=[DataRequired()])
+    departments = StringField('Insert departments', validators=[DataRequired()])
+    user = StringField('This order has been added by', validators=[DataRequired()])
+    date_insert = DateTimeField('This order has been added in the date')
+    date_request = DateTimeField('This order has been required in the date')
 
 
 class UpdateAccountFormPrivate(FlaskForm):
