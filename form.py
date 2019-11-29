@@ -67,10 +67,12 @@ class RegistrationFormCompany(FlaskForm):
             raise ValidationError("Please select if you're a seller or a buyer or both")
 
 
+
 class loginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=4, max=20)])
     submit = SubmitField('Login')
+
 
 class loginEmployeeForm(FlaskForm):
     username = StringField('Email', validators=[DataRequired()])
