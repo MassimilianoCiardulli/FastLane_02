@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="row">
+    <div class="col"></div>
+    <div class="col">
+        <h1>Create a new order</h1>
+        <form action="" method="post" style="padding-top: 5%">
+          <div class="form-group">
+            {{ form_order_creation.product_name.label }}
+              {{ form_order_creation.product_name(class='form-control',placeholder='Please enter your product name') }}
+              {% for error in form_order_creation.product_name.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+          <div class="form-group">
+              {{ form_order_creation.product_id.label }}
+              {{ form_order_creation.product_id(class='form-control',placeholder='Please enter your product id') }}
+              {% for error in form_order_creation.product_id.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        <div class="form-group">
+            {{ form_order_creation.customer_id.label }}
+              {{ form_order_creation.customer_id(class='form-control',placeholder='Please enter the customer id') }}
+                {% for error in form_order_creation.customer_id.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+          <div class="form-group">
+            {{ form_order_creation.departments.label }}
+              {{ form_order_creation.departments(class='form-control',placeholder='Please enter the departments involved') }}
+                {% for error in form_order_creation.departments.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+            <div class="form-group">
+            {{ form_order_creation.order_description.label }}
+              {{ form_order_creation.order_description(class='form-control') }}
+                {% for error in form_order_creation.order_description.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        <div class="form-group">
+            {{ form_order_creation.date_delivery.label }}
+              {{ form_order_creation.date_delivery(class='form-control') }}
+                {% for error in form_order_creation.date_delivery.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        <div class="form-group">
+            {{ form_order_creation.time_delivery.label }}
+              {{ form_order_creation.time_delivery(class='form-control') }}
+                {% for error in form_order_creation.time_delivery.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        <div class="form-group">
+            {{ form_order_creation.order_delivery_type.label }}
+              {{ form_order_creation.order_delivery_type(class='form-control') }}
+                {% for error in form_order_creation.order_delivery_type.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        <div class="form-group">
+            {{ form_order_creation.delivery_company.label }}
+              {{ form_order_creation.delivery_company(class='form-control') }}
+                {% for error in form_order_creation.delivery_company.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+        <div class="form-group">
+            {{ form_order_creation.date_insert.label }}
+              {{ form_order_creation.date_insert(class='form-control') }}
+
+          </div>
+        <div class="form-group">
+            {{ form_order_creation.date_request.label }}
+              {{ form_order_creation.date_request(class='form-control') }}
+        </div>
+
+            {{ form_order_creation.submit(class='btn btn-lg btn-warning btn-block') }}
+            {{ form_order_creation.hidden_tag() }}
+        </form>
+
+    </div>
+      <div class="col"></div>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="row">
+    <div class="col"></div>
+    <div class="col">
+        <h1>Welcome {{ session['id_user'] }}</h1>
+
+        <h3 style="padding-top: 3%; padding-bottom: 3%">Your current orders</h3>
+    <div class="col"></div>
+        <table class="table movie-table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">User</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Delivery date</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+            <tbody>
+
+            {% for order in orders %}
+                <tr><th>{{ order.order_id }}</th>
+                <td>{{ order.order_description }}</td>
+                <td>{{ order.user }}</td>
+                <td>{{ order.order_private_customer }}</td>
+                <td>{{ order.order_delivery_date }}</td>
+                <td>{{ order.order_state }}</td></tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+            {% if session['type'] == 'COMPANY' %}
+                <a class="btn btn-lg btn-warning btn-block'" href="/order_creation">Create new order</a>
+            {% endif %}
+    </div>
+      <div class="col"></div>
+
+    </div>
+
+{% endblock %}
