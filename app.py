@@ -2,9 +2,9 @@ from flask import render_template, redirect, session
 from flask_bootstrap import Bootstrap
 from sqlalchemy_utils import database_exists
 from flask_bcrypt import Bcrypt
-from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order
+from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order, CompanyUser
 from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, RatingForm, RegistrationProduct, \
-    OrderCreation
+    OrderCreation, subRegistrationForm, loginEmployeeForm
 
 app.config['SECRET_KEY'] = 'ldjashfjahef;jhasef;jhase;jfhae;'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fastlane.db'
@@ -44,7 +44,7 @@ def register_company():
     # if current_user.is_authenticated:
     #     return redirect(url_for('home'))
     form_company = RegistrationFormCompany()
-    if form_company.is_submitted():
+    if form_company.validate_on_submit():
         hashed_pwd = bcrypt.generate_password_hash(form_company.password.data)
         new_customer = CompanyCustomer(name_company=form_company.name_company.data, password=hashed_pwd,
                                        email=form_company.email.data, phone_num=form_company.phone.data,
@@ -52,11 +52,43 @@ def register_company():
                                        address=form_company.address.data, vat_code=form_company.vat_code.data,
                                        country=form_company.country.data,
                                        web_site=form_company.web_site.data, email_amm=form_company.email_admin.data,
-                                       type='Company')
+                                       type='Company', supplier=form_company.supplier.data, customer=form_company.customer.data)
         db.session.add(new_customer)
         db.session.commit()
         return redirect('login')
     return render_template('reg_company.html', formReg=form_company)
+
+
+@app.route('/register_company_employee', methods=['POST', 'GET'])
+def register_employee():
+    form_employee = subRegistrationForm()
+    if form_employee.is_submitted():
+        hashed_pwd = bcrypt.generate_password_hash(form_employee.password.data)
+        new_employee = CompanyUser(username=form_employee.username.data, password=hashed_pwd,
+                                       name=form_employee.name.data, surname=form_employee.surname.data,
+                                       role=form_employee.role.data,
+                                       department=form_employee.department.data)
+        db.session.add(new_employee)
+        db.session.commit()
+        return redirect('login_employee')
+    return render_template('subregistration_company.html', form_employee=form_employee)
+
+
+def login_employee():
+    form_login_employee = loginEmployeeForm()
+    if form_login_employee.validate_on_submit():
+        user_selected = CompanyUser.query.filter_by(email=form_login_employee.username.data).first()
+        if CompanyUser.query.filter_by(email=form_login_employee.username.data).first():
+            if bcrypt.check_password_hash(user_selected.password, form_login_employee.password.data):
+                session['email_user'] = user_selected.username
+                session['name_employee'] = user_selected.name
+                session['role_employee'] = user_selected.role
+                return redirect('order')
+            else:
+                error = 'ERROR: username or password should be incorrect. Please Try again'
+                return redirect('register_company_employee')
+    return render_template('subregistration_company.html', form_login_employee=form_login_employee)
+
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -64,29 +96,29 @@ def login():
     if session.get('email'):
         return redirect('order')
     else:
-        formRed = loginForm()
-        if formRed.validate_on_submit():
-            customer_selected = CompanyCustomer.query.filter_by(email=formRed.email.data).first()
-            if CompanyCustomer.query.filter_by(email=formRed.email.data).first():
-                if bcrypt.check_password_hash(customer_selected.password, formRed.password.data):
+        formLog = loginForm()
+        if formLog.validate_on_submit():
+            customer_selected = CompanyCustomer.query.filter_by(email=formLog.email.data).first()
+            if CompanyCustomer.query.filter_by(email=formLog.email.data).first():
+                if bcrypt.check_password_hash(customer_selected.password, formLog.password.data):
                     session['email'] = customer_selected.email
                     session['id_user'] = customer_selected.name_company
                     session['type'] = 'COMPANY'
-                    return redirect('order')
+                    return redirect('register_company_employee')
                 else:
                     error = 'ERROR: username or password should be incorrect. Please Try again'
-                    return redirect('login.html')
-            elif PrivateCustomer.query.filter_by(email=formRed.email.data).first():
-                customer_selected = PrivateCustomer.query.filter_by(email=formRed.email.data).first()
-                if bcrypt.check_password_hash(customer_selected.password, formRed.password.data):
+                    return redirect('login')
+            elif PrivateCustomer.query.filter_by(email=formLog.email.data).first():
+                customer_selected = PrivateCustomer.query.filter_by(email=formLog.email.data).first()
+                if bcrypt.check_password_hash(customer_selected.password, formLog.password.data):
                     session['email'] = customer_selected.email
                     session['id_user'] = customer_selected.name
                     session['type'] = 'PRIVATE'
                     return redirect('order')
                 else:
                     error = 'ERROR: username or password should be incorrect. Please Try again'
-                    return redirect('home')
-        return render_template('login.html', formReg=formRed)
+                    return redirect('login')
+        return render_template('login.html', formLog=formLog)
 
 
 @app.route('/logout')
@@ -120,14 +152,24 @@ def feedback():
 
 @app.route('/order')
 def order():
-    return render_template('order.html')
+    if session['type'] == 'COMPANY':
+        orders = Order.query.filter_by(user=session['id_user']).all()
+    elif session['type'] == 'PRIVATE':
+        orders = Order.query.filter_by(order_private_customer=session['id_user']).all()
+    return render_template('order.html', orders=orders)
 
-#TODO
-@app.route('/order_creation')
+
+@app.route('/order_creation', methods=['POST', 'GET'])
 def order_creation():
     form_order_creation = OrderCreation()
     if form_order_creation.is_submitted():
-        new_order = Order()
+        new_order = Order(order_description=form_order_creation.order_description.data, order_delivery_type=form_order_creation.order_delivery_type.data,
+                          order_delivery_date=form_order_creation.date_delivery.data, order_delivery_time=form_order_creation.time_delivery.data,
+                          order_delivery_company=form_order_creation.delivery_company.data, order_state='TO BE STARTED',
+                          order_private_customer=form_order_creation.customer_id.data, departments=form_order_creation.departments.data,
+                          user=session['id_user'], date_insert=form_order_creation.date_insert.data, date_request=form_order_creation.date_request.data)
+        db.session.add(new_order)
+        db.session.commit()
         return redirect('home')
     return render_template('order_creation.html', form_order_creation=form_order_creation)
 

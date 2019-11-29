@@ -10062,7 +10062,6 @@ a.text-dark:hover, a.text-dark:focus {
   }
   body {
     min-width: 992px !important;
-    background-image: url("/static/img/sfondo_rosso.png") !important;
   }
   .container {
     min-width: 992px !important;

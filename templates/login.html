@@ -7,25 +7,25 @@
         <p><h1>Please provide your username and password to log-in.</h1></p>
         <form action="" method="post">
           <div class="form-group">
-              {{ formReg.email.label }}
-              {{ formReg.email(class='form-control',placeholder='please write your email') }}
-              {% for error in formReg.email.errors %}
+              {{ formLog.email.label }}
+              {{ formLog.email(class='form-control',placeholder='please write your email') }}
+              {% for error in formLog.email.errors %}
                     <div class="alert alert-danger" role="alert">
                       {{ error }}
                     </div>
                 {% endfor %}
           </div>
           <div class="form-group">
-            {{ formReg.password.label }}
-              {{ formReg.password(class='form-control',placeholder='please provide your password') }}
-                {% for error in formReg.password.errors %}
+            {{ formLog.password.label }}
+              {{ formLog.password(class='form-control',placeholder='please provide your password') }}
+                {% for error in formLog.password.errors %}
                     <div class="alert alert-danger" role="alert">
                       {{ error }}
                     </div>
                 {% endfor %}
           </div>
-            {{ formReg.submit(class='btn btn-lg btn-warning btn-block') }}
-            {{ formReg.hidden_tag() }}
+            {{ formLog.submit(class='btn btn-lg btn-warning btn-block') }}
+            {{ formLog.hidden_tag() }}
         </form>
     </div>
       <div class="col"></div>

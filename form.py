@@ -1,9 +1,10 @@
+from flask import request
 from flask_wtf import FlaskForm
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, ValidationError, IntegerField, SelectField, \
-    TextAreaField, FloatField, DateTimeField
-from wtforms.fields.html5 import EmailField, URLField
-from wtforms.validators import DataRequired, Length, Email
+    TextAreaField, FloatField, BooleanField
+from wtforms.fields.html5 import EmailField, URLField, DateTimeField, DateField, TimeField
+from wtforms.validators import DataRequired, Length, Email, Optional
 from app import PrivateCustomer, CompanyCustomer
 from models import Product
 from utilities import COUNTRIES, TYPES
@@ -29,11 +30,6 @@ class RegistrationFormPrivate(FlaskForm):
         if user:
             raise ValidationError('"%s" already exist, please select new username' % username.data)
 
-    def validate_email(self, email):
-        email = PrivateCustomer.query.filter_by(email=self.email.data).first()
-        if email:
-            raise ValidationError('This email is already associated to another account.')
-
 
 class RegistrationFormCompany(FlaskForm):
     name_company = StringField('Name', validators=[DataRequired()])
@@ -47,6 +43,8 @@ class RegistrationFormCompany(FlaskForm):
     vat_code = StringField('VAT code', validators=[DataRequired()])
     web_site = URLField('Web site', validators=[DataRequired()])
     address = StringField('Address', validators=[DataRequired()])
+    supplier = BooleanField('Are you a supplier?', validators=[Optional()])
+    customer = BooleanField('Are you a buyer?', validators=[Optional()])
     submit = SubmitField('Register')
 
     def validate_username(self, name_company):
@@ -54,27 +52,40 @@ class RegistrationFormCompany(FlaskForm):
         if name_company:
             raise ValidationError('"%s" already exist, please select new username' % name_company.data)
 
-    def validate_email(self, email):
-        email = CompanyCustomer.query.filter_by(email=self.email.data).first()
-        if email:
-            raise ValidationError('This email is already associated to another account.')
+    # def validate_email(self, email):
+    #     email = CompanyCustomer.query.filter_by(email=self.email.data).first()
+    #     if email:
+    #         raise ValidationError('This email is already associated to another account.')
+    #
+    # def validate_email_admin(self, email_admin):
+    #     email_admin = CompanyCustomer.query.filter_by(email_admin=self.email_admin.data).first()
+    #     if email_admin:
+    #         raise ValidationError('This email is already associated to another account.')
 
-    def validate_email_admin(self, email_admin):
-        email_admin = CompanyCustomer.query.filter_by(email_admin=self.email_admin.data).first()
-        if email_admin:
-            raise ValidationError('This email is already associated to another account.')
-
-    # def validate_checkbox(self, check_buyer, check_seller):
-    #     buyer = check_buyer.data
-    #     seller = check_seller.data
-    #     if buyer and seller:
-    #         raise ValidationError("Please select if you're a seller or a buyer or both")
+    def validate_checkbox(self):
+        if request.form.get('supplier') is False and request.form.get('customer') is False:
+            raise ValidationError("Please select if you're a seller or a buyer or both")
 
 
 class loginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=4, max=20)])
     submit = SubmitField('Login')
+
+class loginEmployeeForm(FlaskForm):
+    username = StringField('Email', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=4, max=20)])
+    submit = SubmitField('Login')
+
+class subRegistrationForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    surname = StringField('Surname', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=4, max=20)])
+    confirm_password = PasswordField('Confirm password', validators=[DataRequired(), Length(min=4, max=20)])
+    role = SelectField(choices=[('Manager', 'Manager'), ('Employee', 'Employee')])
+    department = SelectField(choices=[('Production', 'Production'), ('Design', 'Design'), ('Prototype', 'Prototype')])
+    submit = SubmitField('Sign up')
 
 
 class RatingForm(FlaskForm):
@@ -106,9 +117,14 @@ class OrderCreation(FlaskForm):
     product_id = StringField('Product id', validators=[DataRequired()])
     customer_id = StringField('Customer id', validators=[DataRequired()])
     departments = StringField('Insert departments', validators=[DataRequired()])
-    user = StringField('This order has been added by', validators=[DataRequired()])
-    date_insert = DateTimeField('This order has been added in the date')
-    date_request = DateTimeField('This order has been required in the date')
+    order_description = TextAreaField('Insert a brief order description', validators=[DataRequired()])
+    date_insert = DateField('This order has been added in the date', validators=[DataRequired()])
+    date_request = DateField('This order has been required in the date', validators=[DataRequired()])
+    date_delivery = DateField('Delivery day', validators=[DataRequired()])
+    time_delivery = TimeField('Delivery time', validators=[DataRequired()])
+    order_delivery_type = StringField('Delivery type')
+    delivery_company = StringField('Delivery Company')
+    submit = SubmitField('Create a new order')
 
 
 class UpdateAccountFormPrivate(FlaskForm):
@@ -147,6 +163,8 @@ class UpdateAccountFormCompany(FlaskForm):
     vat_code = StringField('VAT code', validators=[DataRequired()])
     web_site = URLField('Web site', validators=[DataRequired()])
     address = StringField('Address', validators=[DataRequired()])
+    supplier = BooleanField('Are you a supplier?')
+    customer = BooleanField('Are you a buyer?')
     submit = SubmitField('Update')
 
     def validate_username(self, name_company):
