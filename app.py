@@ -5,14 +5,12 @@ from flask_bcrypt import Bcrypt
 from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order, CompanyUser
 from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, RatingForm, RegistrationProduct, \
     OrderCreation, subRegistrationForm, loginEmployeeForm
-from flask_debug import Debug
 
 app.config['SECRET_KEY'] = 'ldjashfjahef;jhasef;jhase;jfhae;'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fastlane.db'
 
 Bootstrap(app)
 bcrypt = Bcrypt(app)
-Debug(app)
 
 @app.before_first_request
 def create_all():
@@ -61,36 +59,34 @@ def register_company():
 
 
 @app.route('/register_company_employee', methods=['POST', 'GET'])
-def register_login_page():
+def register_employee():
     form_employee = subRegistrationForm()
+    if form_employee.is_submitted():
+        hashed_pwd = bcrypt.generate_password_hash(form_employee.password.data)
+        new_employee = CompanyUser(username=form_employee.username.data, password=hashed_pwd,
+                                       name=form_employee.name.data, surname=form_employee.surname.data,
+                                       role=form_employee.role.data,
+                                       department=form_employee.department.data)
+        db.session.add(new_employee)
+        db.session.commit()
+        return redirect('login_company_employee')
+    return render_template('subregistration_company.html', form_employee=form_employee)
+
+
+@app.route('/login_company_employee', methods=['POST', 'GET'])
+def login_employee():
     form_login_employee = loginEmployeeForm()
-
-    def register_employee():
-
-        if form_employee.is_submitted():
-            hashed_pwd = bcrypt.generate_password_hash(form_employee.password.data)
-            new_employee = CompanyUser(username=form_employee.username.data, password=hashed_pwd,
-                                           name=form_employee.name.data, surname=form_employee.surname.data,
-                                           role=form_employee.role.data,
-                                           department=form_employee.department.data)
-            db.session.add(new_employee)
-            db.session.commit()
-            return redirect('register_company_employee')
-
-    def login_employee():
-
-        if form_login_employee.is_submitted():
-            user_selected = CompanyUser.query.filter_by(email=form_login_employee.username.data).first()
-            if CompanyUser.query.filter_by(email=form_login_employee.username.data).first() and bcrypt.check_password_hash(user_selected.password, form_login_employee.password.data):
-                session['email_user'] = user_selected.username
-                session['name_employee'] = user_selected.name
-                session['role_employee'] = user_selected.role
-                return redirect('order')
-            else:
-                error = 'ERROR: username or password should be incorrect. Please Try again'
-                return redirect('register_company_employee')
-
-    return render_template('subregistration_company.html', form_login_employee=form_login_employee, form_employee=form_employee)
+    if form_login_employee.is_submitted():
+        user_selected = CompanyUser.query.filter_by(username=form_login_employee.username.data).first()
+        if CompanyUser.query.filter_by(username=form_login_employee.username.data).first() and bcrypt.check_password_hash(
+                user_selected.password, form_login_employee.password.data):
+            session['email_user'] = user_selected.username
+            session['name_employee'] = user_selected.name
+            session['role_employee'] = user_selected.role
+            return redirect('order')
+        else:
+            error = 'ERROR: username or password should be incorrect. Please Try again'
+    return render_template('sublogin_company.html', form_login_employee=form_login_employee)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -132,6 +128,23 @@ def logout():
 
     try:
         session['email']
+    except KeyError:
+        session_exists = False
+
+    if not session_exists:
+        return redirect('home')
+    return render_template('logout.html')
+
+
+@app.route('/company_member_logout')
+def company_member_logout():
+    session_exists = True
+    session.pop('email_user')
+    session.pop('name_employee')
+    session.pop('role_employee')
+
+    try:
+        session['email_user']
     except KeyError:
         session_exists = False
 
@@ -197,4 +210,4 @@ def home():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

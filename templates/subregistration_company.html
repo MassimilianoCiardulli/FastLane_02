@@ -2,8 +2,10 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-8" style="padding-right: 7%; padding-left: 7%">
+    <div class="col"></div>
+    <div class="col">
         <p><h2>You are a member of {{ session['id_user'] }}. Sign up to  discover all our functionalities.</h2></p>
+        <p><h4>Already signed up? <a href="/login_company_employee">Sign in</a></h4></p>
         <form action="" method="post" id="registration">
           <div class="form-group">
             {{ form_employee.name.label }}
@@ -64,35 +66,8 @@
             {{ form_employee.hidden_tag() }}
         </form>
         </div>
+      <div class="col"></div>
 
-    <!--**********************************************   LOGIN   **********************************************-->
-
-         <div class="col-sm-4" style="padding-right: 7%; padding-left: 3%">
-        <p><h3>Already signed-up?</h3></p>
-        <form action="" method="post" id="login">
-          <div class="form-group">
-              {{ form_login_employee.username.label }}
-              {{ form_login_employee.username(class='form-control',placeholder='please write your email') }}
-              {% for error in form_login_employee.username.errors %}
-                    <div class="alert alert-danger" role="alert">
-                      {{ error }}
-                    </div>
-                {% endfor %}
-          </div>
-          <div class="form-group">
-            {{ form_login_employee.password.label }}
-              {{ form_login_employee.password(class='form-control',placeholder='please provide your password') }}
-                {% for error in form_login_employee.password.errors %}
-                    <div class="alert alert-danger" role="alert">
-                      {{ error }}
-                    </div>
-                {% endfor %}
-          </div>
-            {{ form_login_employee.submit(class='btn btn-lg btn-warning btn-block') }}
-            {{ form_login_employee.hidden_tag() }}
-        </form>
-
-            </div>
-         </div>
     </div>
+
 {% endblock content %}

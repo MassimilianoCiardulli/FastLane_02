@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="row">
+    <div class="col"></div>
+    <div class="col">
+        <p><h3>Login as a member of {{ session['id_user'] }}</h3></p>
+        <form action="" method="post" id="login">
+          <div class="form-group">
+              {{ form_login_employee.username.label }}
+              {{ form_login_employee.username(class='form-control',placeholder='Please enter your username') }}
+              {% for error in form_login_employee.username.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+          <div class="form-group">
+            {{ form_login_employee.password.label }}
+              {{ form_login_employee.password(class='form-control',placeholder='Please provide your password') }}
+                {% for error in form_login_employee.password.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </div>
+                {% endfor %}
+          </div>
+            {{ form_login_employee.submit(class='btn btn-lg btn-warning btn-block') }}
+            {{ form_login_employee.hidden_tag() }}
+        </form>
+
+    </div>
+      <div class="col"></div>
+
+    </div>
+
+{% endblock %}
