@@ -26,11 +26,11 @@
 
                 <!-- I did the log in as a company, but I still have to log in/register as a user of the company -->
 
-                {% if session.get('email') and session['type'] == 'COMPANY' and not session.get('email_user') %}
+                {% if session.get('email') and session['type'] == 'COMPANY' and not session.get('username_user') %}
                     <a class="nav-item nav-link" href="/login_company_employee">Login - {{ session['id_user'] }} member</a>
                     <a class="nav-item nav-link" href="/register_company_employee">Sign up - {{ session['id_user'] }} member</a>
                     <a class="nav-item nav-link" href="/logout">Logout</a>
-                {% elif session.get('email') and session['type'] == 'COMPANY' and session.get('email_user') %}
+                {% elif session.get('email') and session['type'] == 'COMPANY' and session.get('username_user') %}
 
 
                 <!-- I signed in as a member of the company -->

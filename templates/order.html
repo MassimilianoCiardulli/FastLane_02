@@ -1,16 +1,29 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div class="row">
+    <div class="col-sm-3" style="padding-left: 4%; border-right: 1px inset #333;">
 
-    <div class="row">
-    <div class="col"></div>
-    <div class="col">
-        <h1>Welcome {{ session['id_user'] }}</h1>
+            {% if session.get('email') and session['type'] == 'COMPANY' and session.get('username_user') %}
+                <h4 style=" padding-bottom: 3%">Welcome {{ session['name_employee'] }}</h4>
+            {% elif session.get('email') and session['type'] == 'PRIVATE' %}
+                <h4 style=" padding-bottom: 3%">Welcome {{ session['id_user'] }}</h4>
+            {% endif %}
 
-        <h3 style="padding-top: 3%; padding-bottom: 3%">Your current orders</h3>
-    <div class="col"></div>
-        <table class="table movie-table">
-              <thead>
+                <!-- ***************** PROFILE PIC *************** -->
+
+
+                        <img src="https://secure.gravatar.com/avatar/de9b11d0f9c0569ba917393ed5e5b3ab?s=140&r=g&d=mm" class="img-circle">
+                        <h6 style="padding-top: 2%;"> Role: {{ session['role_employee'] }} - {{ session['department_employee'] }}</h6>
+
+
+    </div>
+
+  <div class="col-sm-8" style="padding-right: 4%; padding-left: 3%">
+
+        <h3 style="padding-bottom: 3%">Your current orders</h3>
+        <table class="table table-striped table-hover" style="background-color: floralwhite; border: #16181b;">
+              <thead style="background-color: black; color: floralwhite;">
                 <tr>
                   <th scope="col">ID</th>
                   <th scope="col">Description</th>
@@ -35,11 +48,9 @@
         </table>
 
             {% if session['type'] == 'COMPANY' %}
-                <a class="btn btn-lg btn-warning btn-block'" href="/order_creation">Create new order</a>
+                <a class="btn btn-lg btn-warning btn-block' pull-right" href="/order_creation">Create new order</a>
             {% endif %}
-    </div>
-      <div class="col"></div>
-
-    </div>
+</div>
+</div>
 
 {% endblock %}

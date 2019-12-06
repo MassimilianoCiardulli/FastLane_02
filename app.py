@@ -1,16 +1,26 @@
+import os
 from flask import render_template, redirect, session
 from flask_bootstrap import Bootstrap
 from sqlalchemy_utils import database_exists
 from flask_bcrypt import Bcrypt
 from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order, CompanyUser
 from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, RatingForm, RegistrationProduct, \
-    OrderCreation, subRegistrationForm, loginEmployeeForm
+    OrderCreation, subRegistrationForm, loginEmployeeForm, UploadForm
+from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 
 app.config['SECRET_KEY'] = 'ldjashfjahef;jhasef;jhase;jfhae;'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fastlane.db'
 
 Bootstrap(app)
 bcrypt = Bcrypt(app)
+
+app.config['UPLOADED_PHOTOS_DEST'] = os.getcwd()+"/static/profile_pic"
+
+photos = UploadSet('photos', IMAGES)
+#media = UploadSet('media', default_dest=lambda app: app.instance_path)
+configure_uploads(app, photos)
+patch_request_class(app)
+
 
 @app.before_first_request
 def create_all():
@@ -80,9 +90,10 @@ def login_employee():
         user_selected = CompanyUser.query.filter_by(username=form_login_employee.username.data).first()
         if CompanyUser.query.filter_by(username=form_login_employee.username.data).first() and bcrypt.check_password_hash(
                 user_selected.password, form_login_employee.password.data):
-            session['email_user'] = user_selected.username
+            session['username_user'] = user_selected.username
             session['name_employee'] = user_selected.name
             session['role_employee'] = user_selected.role
+            session['department_employee'] = user_selected.department
             return redirect('order')
         else:
             error = 'ERROR: username or password should be incorrect. Please Try again'
@@ -122,6 +133,7 @@ def login():
 @app.route('/logout')
 def logout():
     session_exists = True
+    session_employee_exists = True
     session.pop('email')
     session.pop('id_user')
     session.pop('type')
@@ -131,6 +143,14 @@ def logout():
     except KeyError:
         session_exists = False
 
+    try:
+        session['username_user']
+    except KeyError:
+        session_employee_exists = False
+
+    if session_employee_exists:
+        return redirect('company_member_logout')
+
     if not session_exists:
         return redirect('home')
     return render_template('logout.html')
@@ -139,12 +159,13 @@ def logout():
 @app.route('/company_member_logout')
 def company_member_logout():
     session_exists = True
-    session.pop('email_user')
+    session.pop('username_user')
     session.pop('name_employee')
     session.pop('role_employee')
+    session.pop('department_employee')
 
     try:
-        session['email_user']
+        session['username_user']
     except KeyError:
         session_exists = False
 
@@ -185,7 +206,7 @@ def order_creation():
                           user=session['id_user'], date_insert=form_order_creation.date_insert.data, date_request=form_order_creation.date_request.data)
         db.session.add(new_order)
         db.session.commit()
-        return redirect('home')
+        return redirect('order')
     return render_template('order_creation.html', form_order_creation=form_order_creation)
 
 
@@ -201,6 +222,20 @@ def register_product():
         db.session.commit()
         return redirect('order.html')
     return render_template('reg_product.html', formReg=form_product)
+
+
+@app.route("/upload", methods=["POST", "GET"])
+def upload():
+    if not os.path.exists('static/' + str(session.get('id'))):
+        os.makedirs('static/' + str(session.get('id')))
+    file_url = os.listdir('static/' + str(session.get('id')))
+    file_url = [str(session.get('id')) + "/" + file for file in file_url]
+    formUpload = UploadForm()
+    print session.get('email')
+    if formUpload.validate_on_submit():
+        filename = photos.save(formUpload.file.data, name=str(session.get('id')) + '.jpg', folder=str(session.get('id')))
+        file_url.append(filename)
+    return render_template("upload_image.html", formupload=formUpload, filelist=file_url)
 
 
 @app.route('/')
