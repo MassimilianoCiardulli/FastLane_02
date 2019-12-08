@@ -15,7 +15,7 @@
 
                         <img src="https://secure.gravatar.com/avatar/de9b11d0f9c0569ba917393ed5e5b3ab?s=140&r=g&d=mm" class="img-circle">
                         <h6 style="padding-top: 2%;"> Role: {{ session['role_employee'] }} - {{ session['department_employee'] }}</h6>
-
+                         <a href="/upload" style="color: gold">Upload your profile picture</a>
 
     </div>
 
@@ -46,10 +46,20 @@
 
             </tbody>
         </table>
-
-            {% if session['type'] == 'COMPANY' %}
-                <a class="btn btn-lg btn-warning btn-block' pull-right" href="/order_creation">Create new order</a>
-            {% endif %}
+                <div class="dropdown">
+                    <a class="btn btn-lg btn-warning btn-block' pull-right"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Manage your order
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {% for order in orders %}
+                        <a class="dropdown-item" id="{{ order.order_id }}" href="/order_management_menu">{{ order.order_description }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div style="margin: 0px 2px 0px 2px;"></div> <!-- doesnt work -->
+                {% if session['type'] == 'COMPANY' %}
+                    <a class="btn btn-lg btn-warning btn-block' pull-right" href="/order_creation">Create new order</a>
+                {% endif %}
 </div>
 </div>
 

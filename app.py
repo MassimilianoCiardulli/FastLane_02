@@ -7,6 +7,7 @@ from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, O
 from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, RatingForm, RegistrationProduct, \
     OrderCreation, subRegistrationForm, loginEmployeeForm, UploadForm
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
+from sqlalchemy import or_
 
 app.config['SECRET_KEY'] = 'ldjashfjahef;jhasef;jhase;jfhae;'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fastlane.db'
@@ -189,7 +190,7 @@ def feedback():
 @app.route('/order')
 def order():
     if session['type'] == 'COMPANY':
-        orders = Order.query.filter_by(user=session['id_user']).all()
+        orders = Order.query.filter(or_(Order.user == session['id_user'], Order.user == session['username_user'])).all()
     elif session['type'] == 'PRIVATE':
         orders = Order.query.filter_by(order_private_customer=session['id_user']).all()
     return render_template('order.html', orders=orders)
@@ -203,11 +204,16 @@ def order_creation():
                           order_delivery_date=form_order_creation.date_delivery.data, order_delivery_time=form_order_creation.time_delivery.data,
                           order_delivery_company=form_order_creation.delivery_company.data, order_state='TO BE STARTED',
                           order_private_customer=form_order_creation.customer_id.data, departments=form_order_creation.departments.data,
-                          user=session['id_user'], date_insert=form_order_creation.date_insert.data, date_request=form_order_creation.date_request.data)
+                          user=session['username_user'], date_insert=form_order_creation.date_insert.data, date_request=form_order_creation.date_request.data)
         db.session.add(new_order)
         db.session.commit()
         return redirect('order')
     return render_template('order_creation.html', form_order_creation=form_order_creation)
+
+
+@app.route('/order_management_menu')
+def order_management_menu():
+    return render_template('order_management_menu.html')
 
 
 @app.route('/register_product', methods=['POST', 'GET'])

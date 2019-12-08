@@ -1,12 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
+    <div class="row">
+    <div class="col"></div>
+    <div class="col">
     <form method="post" enctype="multipart/form-data" action="">
         {{ formupload.hidden_tag() }}
-        {{ formupload.file.label }}
-        {{ formupload.file }}
-        {{ formupload.upload }}
+        <h6>{{ formupload.file.label }}</h6>
+        <div class="btn btn-lg btn-warning btn-block'">{{ formupload.file }}</div>
+        <div class="btn btn-lg btn-warning btn-block'">{{ formupload.upload }} </div>
     </form>
     {% for file in filelist %}
         <img class="upload-img" src='{{ url_for("static",filename=file) }}'>
     {% endfor %}
+    </div>
+    <div class="col"></div>
+    </div>
 {% endblock content %}

@@ -79,6 +79,7 @@ class loginEmployeeForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), Length(min=4, max=20)])
     submit = SubmitField('Login')
 
+
 class subRegistrationForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     surname = StringField('Surname', validators=[DataRequired()])
@@ -130,8 +131,8 @@ class OrderCreation(FlaskForm):
 
 
 class UploadForm(FlaskForm):
-    file = FileField('file',validators=[DataRequired()])
-    upload=SubmitField('upload')
+    file = FileField('File', validators=[DataRequired()])
+    upload = SubmitField('Upload')
 
 #
 # class UpdateAccountFormPrivate(FlaskForm):
