@@ -3,9 +3,9 @@ from flask import render_template, redirect, session
 from flask_bootstrap import Bootstrap
 from sqlalchemy_utils import database_exists
 from flask_bcrypt import Bcrypt
-from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order, CompanyUser
+from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order, CompanyUser, Department
 from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, RatingForm, RegistrationProduct, \
-    OrderCreation, subRegistrationForm, loginEmployeeForm, UploadForm
+    OrderCreation, subRegistrationForm, loginEmployeeForm, UploadForm, FormNextStep
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 from sqlalchemy import or_
 
@@ -27,6 +27,9 @@ patch_request_class(app)
 def create_all():
     if not database_exists('sqlite:///fastlane.db'):
         db.create_all()
+        db.session.add(Department(department_name='Production', company_id=1))
+        db.session.add(Department(department_name='Design', company_id=1))
+        db.session.add(Department(department_name='Prototype', company_id=1))
         db.session.commit()
 
 
@@ -187,13 +190,17 @@ def feedback():
     return render_template('feedback.html', form_rating=form_rating)
 
 
-@app.route('/order')
+@app.route('/order', methods=['POST', 'GET'])
 def order():
+    formNextStep = FormNextStep()
     if session['type'] == 'COMPANY':
         orders = Order.query.filter(or_(Order.user == session['id_user'], Order.user == session['username_user'])).all()
+        if formNextStep.is_submitted():
+            status = Order.query.filter_by
+            return redirect('order')
     elif session['type'] == 'PRIVATE':
         orders = Order.query.filter_by(order_private_customer=session['id_user']).all()
-    return render_template('order.html', orders=orders)
+    return render_template('order.html', orders=orders, formNextStep=formNextStep)
 
 
 @app.route('/order_creation', methods=['POST', 'GET'])
@@ -203,7 +210,7 @@ def order_creation():
         new_order = Order(order_description=form_order_creation.order_description.data, order_delivery_type=form_order_creation.order_delivery_type.data,
                           order_delivery_date=form_order_creation.date_delivery.data, order_delivery_time=form_order_creation.time_delivery.data,
                           order_delivery_company=form_order_creation.delivery_company.data, order_state='TO BE STARTED',
-                          order_private_customer=form_order_creation.customer_id.data, departments=form_order_creation.departments.data,
+                          order_private_customer=form_order_creation.customer_id.data,
                           user=session['username_user'], date_insert=form_order_creation.date_insert.data, date_request=form_order_creation.date_request.data)
         db.session.add(new_order)
         db.session.commit()
@@ -214,6 +221,14 @@ def order_creation():
 @app.route('/order_management_menu')
 def order_management_menu():
     return render_template('order_management_menu.html')
+
+
+@app.route('/talk_with_the_customer')
+def talk_with_the_customer():
+    session['order_id']=1 ###########DEVE SPARIRE
+    order = Order.query.filter_by(order_id=session['order_id']).first()
+    steps = Department.query.with_entities(Department.department_name)
+    return render_template('talk_with_the_customer.html', order=order, steps=steps)
 
 
 @app.route('/register_product', methods=['POST', 'GET'])

@@ -1,11 +1,18 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
+<script>
+    function funct() {
+        alert(sessionStorage.getItem('order_id'));
+    }
+</script>
+
     <div class="row">
     <div class="col"></div>
     <div class="col">
-        <p><h2>Choose one of these options</h2></p>
-        <p><a class="btn btn-secondary btn-warning btn-block'" href="#">Talk with the customer</a>
+        <p><h2>Choose one of these options - order n. {{ session['order_id'] }}</h2></p>
+        <p><a class="btn btn-secondary btn-warning btn-block'" href="/talk_with_the_customer" onclick="funct()">Talk with the customer</a>
         <a class="btn btn-secondary btn-warning btn-block'" href="#">Talk with other departments</a></p>
     </div>
       <div class="col"></div>

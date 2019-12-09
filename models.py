@@ -120,7 +120,7 @@ class Order(db.Model):
     order_state = db.Column(db.String(64), nullable=False)
     order_private_customer = db.Column(db.Integer, db.ForeignKey('private_costumer.id'))
     order_company_customer = db.Column(db.Integer, db.ForeignKey('company_customer.id_company'))
-    departments = db.Column(db.String(64), nullable=False)
+    current_department = db.Column(db.String(64))
     user = db.Column(db.String(64), nullable=False)
     date_insert = db.Column(db.DateTime, nullable=False)
     date_request = db.Column(db.DateTime, nullable=False)

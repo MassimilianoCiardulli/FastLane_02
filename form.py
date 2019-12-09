@@ -119,7 +119,7 @@ class OrderCreation(FlaskForm):
     product_name = StringField('Product name', validators=[DataRequired()])
     product_id = StringField('Product id', validators=[DataRequired()])
     customer_id = StringField('Customer id', validators=[DataRequired()])
-    departments = StringField('Insert departments', validators=[DataRequired()])
+    #departments = StringField('Insert departments', validators=[DataRequired()])
     order_description = TextAreaField('Insert a brief order description', validators=[DataRequired()])
     date_insert = DateField('This order has been added in the date', validators=[DataRequired()])
     date_request = DateField('This order has been required in the date', validators=[DataRequired()])
@@ -133,6 +133,10 @@ class OrderCreation(FlaskForm):
 class UploadForm(FlaskForm):
     file = FileField('File', validators=[DataRequired()])
     upload = SubmitField('Upload')
+
+
+class FormNextStep(FlaskForm):
+    submit = SubmitField('NextStep')
 
 #
 # class UpdateAccountFormPrivate(FlaskForm):

@@ -34,7 +34,7 @@
                     </div>
                 {% endfor %}
           </div>
-          <div class="form-group">
+          {#<div class="form-group">
             {{ form_order_creation.departments.label }}
               {{ form_order_creation.departments(class='form-control',placeholder='Please enter the departments involved') }}
                 {% for error in form_order_creation.departments.errors %}
@@ -42,7 +42,7 @@
                       {{ error }}
                     </div>
                 {% endfor %}
-          </div>
+          </div>#}
             <div class="form-group">
             {{ form_order_creation.order_description.label }}
               {{ form_order_creation.order_description(class='form-control') }}
