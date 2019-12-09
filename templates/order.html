@@ -2,16 +2,6 @@
 
 {% block content %}
 
-<script>
-
-    function order_session(order_id) {
-        alert(order_id)
-        window.sessionStorage.setItem('order_id', order_id)
-        alert('sessione salvata! session[order_id]='+sessionStorage.getItem('order_id'))
-    }
-
-</script>
-
 <div class="row">
     <div class="col-sm-3" style="padding-left: 4%; border-right: 1px inset #333; padding-bottom: 3%">
 
@@ -59,6 +49,7 @@
                 <td>{{ order.order_private_customer }}</td>
                 <td>{{ order.order_delivery_date }}</td>
                 <td>{{ order.order_state }}</td>
+                    <td><a href="order_management_menu/{{ order.order_id }}">Manage your order</a></td>
                 <td>{{ formNextStep.submit(class='btn btn-sm btn-warning btn-block') }}</td></tr>
             {% endfor %}
 
@@ -66,17 +57,6 @@
         </table>
         </div>
     </form>
-        <!-- *********************** ORDER MANAGEMENT BUTTON ************************* -->
-                <div class="dropdown">
-                    <a class="btn btn-lg btn-warning btn-block' pull-right"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Manage your order
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {% for order in orders %}
-                        <a class="dropdown-item" href="/order_management_menu" onclick="order_session({{ order.order_id }})">{{ order.order_description }}</a>
-                        {% endfor %}
-                    </div>
-                </div>
 
         <!-- *********************** CREATE NEW  ORDER BUTTON ************************* -->
 

@@ -106,7 +106,7 @@ class RegistrationProduct(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     quantity = IntegerField('Quantity', validators=[DataRequired()])
     type = StringField('Type', validators=[DataRequired()])
-    availability = StringField('Availability', validators=[DataRequired()])
+    availability = BooleanField('Availability', validators=[DataRequired()])
     price = FloatField('Price',validators=[DataRequired()])
     submit = SubmitField('Register')
 
@@ -137,6 +137,11 @@ class UploadForm(FlaskForm):
 
 class FormNextStep(FlaskForm):
     submit = SubmitField('NextStep')
+
+
+class FormChat(FlaskForm):
+    taxtarea = TextAreaField('Insert here your message...', validators=[DataRequired()])
+    submit = SubmitField('Send')
 
 #
 # class UpdateAccountFormPrivate(FlaskForm):

@@ -1,11 +1,12 @@
 import os
-from flask import render_template, redirect, session
+from flask import render_template, redirect, session, flash
 from flask_bootstrap import Bootstrap
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy_utils import database_exists
 from flask_bcrypt import Bcrypt
 from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order, CompanyUser, Department
 from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, RatingForm, RegistrationProduct, \
-    OrderCreation, subRegistrationForm, loginEmployeeForm, UploadForm, FormNextStep
+    OrderCreation, subRegistrationForm, loginEmployeeForm, UploadForm, FormNextStep, FormChat
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 from sqlalchemy import or_
 
@@ -27,9 +28,9 @@ patch_request_class(app)
 def create_all():
     if not database_exists('sqlite:///fastlane.db'):
         db.create_all()
-        db.session.add(Department(department_name='Production', company_id=1))
-        db.session.add(Department(department_name='Design', company_id=1))
-        db.session.add(Department(department_name='Prototype', company_id=1))
+        db.session.add(Department(department_name='Production'))
+        db.session.add(Department(department_name='Design'))
+        db.session.add(Department(department_name='Prototype'))
         db.session.commit()
 
 
@@ -67,9 +68,16 @@ def register_company():
                                        web_site=form_company.web_site.data, email_amm=form_company.email_admin.data,
                                        type='Company', supplier=form_company.supplier.data, customer=form_company.customer.data)
         db.session.add(new_customer)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            flash('Data inserted is already registered in another account, please modified your data.', "Warning")
+            return render_template('reg_company.html', formReg=form_company)
+
         return redirect('login')
-    return render_template('reg_company.html', formReg=form_company)
+    else:
+        return render_template('reg_company.html', formReg=form_company)
 
 
 @app.route('/register_company_employee', methods=['POST', 'GET'])
@@ -218,16 +226,20 @@ def order_creation():
     return render_template('order_creation.html', form_order_creation=form_order_creation)
 
 
-@app.route('/order_management_menu')
-def order_management_menu():
-    return render_template('order_management_menu.html')
+@app.route('/order_management_menu/<int:order_no>')
+def order_management_menu(order_no):
+    session['order_no']=order_no
+    test=session.get('order_no')
+    return render_template('order_management_menu.html',order_no=order_no)
 
 
 @app.route('/talk_with_the_customer')
 def talk_with_the_customer():
-    session['order_id']=1 ###########DEVE SPARIRE
     order = Order.query.filter_by(order_id=session['order_id']).first()
-    steps = Department.query.with_entities(Department.department_name)
+    steps = Department.query.all()
+    formChat = FormChat()
+    if formChat.validate_on_submit():
+        return redirect()
     return render_template('talk_with_the_customer.html', order=order, steps=steps)
 
 

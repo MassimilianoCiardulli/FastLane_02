@@ -144,7 +144,13 @@ class Department(db.Model):
     __tablename__ = 'departments'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     department_name = db.Column(db.String(64), nullable=False)
-    company_id = db.Column(db.Integer, db.ForeignKey('company_customer.id_company'))
+    #company_id = db.Column(db.Integer, db.ForeignKey('company_customer.id_company'))
 
     def __repr__(self):
         return '<Department %s>' %self.id
+
+
+# class MessageWithCustomer(db.Model):
+#     __tablename__='messages_with_customer'
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     order_id =
