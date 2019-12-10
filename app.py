@@ -254,8 +254,12 @@ def talk_with_the_customer():
         customer = order.order_company_customer
     formChat = FormChat()
     if formChat.is_submitted():
-        new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
-                                          message=formChat.message.data, customer=customer)
+        if session['name_employee'] is not None:
+            new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
+                                          message=formChat.message.data, customer=customer, sender=session['name_employee'])
+        if session['id_user'] is not None:
+            new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
+                                              message=formChat.message.data, customer=customer, sender=session['id_user'])
         db.session.add(new_message)
         db.session.commit()
         return redirect('talk_with_the_customer')

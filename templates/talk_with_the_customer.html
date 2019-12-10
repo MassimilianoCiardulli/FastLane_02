@@ -24,7 +24,11 @@
                     <tr><th>{{ order.order_id }}</th>
                     <td>{{ order.order_description }}</td>
                     <td>{{ order.user }}</td>
-                    <td>{{ order.order_private_customer }}</td>
+                    <td>{% if order.order_private_customer %}
+                            {{ order.order_private_customer }}
+                        {% elif order.order_company_customer %}
+                            {{ order.order_company_customer }}
+                        {% endif %}</td>
                     <td>{{ order.order_delivery_date }}</td>
                     <td>{{ order.order_state }}</td></tr>
 
@@ -37,7 +41,7 @@
         <div class="col-md-6" style="width:50%; height:100%; float:left;">
         <h4>The steps of the order</h4>
             {% for step in steps %}
-                <div class="text-light">{{ loop.index }} step: {{ step }}</div>
+                <div class="text-light">{{ loop.index }} step: {{ step.department_name }}</div>
             {% endfor %}
         </div>
     </div>
@@ -49,7 +53,14 @@
             <h4>Chat with customer</h4>
 
             {% for message in messages %}
-                {{ message }}
+                <div class="clearfix" style="background-color: floralwhite">
+                    <div class="header">
+                        <strong class="primary-font">{{ message.sender }}</strong>
+                    </div>
+                    <div class="card-body">
+                        {{ message.message }}
+                    </div>
+                </div>
             {% endfor %}
 
              <form action="" method="post">

@@ -157,6 +157,7 @@ class MessageWithCustomer(db.Model):
     company_user = db.Column(db.Integer, db.ForeignKey('company_employee.username'))
     customer = db.Column(db.Integer, nullable=False)
     message = db.Column(db.String(64), index=True)
+    sender = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return '<MessageWithCustomer %s>' %self.id

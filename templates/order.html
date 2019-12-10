@@ -46,7 +46,12 @@
                 <tr><th>{{ order.order_id }}</th>
                 <td>{{ order.order_description }}</td>
                 <td>{{ order.user }}</td>
-                <td>{{ order.order_private_customer }}</td>
+                <td>{% if order.order_private_customer %}
+                        {{ order.order_private_customer }}
+                    {% elif order.order_company_customer %}
+                        {{ order.order_company_customer }}
+                    {% endif %}
+                </td>
                 <td>{{ order.order_delivery_date }}</td>
                 <td>{{ order.order_state }}</td>
                     <td><a href="order_management_menu/{{ order.order_id }}">Manage your order</a></td>
