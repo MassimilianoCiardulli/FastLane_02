@@ -140,8 +140,10 @@ class FormNextStep(FlaskForm):
 
 
 class FormChat(FlaskForm):
-    taxtarea = TextAreaField('Insert here your message...', validators=[DataRequired()])
+    message = TextAreaField('Insert here your message...', validators=[DataRequired()])
     submit = SubmitField('Send')
+
+
 
 #
 # class UpdateAccountFormPrivate(FlaskForm):

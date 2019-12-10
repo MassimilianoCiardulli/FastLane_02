@@ -4,7 +4,8 @@ from flask_bootstrap import Bootstrap
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy_utils import database_exists
 from flask_bcrypt import Bcrypt
-from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order, CompanyUser, Department
+from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order, CompanyUser, Department, \
+    MessageWithCustomer
 from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, RatingForm, RegistrationProduct, \
     OrderCreation, subRegistrationForm, loginEmployeeForm, UploadForm, FormNextStep, FormChat
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
@@ -41,10 +42,10 @@ def register():
     form_private = RegistrationFormPrivate()
     if form_private.validate_on_submit():
         hashed_pwd = bcrypt.generate_password_hash(form_private.password.data)
-        new_customer = PrivateCustomer(name=form_private.name.data, username=form_private.username.data,
-                                       password=hashed_pwd, email=form_private.email.data,
+        new_customer = PrivateCustomer(name=form_private.name.data.upper(), username=form_private.username.data.upper(),
+                                       password=hashed_pwd, email=form_private.email.data.upper(),
                                        phone_num=form_private.phone.data,
-                                       address=form_private.address.data,
+                                       address=form_private.address.data.upper(),
                                        country=form_private.country.data,
                                        type='Private')
         db.session.add(new_customer)
@@ -60,12 +61,12 @@ def register_company():
     form_company = RegistrationFormCompany()
     if form_company.validate_on_submit():
         hashed_pwd = bcrypt.generate_password_hash(form_company.password.data)
-        new_customer = CompanyCustomer(name_company=form_company.name_company.data, password=hashed_pwd,
-                                       email=form_company.email.data, phone_num=form_company.phone.data,
+        new_customer = CompanyCustomer(name_company=form_company.name_company.data.upper(), password=hashed_pwd,
+                                       email=form_company.email.data.upper(), phone_num=form_company.phone.data,
                                        city=form_company.city.data,
-                                       address=form_company.address.data, vat_code=form_company.vat_code.data,
+                                       address=form_company.address.data.upper(), vat_code=form_company.vat_code.data,
                                        country=form_company.country.data,
-                                       web_site=form_company.web_site.data, email_amm=form_company.email_admin.data,
+                                       web_site=form_company.web_site.data, email_amm=form_company.email_admin.data.upper(),
                                        type='Company', supplier=form_company.supplier.data, customer=form_company.customer.data)
         db.session.add(new_customer)
         try:
@@ -85,8 +86,8 @@ def register_employee():
     form_employee = subRegistrationForm()
     if form_employee.is_submitted():
         hashed_pwd = bcrypt.generate_password_hash(form_employee.password.data)
-        new_employee = CompanyUser(username=form_employee.username.data, password=hashed_pwd,
-                                       name=form_employee.name.data, surname=form_employee.surname.data,
+        new_employee = CompanyUser(username=form_employee.username.data.upper(), password=hashed_pwd,
+                                       name=form_employee.name.data.upper(), surname=form_employee.surname.data.upper(),
                                        role=form_employee.role.data,
                                        department=form_employee.department.data)
         db.session.add(new_employee)
@@ -99,11 +100,11 @@ def register_employee():
 def login_employee():
     form_login_employee = loginEmployeeForm()
     if form_login_employee.is_submitted():
-        user_selected = CompanyUser.query.filter_by(username=form_login_employee.username.data).first()
-        if CompanyUser.query.filter_by(username=form_login_employee.username.data).first() and bcrypt.check_password_hash(
+        user_selected = CompanyUser.query.filter_by(username=form_login_employee.username.data.upper()).first()
+        if CompanyUser.query.filter_by(username=form_login_employee.username.data.upper()).first() and bcrypt.check_password_hash(
                 user_selected.password, form_login_employee.password.data):
-            session['username_user'] = user_selected.username
-            session['name_employee'] = user_selected.name
+            session['username_user'] = user_selected.username.upper()
+            session['name_employee'] = user_selected.name.upper()
             session['role_employee'] = user_selected.role
             session['department_employee'] = user_selected.department
             return redirect('order')
@@ -119,21 +120,21 @@ def login():
     else:
         formLog = loginForm()
         if formLog.validate_on_submit():
-            customer_selected = CompanyCustomer.query.filter_by(email=formLog.email.data).first()
-            if CompanyCustomer.query.filter_by(email=formLog.email.data).first():
+            customer_selected = CompanyCustomer.query.filter_by(email=formLog.email.data.upper()).first()
+            if CompanyCustomer.query.filter_by(email=formLog.email.data.upper()).first():
                 if bcrypt.check_password_hash(customer_selected.password, formLog.password.data):
-                    session['email'] = customer_selected.email
-                    session['id_user'] = customer_selected.name_company
+                    session['email'] = customer_selected.email.upper()
+                    session['id_user'] = customer_selected.name_company.upper()
                     session['type'] = 'COMPANY'
                     return redirect('register_company_employee')
                 else:
                     error = 'ERROR: username or password should be incorrect. Please Try again'
                     return redirect('login')
-            elif PrivateCustomer.query.filter_by(email=formLog.email.data).first():
-                customer_selected = PrivateCustomer.query.filter_by(email=formLog.email.data).first()
+            elif PrivateCustomer.query.filter_by(email=formLog.email.data.upper()).first():
+                customer_selected = PrivateCustomer.query.filter_by(email=formLog.email.data.upper()).first()
                 if bcrypt.check_password_hash(customer_selected.password, formLog.password.data):
-                    session['email'] = customer_selected.email
-                    session['id_user'] = customer_selected.name
+                    session['email'] = customer_selected.email.upper()
+                    session['id_user'] = customer_selected.name.upper()
                     session['type'] = 'PRIVATE'
                     return redirect('order')
                 else:
@@ -190,7 +191,7 @@ def company_member_logout():
 def feedback():
     form_rating = RatingForm()
     if form_rating.is_submitted():
-        new_review = Rating(id_reviewer=form_rating.id_reviewer.data, type=form_rating.type.data,
+        new_review = Rating(id_reviewer=form_rating.id_reviewer.data.upper(), type=form_rating.type.data,
                             review=form_rating.review.data)
         db.session.add(new_review)
         db.session.commit()
@@ -204,7 +205,6 @@ def order():
     if session['type'] == 'COMPANY':
         orders = Order.query.filter(or_(Order.user == session['id_user'], Order.user == session['username_user'])).all()
         if formNextStep.is_submitted():
-            status = Order.query.filter_by
             return redirect('order')
     elif session['type'] == 'PRIVATE':
         orders = Order.query.filter_by(order_private_customer=session['id_user']).all()
@@ -215,11 +215,20 @@ def order():
 def order_creation():
     form_order_creation = OrderCreation()
     if form_order_creation.is_submitted():
-        new_order = Order(order_description=form_order_creation.order_description.data, order_delivery_type=form_order_creation.order_delivery_type.data,
+        if PrivateCustomer.query.filter_by(username=form_order_creation.customer_id.data.upper()).first() is not None:
+            new_order = Order(order_description=form_order_creation.order_description.data, order_delivery_type=form_order_creation.order_delivery_type.data.upper(),
                           order_delivery_date=form_order_creation.date_delivery.data, order_delivery_time=form_order_creation.time_delivery.data,
-                          order_delivery_company=form_order_creation.delivery_company.data, order_state='TO BE STARTED',
-                          order_private_customer=form_order_creation.customer_id.data,
+                          order_delivery_company=form_order_creation.delivery_company.data.upper(), order_state='TO BE STARTED',
+                          order_private_customer=form_order_creation.customer_id.data.upper(),
                           user=session['username_user'], date_insert=form_order_creation.date_insert.data, date_request=form_order_creation.date_request.data)
+
+        elif CompanyCustomer.query.filter_by(name_company=form_order_creation.customer_id.data.upper()).first() is not None:
+            new_order = Order(order_description=form_order_creation.order_description.data, order_delivery_type=form_order_creation.order_delivery_type.data.upper(),
+                          order_delivery_date=form_order_creation.date_delivery.data, order_delivery_time=form_order_creation.time_delivery.data,
+                          order_delivery_company=form_order_creation.delivery_company.data.upper(), order_state='TO BE STARTED',
+                          order_company_customer=form_order_creation.customer_id.data.upper(),
+                          user=session['username_user'], date_insert=form_order_creation.date_insert.data, date_request=form_order_creation.date_request.data)
+
         db.session.add(new_order)
         db.session.commit()
         return redirect('order')
@@ -228,29 +237,39 @@ def order_creation():
 
 @app.route('/order_management_menu/<int:order_no>')
 def order_management_menu(order_no):
-    session['order_no']=order_no
-    test=session.get('order_no')
-    return render_template('order_management_menu.html',order_no=order_no)
+    session['order_no'] = order_no
+    return render_template('order_management_menu.html', order_no=order_no)
 
-
-@app.route('/talk_with_the_customer')
+#ToDo: non funziona
+@app.route('/talk_with_the_customer', methods=['POST', 'GET'])
 def talk_with_the_customer():
-    order = Order.query.filter_by(order_id=session['order_id']).first()
+    order = Order.query.filter_by(order_id=session['order_no']).first()
     steps = Department.query.all()
+    messages = MessageWithCustomer.query.filter_by(order_product_id=session['order_no']).all()
+    if order.order_private_customer:
+        flash(order.order_private_customer+"p", "warning")
+        customer = order.order_private_customer
+    elif order.order_company_customer:
+        flash(order.order_company_customer+"c", "warning")
+        customer = order.order_company_customer
     formChat = FormChat()
-    if formChat.validate_on_submit():
-        return redirect()
-    return render_template('talk_with_the_customer.html', order=order, steps=steps)
+    if formChat.is_submitted():
+        new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
+                                          message=formChat.message.data, customer=customer)
+        db.session.add(new_message)
+        db.session.commit()
+        return redirect('talk_with_the_customer')
+    return render_template('talk_with_the_customer.html', order=order, steps=steps, formChat=formChat, messages=messages)
 
 
 @app.route('/register_product', methods=['POST', 'GET'])
 def register_product():
     form_product = RegistrationProduct()
     if form_product.validate_on_submit():
-        new_product = Product(name=form_product.name.data, quantity=form_product.quantity.data,
+        new_product = Product(name=form_product.name.data.upper(), quantity=form_product.quantity.data,
                               price=form_product.price.data,
                               availability=form_product.availability.data,
-                              type=form_product.type.data)
+                              type=form_product.type.data.upper())
         db.session.add(new_product)
         db.session.commit()
         return redirect('order.html')

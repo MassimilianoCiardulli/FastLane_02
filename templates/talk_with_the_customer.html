@@ -48,10 +48,13 @@
         <div class="col-md-6 pull-left" style="width:50%; height:100%; float:left;">
             <h4>Chat with customer</h4>
 
-             <form>
-                <textarea placeholder="Write something here...">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
 
-                </textarea>
+             <form action="" method="post">
+                {{ formChat.message(class='form-control') }}
+                 {{ formChat.submit(class='btn btn-lg btn-warning btn-block') }}
              </form>
 
         </div>
