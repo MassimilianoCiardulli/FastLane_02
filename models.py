@@ -158,6 +158,7 @@ class MessageWithCustomer(db.Model):
     customer = db.Column(db.Integer, nullable=False)
     message = db.Column(db.String(64), index=True)
     sender = db.Column(db.Integer, nullable=False)
+    datetime = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
         return '<MessageWithCustomer %s>' %self.id

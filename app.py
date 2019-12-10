@@ -1,4 +1,4 @@
-import os
+import os, datetime
 from flask import render_template, redirect, session, flash
 from flask_bootstrap import Bootstrap
 from sqlalchemy.exc import IntegrityError
@@ -203,7 +203,9 @@ def feedback():
 def order():
     formNextStep = FormNextStep()
     if session['type'] == 'COMPANY':
-        orders = Order.query.filter(or_(Order.user == session['id_user'], Order.user == session['username_user'])).all()
+        orders = Order.query.filter(or_(Order.user == session['id_user'],
+                                        Order.user == session['username_user'],
+                                        Order.order_company_customer == session['id_user'])).all()
         if formNextStep.is_submitted():
             return redirect('order')
     elif session['type'] == 'PRIVATE':
@@ -240,26 +242,27 @@ def order_management_menu(order_no):
     session['order_no'] = order_no
     return render_template('order_management_menu.html', order_no=order_no)
 
-#ToDo: non funziona
+
 @app.route('/talk_with_the_customer', methods=['POST', 'GET'])
 def talk_with_the_customer():
     order = Order.query.filter_by(order_id=session['order_no']).first()
     steps = Department.query.all()
     messages = MessageWithCustomer.query.filter_by(order_product_id=session['order_no']).all()
     if order.order_private_customer:
-        flash(order.order_private_customer+"p", "warning")
         customer = order.order_private_customer
     elif order.order_company_customer:
-        flash(order.order_company_customer+"c", "warning")
         customer = order.order_company_customer
     formChat = FormChat()
     if formChat.is_submitted():
-        if session['name_employee'] is not None:
+        if session['type'] == 'COMPANY':
+            flash('warning', session['name_employee'])
             new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
-                                          message=formChat.message.data, customer=customer, sender=session['name_employee'])
-        if session['id_user'] is not None:
+                                              message=formChat.message.data, customer=customer, sender=session['name_employee']+' - '+session['id_user'],
+                                              datetime=datetime.datetime.now())
+        if session['type'] == 'PRIVATE':
             new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
-                                              message=formChat.message.data, customer=customer, sender=session['id_user'])
+                                              message=formChat.message.data, customer=customer, sender=session['id_user'],
+                                              datetime=datetime.datetime.now())
         db.session.add(new_message)
         db.session.commit()
         return redirect('talk_with_the_customer')

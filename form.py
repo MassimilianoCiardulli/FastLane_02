@@ -136,7 +136,7 @@ class UploadForm(FlaskForm):
 
 
 class FormNextStep(FlaskForm):
-    submit = SubmitField('NextStep')
+    submit = SubmitField('Next Step')
 
 
 class FormChat(FlaskForm):

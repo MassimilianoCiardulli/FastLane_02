@@ -25,11 +25,11 @@
 
         <!-- *********************** ORDERS TABLE ************************* -->
 
-        <h3 style="padding-bottom: 3%">Your current orders</h3>
+        <h3 style="padding-bottom: 3%">{{ session.get('id_user') }} - Your current orders</h3>
     <form action="" method="post">
         <div class="table-sm">
-        <table class="table table-striped table-hover" style="background-color: floralwhite; border: #16181b;">
-              <thead style="background-color: black; color: floralwhite;">
+        <table class="table table-borderless  text-center">
+              <thead class="text-light" style="background-color: black">
                 <tr>
                   <th scope="col">ID</th>
                   <th scope="col">Description</th>
@@ -37,25 +37,24 @@
                   <th scope="col">Customer</th>
                   <th scope="col">Delivery date</th>
                   <th scope="col">Status</th>
-                  <th scope="col" style="background-color: transparent"></th>
                 </tr>
               </thead>
             <tbody>
 
             {% for order in orders %}
-                <tr><th>{{ order.order_id }}</th>
-                <td>{{ order.order_description }}</td>
-                <td>{{ order.user }}</td>
-                <td>{% if order.order_private_customer %}
+                <tr><th style="background-color:white; color: black;">{{ order.order_id }}</th>
+                <td style="background-color:white; color: black;">{{ order.order_description }}</td>
+                <td style="background-color:white; color: black;">{{ order.user }}</td>
+                <td style="background-color:white; color: black;">{% if order.order_private_customer %}
                         {{ order.order_private_customer }}
                     {% elif order.order_company_customer %}
                         {{ order.order_company_customer }}
                     {% endif %}
                 </td>
-                <td>{{ order.order_delivery_date }}</td>
-                <td>{{ order.order_state }}</td>
-                    <td><a href="order_management_menu/{{ order.order_id }}">Manage your order</a></td>
-                <td>{{ formNextStep.submit(class='btn btn-sm btn-warning btn-block') }}</td></tr>
+                <td style="background-color:white; color: black;">{{ order.order_delivery_date }}</td>
+                <td style="background-color:white; color: black;">{{ order.order_state }}</td>
+                    <td style="background-color:transparent; color: white;"><a class="btn btn-sm btn-warning btn-block"  href="order_management_menu/{{ order.order_id }}">Manage it</a></td>
+                <td style="background-color:transparent; color: white;">{{ formNextStep.submit(class='btn btn-sm btn-warning btn-block') }}</td></tr>
             {% endfor %}
 
             </tbody>
