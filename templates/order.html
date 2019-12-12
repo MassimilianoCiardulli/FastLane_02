@@ -54,7 +54,8 @@
                 <td style="background-color:white; color: black;">{{ order.order_delivery_date }}</td>
                 <td style="background-color:white; color: black;">{{ order.order_state }}</td>
                     <td style="background-color:transparent; color: white;"><a class="btn btn-sm btn-warning btn-block"  href="order_management_menu/{{ order.order_id }}">Manage it</a></td>
-                <td style="background-color:transparent; color: white;">{{ formNextStep.submit(class='btn btn-sm btn-warning btn-block') }}</td></tr>
+                <td style="background-color:transparent; color: white;">
+                    <a class="btn btn-sm btn-warning btn-block" href="order/{{ order.order_id }}">Next Step</a></td></tr>
             {% endfor %}
 
             </tbody>

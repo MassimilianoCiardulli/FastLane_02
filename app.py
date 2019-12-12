@@ -1,5 +1,5 @@
 import os, datetime
-from flask import render_template, redirect, session, flash
+from flask import render_template, redirect, session, flash, request
 from flask_bootstrap import Bootstrap
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy_utils import database_exists
@@ -212,6 +212,34 @@ def order():
         orders = Order.query.filter_by(order_private_customer=session['id_user']).all()
     return render_template('order.html', orders=orders, formNextStep=formNextStep)
 
+#ToDO: quando clicco due volte su NEXT STEP mi da 404
+@app.route('/order/<int:order_no>', methods=['POST', 'GET'])
+def update_status(order_no):
+    order = Order.query.filter_by(order_id=order_no).first()
+    departments = Department.query.all()
+    if order.order_state == 'TO BE STARTED':
+        order_status = departments[0].department_name
+    else:
+        for department in departments:
+            if order.order_state == department:
+                order_status = next(departments).department_name
+            break
+    order.order_state = order_status
+    db.session.commit()
+    #return redirect('order')
+
+    #ToDo: come rimuovere codice duplicato? se scrivo return order() mi da errore
+    formNextStep = FormNextStep()
+    if session['type'] == 'COMPANY':
+        orders = Order.query.filter(or_(Order.user == session['id_user'],
+                                        Order.user == session['username_user'],
+                                        Order.order_company_customer == session['id_user'])).all()
+        if formNextStep.is_submitted():
+            return redirect('order')
+    elif session['type'] == 'PRIVATE':
+        orders = Order.query.filter_by(order_private_customer=session['id_user']).all()
+    return render_template('order.html', orders=orders, formNextStep=formNextStep)
+
 
 @app.route('/order_creation', methods=['POST', 'GET'])
 def order_creation():
@@ -267,6 +295,33 @@ def talk_with_the_customer():
         db.session.commit()
         return redirect('talk_with_the_customer')
     return render_template('talk_with_the_customer.html', order=order, steps=steps, formChat=formChat, messages=messages)
+
+#ToDo: finire di modificare
+@app.route('/talk_with_departments', methods=['POST', 'GET'])
+def talk_with_departments():
+    order = Order.query.filter_by(order_id=session['order_no']).first()
+    steps = Department.query.all()
+    messages = MessageWithCustomer.query.filter_by(order_product_id=session['order_no']).all()
+    if order.order_private_customer:
+        customer = order.order_private_customer
+    elif order.order_company_customer:
+        customer = order.order_company_customer
+    formChat = FormChat()
+    if formChat.is_submitted():
+        if session['type'] == 'COMPANY':
+            flash('warning', session['name_employee'])
+            new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
+                                              message=formChat.message.data, customer=customer, sender=session['name_employee']+' - '+session['id_user'],
+                                              datetime=datetime.datetime.now())
+        if session['type'] == 'PRIVATE':
+            new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
+                                              message=formChat.message.data, customer=customer, sender=session['id_user'],
+                                              datetime=datetime.datetime.now())
+        db.session.add(new_message)
+        db.session.commit()
+        return redirect('talk_with_the_customer')
+    return render_template('talk_with_the_customer.html', order=order, steps=steps, formChat=formChat, messages=messages)
+
 
 
 @app.route('/register_product', methods=['POST', 'GET'])

@@ -1,10 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout.html" %}
 
-</body>
-</html>
+{% block content %}
+
+<div>
+    <!-- ****************** ORDER DETAILS ****************** -->
+    <div class="row" style="padding-left: 2%">
+        <div class="col-md-6" style="width:50%; height:100%; float:left;">
+            <h4>Order details</h4>
+
+            <table class="table table-sm table-striped table-hover" style="background-color: floralwhite; border: #16181b;">
+                  <thead style="background-color: black; color: floralwhite;">
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">User</th>
+                      <th scope="col">Customer</th>
+                      <th scope="col">Delivery date</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                <tbody>
+
+                    <tr><th>{{ order.order_id }}</th>
+                    <td>{{ order.order_description }}</td>
+                    <td>{{ order.user }}</td>
+                    <td>{% if order.order_private_customer %}
+                            {{ order.order_private_customer }}
+                        {% elif order.order_company_customer %}
+                            {{ order.order_company_customer }}
+                        {% endif %}</td>
+                    <td>{{ order.order_delivery_date }}</td>
+                    <td>{{ order.order_state }}</td></tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    <!-- ****************** ORDER STATUS ****************** -->
+        <div class="col-md-6" style="width:50%; height:100%; float:left;">
+        <h4>The steps of the order</h4>
+            {% for step in steps %}
+                <div class="text-light">{{ loop.index }} step: {{ step.department_name }}</div>
+            {% endfor %}
+        </div>
+
+
+    </div>
+
+    <div class="row" style="padding-left: 2%">
+
+        <!-- ****************** CHAT WITH CUSTOMER ****************** -->
+        <div class="col-md-6" style="width:50%; height:100%; float:left;">
+            <h4>Chat with customer</h4>
+
+            {% for message in messages %}
+                <div class="clearfix" style="background-color: floralwhite">
+                    <div class="header">
+                        <strong class="primary-font">{{ message.sender }}</strong>
+                        <strong class="primary-font pull-right">{{ message.datetime }}</strong>
+                    </div>
+                    <div class="card-body">
+                        {{ message.message }}
+                    </div>
+                </div>
+            {% endfor %}
+
+             <form action="" method="post">
+                {{ formChat.message(class='form-control') }}
+                 {{ formChat.submit(class='btn btn-lg btn-warning btn-block') }}
+             </form>
+
+        </div>
+
+        <!-- ****************** DOCUMENT SHARED ****************** -->
+        <div class="col-md-6" style="width:50%; height:100%; float:left;">
+        <h4>Document share</h4>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
