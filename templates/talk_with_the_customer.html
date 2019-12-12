@@ -43,7 +43,7 @@
             <h4>Order details</h4>
 
             <table class="table table-sm table-striped table-hover" style="background-color: floralwhite; border: #16181b;">
-                  <thead style="background-color: black; color: floralwhite; font-size: 0.95em">
+                  <thead style="background-color: black; color: floralwhite; font-size: 0.9em; text-align: center">
                     <tr>
                       <th scope="col">ID</th>
                       <th scope="col">Description</th>
@@ -118,16 +118,17 @@
                         {% if message.sender == session.get('name_employee')+' - '+session['id_user'] or message.sender == session.get('id_user') %}
                             <div class="sender">
                             <span class="time">{{ message.datetime }}</span>
+                            <p class="sender_name">{{ message.sender }}</p>
+                             {{ message.message }}
+                            </div>
                         {% else %}
                             <div class="receiver">
                             <span class="time">{{ message.datetime }}</span>
+                            <p class="sender_name">{{ message.sender }}</p>
+                             {{ message.message }}
+                            </div>
                         {% endif %}
 
-                        <p class="sender_name">{{ message.sender }}</p>
-
-
-                        {{ message.message }}
-                    </div>
                     {% endfor %}
 
 

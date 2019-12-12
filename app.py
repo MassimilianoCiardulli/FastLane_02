@@ -217,12 +217,17 @@ def order():
 def update_status(order_no):
     order = Order.query.filter_by(order_id=order_no).first()
     departments = Department.query.all()
+
     if order.order_state == 'TO BE STARTED':
         order_status = departments[0].department_name
     else:
+        i=0
         for department in departments:
-            if order.order_state == department:
-                order_status = next(departments).department_name
+            if order.order_state == department.department_name:
+                if departments[i+1]:
+                    order_status = departments[i+1].department_name
+                else:
+                    order_status = 'FINISHED'
             break
     order.order_state = order_status
     db.session.commit()
