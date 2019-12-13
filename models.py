@@ -169,10 +169,8 @@ class MessageWithDepartment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     order_product_id = db.Column(db.Integer, db.ForeignKey('order_product.id')) #manca corrispondente nell'altra tabella?
     company_user = db.Column(db.Integer, db.ForeignKey('company_employee.username')) #manca corrispondente nell'altra tabella?
-    department = db.Column(db.String, db.ForeignKey('departments.id')) #manca corrispondente nell'altra tabella?
+    department = db.Column(db.String(64), db.ForeignKey('departments.id')) #manca corrispondente nell'altra tabella?
     message = db.Column(db.String(64), index=True)
-    sender = db.Column(db.Integer, nullable=False)
-    department_sender = db.Column(db.String, nullable=False)
     datetime = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):

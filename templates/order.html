@@ -39,7 +39,7 @@
                   <th scope="col">Status</th>
                 </tr>
               </thead>
-            <tbody>
+            <div>
 
             {% for order in orders %}
                 <tr><th style="background-color:white; color: black;">{{ order.order_id }}</th>
@@ -55,7 +55,11 @@
                 <td style="background-color:white; color: black;">{{ order.order_state }}</td>
                     <td style="background-color:transparent; color: white;"><a class="btn btn-sm btn-warning btn-block"  href="order_management_menu/{{ order.order_id }}">Manage it</a></td>
                 <td style="background-color:transparent; color: white;">
-                    <a class="btn btn-sm btn-warning btn-block" href="order/{{ order.order_id }}">Next Step</a></td></tr>
+                    {% if order.order_state == 'FINISHED' %}
+                        <a class="btn btn-sm btn-warning btn-block disabled" href="order/{{ order.order_id }}">Next Step</a></td></tr>
+                    {% else %}
+                        <a class="btn btn-sm btn-warning btn-block" href="order/{{ order.order_id }}">Next Step</a></td></tr>
+                    {% endif %}
             {% endfor %}
 
             </tbody>

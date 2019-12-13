@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy_utils import database_exists
 from flask_bcrypt import Bcrypt
 from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order, CompanyUser, Department, \
-    MessageWithCustomer
+    MessageWithCustomer, MessageWithDepartment
 from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, RatingForm, RegistrationProduct, \
     OrderCreation, subRegistrationForm, loginEmployeeForm, UploadForm, FormNextStep, FormChat
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
@@ -221,14 +221,18 @@ def update_status(order_no):
     if order.order_state == 'TO BE STARTED':
         order_status = departments[0].department_name
     else:
-        i=0
+        i = 0
         for department in departments:
             if order.order_state == department.department_name:
-                if departments[i+1]:
-                    order_status = departments[i+1].department_name
-                else:
-                    order_status = 'FINISHED'
-            break
+                try:
+                    if departments[i+1]:
+                        order_status = departments[i+1].department_name
+                        break
+                except IndexError:
+                        order_status = 'FINISHED'
+                        break
+            else:
+                i = i+1
     order.order_state = order_status
     db.session.commit()
     #return redirect('order')
@@ -301,32 +305,25 @@ def talk_with_the_customer():
         return redirect('talk_with_the_customer')
     return render_template('talk_with_the_customer.html', order=order, steps=steps, formChat=formChat, messages=messages)
 
-#ToDo: finire di modificare
+
 @app.route('/talk_with_departments', methods=['POST', 'GET'])
 def talk_with_departments():
     order = Order.query.filter_by(order_id=session['order_no']).first()
     steps = Department.query.all()
-    messages = MessageWithCustomer.query.filter_by(order_product_id=session['order_no']).all()
-    if order.order_private_customer:
-        customer = order.order_private_customer
-    elif order.order_company_customer:
-        customer = order.order_company_customer
+    messages = MessageWithDepartment.query.filter_by(order_product_id=session['order_no']).all()
     formChat = FormChat()
+    employee_department = CompanyUser.query.filter_by(username=session['username_user']).first().department
     if formChat.is_submitted():
+        #ToDo: gestire il dipartimento
         if session['type'] == 'COMPANY':
             flash('warning', session['name_employee'])
-            new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
-                                              message=formChat.message.data, customer=customer, sender=session['name_employee']+' - '+session['id_user'],
-                                              datetime=datetime.datetime.now())
-        if session['type'] == 'PRIVATE':
-            new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
-                                              message=formChat.message.data, customer=customer, sender=session['id_user'],
+            new_message = MessageWithDepartment(order_product_id=session['order_no'], company_user=session['username_user']+' - '+session['id_user'],
+                                              department=employee_department, message=formChat.message.data,
                                               datetime=datetime.datetime.now())
         db.session.add(new_message)
         db.session.commit()
-        return redirect('talk_with_the_customer')
-    return render_template('talk_with_the_customer.html', order=order, steps=steps, formChat=formChat, messages=messages)
-
+        return redirect('talk_with_departments')
+    return render_template('talk_with_departments.html', order=order, steps=steps, formChat=formChat, messages=messages)
 
 
 @app.route('/register_product', methods=['POST', 'GET'])
