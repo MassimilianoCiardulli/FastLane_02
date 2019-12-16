@@ -124,6 +124,7 @@ class Order(db.Model):
     order_company_customer = db.Column(db.Integer, db.ForeignKey('company_customer.id_company'))
     current_department = db.Column(db.String(64))
     user = db.Column(db.String(64), nullable=False)
+    company = db.Column(db.String(64), nullable=False)
     date_insert = db.Column(db.DateTime, nullable=False)
     date_request = db.Column(db.DateTime, nullable=False)
     order_product_id = db.Column(db.Integer, db.ForeignKey('order_product.id'))

@@ -53,13 +53,15 @@
                 </td>
                 <td style="background-color:white; color: black;">{{ order.order_delivery_date }}</td>
                 <td style="background-color:white; color: black;">{{ order.order_state }}</td>
-                    <td style="background-color:transparent; color: white;"><a class="btn btn-sm btn-warning btn-block"  href="order_management_menu/{{ order.order_id }}">Manage it</a></td>
+                    <td style="background-color:transparent; color: white;"><a class="btn btn-sm btn-warning btn-block"  href="{{ url_for('order_management_menu',order_no=order.order_id) }}">Manage it</a></td>
                 <td style="background-color:transparent; color: white;">
+                {% if session.get('name_employee') %}
                     {% if order.order_state == 'FINISHED' %}
                         <a class="btn btn-sm btn-warning btn-block disabled">Next Step</a></td></tr>
                     {% else %}
                         <a class="btn btn-sm btn-warning btn-block" href="{{ url_for('update_status',order_no=order.order_id) }}">Next Step</a></td></tr>
                     {% endif %}
+                {% endif %}
             {% endfor %}
 
             </tbody>

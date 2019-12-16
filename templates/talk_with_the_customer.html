@@ -115,7 +115,7 @@
 
 
                     {% for message in messages %}
-                        {% if message.sender == session.get('name_employee')+' - '+session['id_user'] or message.sender == session.get('id_user') %}
+                        {% if message.sender == (session.get('name_employee')|string+' - '+session['id_user']|string) or message.sender == session.get('id_user') %}
                             <div class="sender">
                             <span class="time">{{ message.datetime }}</span>
                             <p class="sender_name">{{ message.sender }}</p>

@@ -153,7 +153,7 @@ def logout():
     session.pop('email')
     session.pop('id_user')
     session.pop('type')
-    session.pop('username')
+    #session.pop('username')
 
     try:
         session['email']
@@ -209,7 +209,8 @@ def order():
     if session['type'] == 'COMPANY':
         orders = Order.query.filter(or_(Order.user == session['id_user'],
                                         Order.user == session['username_user'],
-                                        Order.order_company_customer == session['id_user'])).all()
+                                        Order.order_company_customer == session['id_user'],
+                                        Order.company == session['id_user'])).all()
         if formNextStep.is_submitted():
             return redirect('order')
     elif session['type'] == 'PRIVATE':
@@ -245,7 +246,8 @@ def update_status(order_no):
     if session['type'] == 'COMPANY':
         orders = Order.query.filter(or_(Order.user == session['id_user'],
                                         Order.user == session['username_user'],
-                                        Order.order_company_customer == session['id_user'])).all()
+                                        Order.order_company_customer == session['id_user'],
+                                        Order.company == session['id_user'])).all()
         if formNextStep.is_submitted():
             return redirect('order')
     elif session['type'] == 'PRIVATE':
@@ -259,19 +261,18 @@ def order_creation():
     CUSTOMERS = PrivateCustomer.query.all()
     if form_order_creation.is_submitted():
         customer_selected = request.form.get('customerId')
-        flash('warning', customer_selected)
         if PrivateCustomer.query.filter_by(username=customer_selected).first() is not None:
             new_order = Order(order_description=form_order_creation.order_description.data, order_delivery_type=form_order_creation.order_delivery_type.data.upper(),
                           order_delivery_date=form_order_creation.date_delivery.data, order_delivery_time=form_order_creation.time_delivery.data,
                           order_delivery_company=form_order_creation.delivery_company.data.upper(), order_state='TO BE STARTED',
-                          order_private_customer=customer_selected,
+                          order_private_customer=customer_selected, company=session['id_user'],
                           user=session['username_user'], date_insert=form_order_creation.date_insert.data, date_request=form_order_creation.date_request.data)
 
         elif CompanyCustomer.query.filter_by(name_company=customer_selected).first() is not None:
             new_order = Order(order_description=form_order_creation.order_description.data, order_delivery_type=form_order_creation.order_delivery_type.data.upper(),
                           order_delivery_date=form_order_creation.date_delivery.data, order_delivery_time=form_order_creation.time_delivery.data,
                           order_delivery_company=form_order_creation.delivery_company.data.upper(), order_state='TO BE STARTED',
-                          order_company_customer=customer_selected,
+                          order_company_customer=customer_selected, company=session['id_user'],
                           user=session['username_user'], date_insert=form_order_creation.date_insert.data, date_request=form_order_creation.date_request.data)
 
         db.session.add(new_order)
