@@ -303,7 +303,7 @@ def talk_with_the_customer():
                                               message=formChat.message.data, customer=customer, sender=session['name_employee']+' - '+session['id_user'],
                                               datetime=datetime.datetime.now())
         if session['type'] == 'PRIVATE':
-            new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
+            new_message = MessageWithCustomer(order_product_id=session['order_no'],
                                               message=formChat.message.data, customer=customer, sender=session['id_user'],
                                               datetime=datetime.datetime.now())
         db.session.add(new_message)
