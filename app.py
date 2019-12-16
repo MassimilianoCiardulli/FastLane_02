@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fastlane.db'
 Bootstrap(app)
 bcrypt = Bcrypt(app)
 
-app.config['UPLOADED_PHOTOS_DEST'] = os.getcwd()+"/static/profile_pic"
+app.config['UPLOADED_PHOTOS_DEST'] = os.getcwd()+"/static"
 
 photos = UploadSet('photos', IMAGES)
 #media = UploadSet('media', default_dest=lambda app: app.instance_path)
