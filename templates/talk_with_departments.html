@@ -90,9 +90,9 @@
                         <div class="btn">
                             <span>
                                 {% if loop.index == 1 %}
-                                    <p><img src="/static/img/production_icon.png" height="80px" width="80px"></p>
-                                {% elif loop.index == 2 %}
                                     <p><img src="/static/img/design_icon.png" height="80px" width="80px"></p>
+                                {% elif loop.index == 2 %}
+                                    <p><img src="/static/img/production_icon.png" height="80px" width="80px"></p>
                                 {% elif loop.index == 3 %}
                                     <p><img src="/static/img/testing_icon.png" height="80px" width="80px"></p>
                                 {% endif %}
@@ -115,16 +115,16 @@
 
 
                     {% for message in messages %}
-                        {% if message.sender == session.get('username_user')+' - '+session.get('id_user') or message.sender == session.get('id_user') %}
+                        {% if message.sender == session.get('username_user')+' - '+message.department|string %}
                             <div class="sender">
                             <span class="time">{{ message.datetime }}</span>
-                            <p class="sender_name">{{ message.sender }}</p>
+                            <p class="sender_name">{{ message.company_user }}</p>
                              {{ message.message }}
                             </div>
                         {% else %}
                             <div class="receiver">
                             <span class="time">{{ message.datetime }}</span>
-                            <p class="sender_name">{{ message.sender }}</p>
+                            <p class="sender_name">{{ message.company_user }}</p>
                              {{ message.message }}
                             </div>
                         {% endif %}

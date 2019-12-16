@@ -30,8 +30,8 @@ CUSTOMERS = 0
 def create_all():
     if not database_exists('sqlite:///fastlane.db'):
         db.create_all()
-        db.session.add(Department(department_name='Production'))
         db.session.add(Department(department_name='Design'))
+        db.session.add(Department(department_name='Production'))
         db.session.add(Department(department_name='Prototype'))
         db.session.commit()
 
@@ -215,7 +215,19 @@ def order():
             return redirect('order')
     elif session['type'] == 'PRIVATE':
         orders = Order.query.filter_by(order_private_customer=session['username']).all()
-    return render_template('order.html', orders=orders, formNextStep=formNextStep)
+
+    if not os.path.exists('static/' + str(session.get('id'))):
+        os.makedirs('static/' + str(session.get('id')))
+    file_url = os.listdir('static/' + str(session.get('id')))
+    file_url = [str(session.get('id')) + "/" + file for file in file_url]
+    formUpload = UploadForm()
+    if formUpload.validate_on_submit():
+        filename = photos.save(formUpload.file.data, name=str(session.get('id')) + '.jpg', folder=str(session.get('id')))
+        file_url.append(filename)
+    #return render_template("upload_image.html", formupload=formUpload, filelist=file_url)
+
+
+    return render_template('order.html', orders=orders, formNextStep=formNextStep, formupload=formUpload, filelist=file_url)
 
 
 @app.route('/order/<int:order_no>', methods=['POST', 'GET'])
@@ -252,7 +264,15 @@ def update_status(order_no):
             return redirect('order')
     elif session['type'] == 'PRIVATE':
         orders = Order.query.filter_by(order_private_customer=session['id_user']).all()
-    return render_template('order.html', orders=orders, formNextStep=formNextStep)
+    if not os.path.exists('static/' + str(session.get('id'))):
+        os.makedirs('static/' + str(session.get('id')))
+    file_url = os.listdir('static/' + str(session.get('id')))
+    file_url = [str(session.get('id')) + "/" + file for file in file_url]
+    formUpload = UploadForm()
+    if formUpload.validate_on_submit():
+        filename = photos.save(formUpload.file.data, name=str(session.get('id')) + '.jpg', folder=str(session.get('id')))
+        file_url.append(filename)
+    return render_template('order.html', orders=orders, formNextStep=formNextStep, formupload=formUpload, filelist=file_url)
 
 
 @app.route('/order_creation', methods=['POST', 'GET'])
@@ -322,7 +342,7 @@ def talk_with_departments():
     if formChat.is_submitted():
         #ToDo: gestire il dipartimento
         if session['type'] == 'COMPANY':
-            new_message = MessageWithDepartment(order_product_id=session['order_no'], company_user=session['username_user']+' - '+session['id_user'],
+            new_message = MessageWithDepartment(order_product_id=session['order_no'], company_user=session['username_user']+' - '+employee_department,
                                               department=employee_department, message=formChat.message.data,
                                               datetime=datetime.datetime.now())
         db.session.add(new_message)

@@ -1,65 +1,68 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div style="padding-left: 7%; padding-right: 7%;">
+{% if session['id_user'] %}
+    <div style="padding-left: 7%; padding-right: 7%;">
 
-   <div class="row">
-    <div class="col"></div>
-    <div class="col">
-
-<div class="col-sm-12 form-group">
-    <div class="row">
-        <p class="form-group">How do you rate your overall experience?</p></br>
+       <div class="row">
+        <div class="col"></div>
         <div class="col">
-          <div class="star-rating">
-            <span class="fa fa-star-o" data-rating="1"></span>
-            <span class="fa fa-star-o" data-rating="2"></span>
-            <span class="fa fa-star-o" data-rating="3"></span>
-            <span class="fa fa-star-o" data-rating="4"></span>
-            <span class="fa fa-star-o" data-rating="5"></span>
-            <input type="hidden" name="whatever1" class="rating-value" value="2.56">
+
+    <div class="col-sm-12 form-group">
+        <div class="row">
+            <p class="form-group">How do you rate your overall experience?</p></br>
+            <div class="col">
+              <div class="star-rating">
+                <span class="fa fa-star-o" data-rating="1"></span>
+                <span class="fa fa-star-o" data-rating="2"></span>
+                <span class="fa fa-star-o" data-rating="3"></span>
+                <span class="fa fa-star-o" data-rating="4"></span>
+                <span class="fa fa-star-o" data-rating="5"></span>
+                <input type="hidden" name="whatever1" class="rating-value" value="2.56">
+              </div>
+            </div>
+
           </div>
+
+    </div>
+        <form action="" method="post">
+        <div class="form-group">
+                {{ form_rating.review.label }}
+                  {{ form_rating.review(class='form-control') }}
+                    {% for error in form_rating.review.errors %}
+                        <div class="alert alert-danger" role="alert">
+                          {{ error }}
+                        </div>
+                    {% endfor %}
         </div>
+        <div class="form-group">
+                {{ form_rating.id_reviewer.label }}
+                  {{ form_rating.id_reviewer(class='form-control') }}
+                    {% for error in form_rating.id_reviewer.errors %}
+                        <div class="alert alert-danger" role="alert">
+                          {{ error }}
+                        </div>
+                    {% endfor %}
+        </div>
+        <div class="form-group">
+                {{ form_rating.type.label }}
+                  {{ form_rating.type(class='form-control') }}
+                    {% for error in form_rating.type.errors %}
+                        <div class="alert alert-danger" role="alert">
+                          {{ error }}
+                        </div>
+                    {% endfor %}
+        </div>
+        {{ form_rating.submit(class='btn btn-lg btn-warning btn-block') }}
+                {{ form_rating.hidden_tag() }}
+        </form>
 
-      </div>
-
-</div>
-    <form action="" method="post">
-    <div class="form-group">
-            {{ form_rating.review.label }}
-              {{ form_rating.review(class='form-control') }}
-                {% for error in form_rating.review.errors %}
-                    <div class="alert alert-danger" role="alert">
-                      {{ error }}
-                    </div>
-                {% endfor %}
-    </div>
-    <div class="form-group">
-            {{ form_rating.id_reviewer.label }}
-              {{ form_rating.id_reviewer(class='form-control') }}
-                {% for error in form_rating.id_reviewer.errors %}
-                    <div class="alert alert-danger" role="alert">
-                      {{ error }}
-                    </div>
-                {% endfor %}
-    </div>
-    <div class="form-group">
-            {{ form_rating.type.label }}
-              {{ form_rating.type(class='form-control') }}
-                {% for error in form_rating.type.errors %}
-                    <div class="alert alert-danger" role="alert">
-                      {{ error }}
-                    </div>
-                {% endfor %}
-    </div>
-    {{ form_rating.submit(class='btn btn-lg btn-warning btn-block') }}
-            {{ form_rating.hidden_tag() }}
-    </form>
-
-
-</div>
-      <div class="col"></div>
 
     </div>
+          <div class="col"></div>
 
+        </div>
+{% else %}
+        <h4>Please log in to give us a feedback.</h4>
+{% endif %}
 {% endblock content %}

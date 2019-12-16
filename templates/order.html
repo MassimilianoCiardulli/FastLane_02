@@ -2,6 +2,19 @@
 
 {% block content %}
 
+    <style>
+
+    .widthset {
+    max-width: 200px;
+    }
+
+    .heightset {
+        max-height: 200px;
+    }
+
+        </style>
+
+
 <div class="row">
     <div class="col-sm-3" style="padding-left: 4%; border-right: 1px inset #333; padding-bottom: 3%">
 
@@ -14,9 +27,24 @@
                 <!-- ***************** PROFILE PIC *************** -->
 
 
-                        <img src="/static/img/billgates.png" class="img-circle">
+                    <form method="post" enctype="multipart/form-data" action="">
+        {{ formupload.hidden_tag() }}
+        {{ formupload.file(class="btn btn-sm btn-warning btn-block'") }}
+        {{ formupload.upload(class="btn btn-sm btn-warning btn-block'") }}
+    </form>
+    {% for file in filelist %}
+        <img src='{{ url_for("static",filename=file) }}' class="widthset heightset">
+    {% endfor %}
+
+
+
+
+
+
+
+                        {#<img src="/static/img/billgates.png" class="img-circle">
                         <h6 style="padding-top: 3%;"> Role: {{ session['role_employee'] }} - {{ session['department_employee'] }}</h6>
-                         <a href="/upload" style="color: gold">Upload your profile picture</a>
+                         <a href="/upload" style="color: gold">Upload your profile picture</a>#}
 
     </div>
 
