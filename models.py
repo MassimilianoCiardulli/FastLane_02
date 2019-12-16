@@ -83,11 +83,13 @@ class CompanyDelivery(db.Model):
     def __repr__(self):
         return '<Customer %s>' % self.username_company
 
-
+#chiave esterna con companycustomer e privatecustomer
+#todo:aggiungere chiave esterna
 class Rating(db.Model):
     __tablename__ = 'ratings'
     id_review = db.Column(db.Integer, primary_key=True)
     id_reviewer = db.Column(db.String(64), nullable=False)
+    company_id = db.Column(db.Integer)
     type = db.Column(db.String(64), nullable=False)
     review = db.Column(db.String(128))
 

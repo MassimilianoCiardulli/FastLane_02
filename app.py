@@ -24,6 +24,7 @@ photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 patch_request_class(app)
 
+CUSTOMERS = 0
 
 @app.before_first_request
 def create_all():
@@ -87,6 +88,7 @@ def register_employee():
     if form_employee.is_submitted():
         hashed_pwd = bcrypt.generate_password_hash(form_employee.password.data)
         new_employee = CompanyUser(username=form_employee.username.data.upper(), password=hashed_pwd,
+                                       company_id=session['id_user'],
                                        name=form_employee.name.data.upper(), surname=form_employee.surname.data.upper(),
                                        role=form_employee.role.data,
                                        department=form_employee.department.data)
@@ -135,6 +137,7 @@ def login():
                 if bcrypt.check_password_hash(customer_selected.password, formLog.password.data):
                     session['email'] = customer_selected.email.upper()
                     session['id_user'] = customer_selected.name.upper()
+                    session['username'] = customer_selected.username.upper()
                     session['type'] = 'PRIVATE'
                     return redirect('order')
                 else:
@@ -150,6 +153,7 @@ def logout():
     session.pop('email')
     session.pop('id_user')
     session.pop('type')
+    session.pop('username')
 
     try:
         session['email']
@@ -209,15 +213,15 @@ def order():
         if formNextStep.is_submitted():
             return redirect('order')
     elif session['type'] == 'PRIVATE':
-        orders = Order.query.filter_by(order_private_customer=session['id_user']).all()
+        orders = Order.query.filter_by(order_private_customer=session['username']).all()
     return render_template('order.html', orders=orders, formNextStep=formNextStep)
 
-#ToDO: quando clicco due volte su NEXT STEP mi da 404
+
 @app.route('/order/<int:order_no>', methods=['POST', 'GET'])
 def update_status(order_no):
     order = Order.query.filter_by(order_id=order_no).first()
     departments = Department.query.all()
-
+    order_status = order.order_state
     if order.order_state == 'TO BE STARTED':
         order_status = departments[0].department_name
     else:
@@ -229,13 +233,12 @@ def update_status(order_no):
                         order_status = departments[i+1].department_name
                         break
                 except IndexError:
-                        order_status = 'FINISHED'
-                        break
+                    order_status = 'FINISHED'
+                    break
             else:
                 i = i+1
     order.order_state = order_status
     db.session.commit()
-    #return redirect('order')
 
     #ToDo: come rimuovere codice duplicato? se scrivo return order() mi da errore
     formNextStep = FormNextStep()
@@ -253,25 +256,28 @@ def update_status(order_no):
 @app.route('/order_creation', methods=['POST', 'GET'])
 def order_creation():
     form_order_creation = OrderCreation()
+    CUSTOMERS = PrivateCustomer.query.all()
     if form_order_creation.is_submitted():
-        if PrivateCustomer.query.filter_by(username=form_order_creation.customer_id.data.upper()).first() is not None:
+        customer_selected = request.form.get('customerId')
+        flash('warning', customer_selected)
+        if PrivateCustomer.query.filter_by(username=customer_selected).first() is not None:
             new_order = Order(order_description=form_order_creation.order_description.data, order_delivery_type=form_order_creation.order_delivery_type.data.upper(),
                           order_delivery_date=form_order_creation.date_delivery.data, order_delivery_time=form_order_creation.time_delivery.data,
                           order_delivery_company=form_order_creation.delivery_company.data.upper(), order_state='TO BE STARTED',
-                          order_private_customer=form_order_creation.customer_id.data.upper(),
+                          order_private_customer=customer_selected,
                           user=session['username_user'], date_insert=form_order_creation.date_insert.data, date_request=form_order_creation.date_request.data)
 
-        elif CompanyCustomer.query.filter_by(name_company=form_order_creation.customer_id.data.upper()).first() is not None:
+        elif CompanyCustomer.query.filter_by(name_company=customer_selected).first() is not None:
             new_order = Order(order_description=form_order_creation.order_description.data, order_delivery_type=form_order_creation.order_delivery_type.data.upper(),
                           order_delivery_date=form_order_creation.date_delivery.data, order_delivery_time=form_order_creation.time_delivery.data,
                           order_delivery_company=form_order_creation.delivery_company.data.upper(), order_state='TO BE STARTED',
-                          order_company_customer=form_order_creation.customer_id.data.upper(),
+                          order_company_customer=customer_selected,
                           user=session['username_user'], date_insert=form_order_creation.date_insert.data, date_request=form_order_creation.date_request.data)
 
         db.session.add(new_order)
         db.session.commit()
         return redirect('order')
-    return render_template('order_creation.html', form_order_creation=form_order_creation)
+    return render_template('order_creation.html', form_order_creation=form_order_creation, customers=CUSTOMERS)
 
 
 @app.route('/order_management_menu/<int:order_no>')
@@ -292,7 +298,6 @@ def talk_with_the_customer():
     formChat = FormChat()
     if formChat.is_submitted():
         if session['type'] == 'COMPANY':
-            flash('warning', session['name_employee'])
             new_message = MessageWithCustomer(order_product_id=session['order_no'], company_user=session['username_user'],
                                               message=formChat.message.data, customer=customer, sender=session['name_employee']+' - '+session['id_user'],
                                               datetime=datetime.datetime.now())
@@ -316,7 +321,6 @@ def talk_with_departments():
     if formChat.is_submitted():
         #ToDo: gestire il dipartimento
         if session['type'] == 'COMPANY':
-            flash('warning', session['name_employee'])
             new_message = MessageWithDepartment(order_product_id=session['order_no'], company_user=session['username_user']+' - '+session['id_user'],
                                               department=employee_department, message=formChat.message.data,
                                               datetime=datetime.datetime.now())
@@ -347,7 +351,6 @@ def upload():
     file_url = os.listdir('static/' + str(session.get('id')))
     file_url = [str(session.get('id')) + "/" + file for file in file_url]
     formUpload = UploadForm()
-    print session.get('email')
     if formUpload.validate_on_submit():
         filename = photos.save(formUpload.file.data, name=str(session.get('id')) + '.jpg', folder=str(session.get('id')))
         file_url.append(filename)

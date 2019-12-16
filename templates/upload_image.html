@@ -6,11 +6,11 @@
     <form method="post" enctype="multipart/form-data" action="">
         {{ formupload.hidden_tag() }}
         <h6>{{ formupload.file.label }}</h6>
-        <div class="btn btn-lg btn-warning btn-block'">{{ formupload.file }}</div>
-        <div class="btn btn-lg btn-warning btn-block'">{{ formupload.upload }} </div>
+        {{ formupload.file(class="btn btn-lg btn-warning btn-block'") }}
+        {{ formupload.upload(class="btn btn-lg btn-warning btn-block'") }}
     </form>
     {% for file in filelist %}
-        <img class="upload-img" src='{{ url_for("static",filename=file) }}'>
+        <img src='{{ url_for("static",filename=file) }}' height="300px" width="300px">
     {% endfor %}
     </div>
     <div class="col"></div>

@@ -2,11 +2,11 @@ from flask import request
 from flask_wtf import FlaskForm
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, ValidationError, IntegerField, SelectField, \
-    TextAreaField, FloatField, BooleanField, FileField
+    TextAreaField, FloatField, BooleanField, FileField, FieldList, FormField
 from wtforms.fields.html5 import EmailField, URLField, DateTimeField, DateField, TimeField
 from wtforms.validators import DataRequired, Length, Email, Optional
-from app import PrivateCustomer, CompanyCustomer
-from models import Product
+from app import CompanyCustomer
+from models import Product, PrivateCustomer
 from utilities import COUNTRIES, TYPES
 
 
@@ -67,7 +67,6 @@ class RegistrationFormCompany(FlaskForm):
             raise ValidationError("Please select if you're a seller or a buyer or both")
 
 
-
 class loginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=4, max=20)])
@@ -101,7 +100,7 @@ class RatingForm(FlaskForm):
         if not PrivateCustomer.query.filter_by(username=self.id_reviewer.data).first() and not CompanyCustomer.query.filter_by(name_company=self.id_reviewer.data).first():
             ValidationError('"%s" does not exist, please insert a valid name or username' % id_reviewer.data)
 
-
+#Todo: quando la usiamo?
 class RegistrationProduct(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     quantity = IntegerField('Quantity', validators=[DataRequired()])
@@ -118,7 +117,8 @@ class RegistrationProduct(FlaskForm):
 class OrderCreation(FlaskForm):
     product_name = StringField('Product name', validators=[DataRequired()])
     product_id = StringField('Product id', validators=[DataRequired()])
-    customer_id = StringField('Customer id', validators=[DataRequired()])
+    #customer_id = SelectField(choices=CUSTOMERS)
+    #customer_id = FieldList(FormField(PrivateCustomer.query.all().name), min_entries=1)
     #departments = StringField('Insert departments', validators=[DataRequired()])
     order_description = TextAreaField('Insert a brief order description', validators=[DataRequired()])
     date_insert = DateField('This order has been added in the date', validators=[DataRequired()])
