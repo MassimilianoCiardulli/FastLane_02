@@ -8,7 +8,7 @@
         <div class="col"></div>
         <div class="col">
 
-    <div class="col-sm-12 form-group">
+    <div class="col-sm-11 form-group">
         <div class="row">
             <p class="form-group">How do you rate your overall experience?</p></br>
             <div class="col">
@@ -63,6 +63,13 @@
 
         </div>
 {% else %}
-        <h4>Please log in to give us a feedback.</h4>
+    <div class="row">
+        <div class="col-sm"></div>
+            <div class="col-sm">
+                <h4>Please <a href="login" style="color: gold">log in</a> to give us a feedback.</h4>
+                <h6>If you don't have an account, <a href="register_company" style="color: gold">sign up as a company</a> or <a href="register_private" style="color: gold">as a private</a>.</h6>
+            </div>
+        <div class="col-sm"></div>
+    </div>
 {% endif %}
 {% endblock content %}

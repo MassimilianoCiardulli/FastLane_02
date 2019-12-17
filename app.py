@@ -215,7 +215,6 @@ def order():
             return redirect('order')
     elif session['type'] == 'PRIVATE':
         orders = Order.query.filter_by(order_private_customer=session['username']).all()
-
     if not os.path.exists('static/' + str(session.get('id'))):
         os.makedirs('static/' + str(session.get('id')))
     file_url = os.listdir('static/' + str(session.get('id')))
@@ -224,9 +223,6 @@ def order():
     if formUpload.validate_on_submit():
         filename = photos.save(formUpload.file.data, name=str(session.get('id')) + '.jpg', folder=str(session.get('id')))
         file_url.append(filename)
-    #return render_template("upload_image.html", formupload=formUpload, filelist=file_url)
-
-
     return render_template('order.html', orders=orders, formNextStep=formNextStep, formupload=formUpload, filelist=file_url)
 
 

@@ -131,7 +131,7 @@ class OrderCreation(FlaskForm):
 
 
 class UploadForm(FlaskForm):
-    file = FileField('File', validators=[DataRequired()])
+    file = FileField('Choose File', validators=[DataRequired()])
     upload = SubmitField('Upload')
 
 

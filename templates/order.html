@@ -25,26 +25,19 @@
             {% endif %}
 
                 <!-- ***************** PROFILE PIC *************** -->
-
-
-                    <form method="post" enctype="multipart/form-data" action="">
-        {{ formupload.hidden_tag() }}
-        {{ formupload.file(class="btn btn-sm btn-warning btn-block'") }}
-        {{ formupload.upload(class="btn btn-sm btn-warning btn-block'") }}
-    </form>
-    {% for file in filelist %}
-        <img src='{{ url_for("static",filename=file) }}' class="widthset heightset">
-    {% endfor %}
-
-
-
-
-
-
-
-                        {#<img src="/static/img/billgates.png" class="img-circle">
-                        <h6 style="padding-top: 3%;"> Role: {{ session['role_employee'] }} - {{ session['department_employee'] }}</h6>
-                         <a href="/upload" style="color: gold">Upload your profile picture</a>#}
+            <div style="padding-left: 10%">
+                {% for file in filelist %}
+                    <img src='{{ url_for("static",filename=file) }}' class="widthset heightset">
+                {% endfor %}
+                <form method="post" enctype="multipart/form-data" action="">
+                    {{ formupload.hidden_tag() }}
+                    <label class="btn btn-sm btn-warning btn-block'" style="margin-top: 0.5rem">
+                        Choose file <input type="file" class="btn btn-sm btn-warning btn-block'" style="display: none;">
+                        {{ formupload.file(style="display: none;") }}
+                    </label>
+                    {{ formupload.upload(class="btn btn-sm btn-warning btn-block'") }}
+                </form>
+            </div>
 
     </div>
 
