@@ -12,6 +12,15 @@
         max-height: 200px;
     }
 
+    tbody{
+        background-color: white;
+    }
+
+    tr:nth-child(even){
+        background-color: lightgray;
+    }
+
+
         </style>
 
 
@@ -25,9 +34,14 @@
             {% endif %}
 
                 <!-- ***************** PROFILE PIC *************** -->
-            <div style="padding-left: 10%">
+            <div style="padding-left: 8%">
                 {% for file in filelist %}
-                    <img src='{{ url_for("static",filename=file) }}' class="widthset heightset">
+                    {% if file==session.get('id_user')+'/'+session.get('id_user') + '.jpg' %}
+                        <img src='{{ url_for("static",filename=file) }}' class="widthset heightset img-circle">
+                    {% elif file==session.get('name_employee')|string+'/'+session.get('name_employee')|string + '.jpg' %}
+                        <img src='{{ url_for("static",filename=file) }}' class="widthset heightset img-circle">
+                    {% endif %}
+
                 {% endfor %}
                 <form method="post" enctype="multipart/form-data" action="">
                     {{ formupload.hidden_tag() }}
@@ -49,37 +63,39 @@
         <h3 style="padding-bottom: 3%">{{ session.get('id_user') }} - Your current orders</h3>
     <form action="" method="post">
         <div class="table-sm">
-        <table class="table table-borderless  text-center">
-              <thead style="background-color: #ffc107; color: black">
+        <table class="table table-borderless text-center">
+              <colgroup>
+                  <col span="6">
+                  <col style="background-color:transparent!important;">
+              </colgroup>
                 <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">User</th>
-                  <th scope="col">Customer</th>
-                  <th scope="col">Delivery date</th>
-                  <th scope="col">Status</th>
+                  <th style="background-color: #ffc107;">ID</th>
+                  <th style="background-color: #ffc107;">Description</th>
+                  <th style="background-color: #ffc107;">User</th>
+                  <th style="background-color: #ffc107;">Customer</th>
+                  <th style="background-color: #ffc107;">Delivery date</th>
+                  <th style="background-color: #ffc107;">Status</th>
                 </tr>
-              </thead>
-            <div>
 
+            <tbody>
             {% for order in orders %}
-                <tr><th style="background-color:white; color: black;">{{ order.order_id }}</th>
-                <td style="background-color:white; color: black;">{{ order.order_description }}</td>
-                <td style="background-color:white; color: black;">{{ order.user }}</td>
-                <td style="background-color:white; color: black;">{% if order.order_private_customer %}
+                <tr><th style="color: black;">{{ order.order_id }}</th>
+                <td style="color: black;">{{ order.order_description }}</td>
+                <td style="color: black;">{{ order.user }}</td>
+                <td style="color: black;">{% if order.order_private_customer %}
                         {{ order.order_private_customer }}
                     {% elif order.order_company_customer %}
                         {{ order.order_company_customer }}
                     {% endif %}
                 </td>
-                <td style="background-color:white; color: black;">{{ order.order_delivery_date }}</td>
-                <td style="background-color:white; color: black;">{{ order.order_state }}</td>
+                <td style="color: black;">{{ order.order_delivery_date }}</td>
+                <td style="color: black;">{{ order.order_state }}</td>
                 {% if session['type'] == 'COMPANY' %}
-                    <td style="background-color:transparent; color: white;"><a class="btn btn-sm btn-warning btn-block"  href="{{ url_for('order_management_menu',order_no=order.order_id) }}">Manage it</a></td>
+                    <td class="btn-table"><a class="btn btn-sm btn-warning btn-block" href="{{ url_for('order_management_menu',order_no=order.order_id) }}">Manage it</a></td>
                 {% elif session['type'] == 'PRIVATE' %}
-                    <td style="background-color:transparent; color: white;"><a class="btn btn-sm btn-warning btn-block"  href="{{ url_for('talk_with_the_customer',order_no=order.order_id) }}">Manage it</a></td>
+                    <td class="btn-table"><a class="btn btn-sm btn-warning btn-block" href="{{ url_for('talk_with_the_customer',order_no=order.order_id) }}">Manage it</a></td>
                 {% endif %}
-                <td style="background-color:transparent; color: white;">
+                <td>
                 {% if session.get('name_employee') %}
                     {% if order.order_state == 'FINISHED' %}
                         <a class="btn btn-sm btn-warning btn-block disabled">Next Step</a></td></tr>

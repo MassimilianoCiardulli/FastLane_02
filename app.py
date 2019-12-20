@@ -157,7 +157,6 @@ def logout():
     session.pop('email')
     session.pop('id_user')
     session.pop('type')
-    #session.pop('username')
 
     try:
         session['email']
@@ -166,6 +165,8 @@ def logout():
 
     try:
         session['username_user']
+        session.pop('username_user')
+        session.pop('name_employee')
     except KeyError:
         session_employee_exists = False
 
@@ -180,12 +181,11 @@ def logout():
 @app.route('/company_member_logout')
 def company_member_logout():
     session_exists = True
-    session.pop('username_user')
-    session.pop('name_employee')
-    session.pop('role_employee')
-    session.pop('department_employee')
-
     try:
+        session.pop('username_user')
+        session.pop('name_employee')
+        session.pop('role_employee')
+        session.pop('department_employee')
         session['username_user']
     except KeyError:
         session_exists = False
@@ -219,13 +219,24 @@ def order():
             return redirect('order')
     elif session['type'] == 'PRIVATE':
         orders = Order.query.filter_by(order_private_customer=session['username']).all()
-    if not os.path.exists('static/' + str(session.get('id'))):
-        os.makedirs('static/' + str(session.get('id')))
-    file_url = os.listdir('static/' + str(session.get('id')))
-    file_url = [str(session.get('id')) + "/" + file for file in file_url]
+    try:
+        if not os.path.exists('static/' + str(session.get('name_employee'))):
+            os.makedirs('static/' + str(session.get('name_employee')))
+        file_url = os.listdir('static/' + str(session.get('name_employee')))
+        file_url = [str(session.get('name_employee')) + "/" + file for file in file_url]
+    except KeyError:
+        if not os.path.exists('static/' + str(session.get('id_user'))):
+            os.makedirs('static/' + str(session.get('id_user')))
+        file_url = os.listdir('static/' + str(session.get('id_user')))
+        file_url = [str(session.get('id_user')) + "/" + file for file in file_url]
     formUpload = UploadForm()
     if formUpload.validate_on_submit():
-        filename = photos.save(formUpload.file.data, name=str(session.get('id')) + '.jpg', folder=str(session.get('id')))
+        try:
+            filename = photos.save(formUpload.file.data, name=str(session.get('name_employee')) + '.jpg',
+                                   folder=str(session.get('name_employee')))
+        except KeyError:
+            filename = photos.save(formUpload.file.data, name=str(session.get('id_user')) + '.jpg',
+                                   folder=str(session.get('id_user')))
         file_url.append(filename)
     return render_template('order.html', orders=orders, formNextStep=formNextStep, formupload=formUpload, filelist=file_url)
 
@@ -264,14 +275,21 @@ def update_status(order_no):
             return redirect('order')
     elif session['type'] == 'PRIVATE':
         orders = Order.query.filter_by(order_private_customer=session['id_user']).all()
+
     if not os.path.exists('static/' + str(session.get('id'))):
         os.makedirs('static/' + str(session.get('id')))
     file_url = os.listdir('static/' + str(session.get('id')))
     file_url = [str(session.get('id')) + "/" + file for file in file_url]
     formUpload = UploadForm()
     if formUpload.validate_on_submit():
-        filename = photos.save(formUpload.file.data, name=str(session.get('id')) + '.jpg', folder=str(session.get('id')))
+        try:
+            filename = photos.save(formUpload.file.data, name=str(session.get('id_user')) + '.jpg',
+                                   folder=str(session.get('id_user')))
+        except KeyError:
+            filename = photos.save(formUpload.file.data, name=str(session.get('name_employee')) + '.jpg',
+                                   folder=str(session.get('name_employee')))
         file_url.append(filename)
+    flash('warning', filename)
     return render_template('order.html', orders=orders, formNextStep=formNextStep, formupload=formUpload, filelist=file_url)
 
 
@@ -353,7 +371,6 @@ def talk_with_departments():
     formChat = FormChat()
     employee_department = CompanyUser.query.filter_by(username=session['username_user']).first().department
     if formChat.is_submitted():
-        #ToDo: gestire il dipartimento
         if session['type'] == 'COMPANY':
             new_message = MessageWithDepartment(order_product_id=session['order_no'], company_user=session['username_user']+' - '+employee_department,
                                               department=employee_department, message=formChat.message.data,
@@ -392,14 +409,25 @@ def register_product():
 
 @app.route("/upload", methods=["POST", "GET"])
 def upload():
-    if not os.path.exists('static/' + str(session.get('id'))):
-        os.makedirs('static/' + str(session.get('id')))
-    file_url = os.listdir('static/' + str(session.get('id')))
-    file_url = [str(session.get('id')) + "/" + file for file in file_url]
+    try:
+        if not os.path.exists('static/' + str(session.get('name_employee'))):
+            os.makedirs('static/' + str(session.get('name_employee')))
+        file_url = os.listdir('static/' + str(session.get('name_employee')))
+        file_url = [str(session.get('name_employee')) + "/" + file for file in file_url]
+    except KeyError:
+        if not os.path.exists('static/' + str(session.get('id_user'))):
+            os.makedirs('static/' + str(session.get('id_user')))
+        file_url = os.listdir('static/' + str(session.get('id_user')))
+        file_url = [str(session.get('id_user')) + "/" + file for file in file_url]
     formUpload = UploadForm()
+    filename=''
     if formUpload.validate_on_submit():
-        filename = photos.save(formUpload.file.data, name=str(session.get('id')) + '.jpg', folder=str(session.get('id')))
+        try:
+            filename = photos.save(formUpload.file.data, name=str(session.get('name_employee')) + '.jpg', folder=str(session.get('name_employee')))
+        except KeyError:
+            filename = photos.save(formUpload.file.data, name=str(session.get('id_user')) + '.jpg', folder=str(session.get('id_user')))
         file_url.append(filename)
+    flash('warning', session.get('id_user'))
     return render_template("upload_image.html", formupload=formUpload, filelist=file_url)
 
 
