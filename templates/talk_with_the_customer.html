@@ -70,13 +70,22 @@
             </table>
 
         </div>
-        <div class="col-md-1"></div>
+
     <!-- ****************** ORDER STATUS ****************** -->
-        <div class="col-md-5" style="width:50%; height:100%; float:left;">
+        <div class="col-md-6">
 
-            <div style="padding-top: 12%;" class="order-status">
-
-                <div class="order-status-timeline">
+        <div style="padding-top: 10%;" class="order-status">
+                {% if order.order_state == 'TO BE STARTED' %}
+                <div class="order-status-timeline0">
+                {% elif order.order_state == 'Design' %}
+                <div class="order-status-timeline1" style="background-color: whitesmoke">
+                {% elif order.order_state == 'Production' %}
+                <div class="order-status-timeline2" style="background-color: whitesmoke">
+                {% elif order.order_state == 'Prototype' %}
+                <div class="order-status-timeline3" style="background-color: whitesmoke">
+                {% elif order.order_state == 'FINISHED' %}
+                <div class="order-status-timeline4">
+                {% endif %}
                     <!-- class names: c0 c1 c2 c3 and c4 -->
                     <div class="order-status-timeline-completion c3"></div>
                 </div>
@@ -85,22 +94,54 @@
                     <span class="status">To be started</span>
                     <div class="icon"><img class="icon" src="/static/img/Hourglass-512.png"></div>
                 </div>
+
+                {% if order.order_state == 'FINISHED' or order.order_state == 'Prototype' or order.order_state == 'Production' or order.order_state == 'Design'%}
+                <div class="image-order-status image-order-status-active active img-circle" style="background-color: goldenrod">
+                    <span class="status">Design</span>
+                    <div class="icon"><img class="icon" src="/static/img/design_icon.png"></div>
+                </div>
+                {% else %}
                 <div class="image-order-status image-order-status-active active img-circle">
                     <span class="status">Design</span>
                     <div class="icon"><img class="icon" src="/static/img/design_icon.png"></div>
                 </div>
+                {% endif %}
+
+                {% if order.order_state == 'FINISHED' or order.order_state == 'Prototype' or order.order_state == 'Production' %}
+                <div class="image-order-status image-order-status-intransit active img-circle" style="background-color: goldenrod">
+                    <span class="status">Production</span>
+                    <div class="icon"><img class="icon" src="/static/img/production_icon.png"></div>
+                </div>
+                {% else %}
                 <div class="image-order-status image-order-status-intransit active img-circle">
                     <span class="status">Production</span>
                     <div class="icon"><img class="icon" src="/static/img/production_icon.png"></div>
                 </div>
+                {% endif %}
+
+                {% if order.order_state == 'FINISHED' or order.order_state == 'Prototype' %}
+                <div class="image-order-status image-order-status-delivered active img-circle" style="background-color: goldenrod">
+                    <span class="status">Prototype</span>
+                    <div class="icon"><img class="icon" src="/static/img/testing_icon.png"></div>
+                </div>
+                {% else %}
                 <div class="image-order-status image-order-status-delivered active img-circle">
                     <span class="status">Prototype</span>
                     <div class="icon"><img class="icon" src="/static/img/testing_icon.png"></div>
                 </div>
+                {% endif %}
+
+                {% if order.order_state == 'FINISHED' %}
+                    <div class="image-order-status image-order-status-completed active img-circle" style="background-color: goldenrod">
+                    <span class="status">To be started</span>
+                    <div class="icon"><img class="icon" src="/static/img/completed.png"></div>
+                </div>
+                {% else %}
                 <div class="image-order-status image-order-status-completed active img-circle">
                     <span class="status">Completed</span>
                     <div class="icon"><img class="icon" src="/static/img/completed.png"></div>
                 </div>
+                {% endif %}
 
             </div>
 
@@ -108,7 +149,7 @@
 
     </div>
 
-    <div class="row" style="padding-left: 2%; padding-top: 2%">
+    <div class="row" style="padding-left: 2%; padding-top: 5%">
 
         <!-- ****************** CHAT WITH CUSTOMER ****************** -->
         <div class="col-md-6" style="width:50%; height:100%; float:left;">
@@ -141,8 +182,8 @@
         </div>
         <div class="col-md-1"></div>
         <!-- ****************** DOCUMENT SHARED ****************** -->
-        <div class="col-md-5" style="width:50%; height:100%; float:left;">
-        <p>Need to share a file? No problem<a href="/upload_file_customer"> click here!</a></p>
+        <div class="col-md-5 text-light">
+        <p>Click <a href="/upload_file_customer" style="color: goldenrod">here</a> to upload a file</p>
 
 
           </div>
