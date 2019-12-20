@@ -1,5 +1,5 @@
 import os, datetime
-from flask import render_template, redirect, session, flash, request
+from flask import render_template, redirect, session, flash, request, url_for
 from flask_bootstrap import Bootstrap
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy_utils import database_exists
@@ -10,19 +10,23 @@ from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, Ra
     OrderCreation, subRegistrationForm, loginEmployeeForm, UploadForm, FormNextStep, FormChat
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 from sqlalchemy import or_
+from werkzeug.utils import secure_filename
 
 app.config['SECRET_KEY'] = 'ldjashfjahef;jhasef;jhase;jfhae;'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fastlane.db'
+UPLOAD_FOLDER = 'C:/Users/Marina/PycharmProjects/FastLane_02/static/uploaded_file'
 
 Bootstrap(app)
 bcrypt = Bcrypt(app)
 
 app.config['UPLOADED_PHOTOS_DEST'] = os.getcwd()+"/static"
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 photos = UploadSet('photos', IMAGES)
 #media = UploadSet('media', default_dest=lambda app: app.instance_path)
 configure_uploads(app, photos)
 patch_request_class(app)
+
 
 CUSTOMERS = 0
 
@@ -304,6 +308,7 @@ def order_management_menu(order_no):
 
 
 @app.route('/talk_with_the_customer', methods=['POST', 'GET'])
+
 def talk_with_the_customer():
     order = Order.query.filter_by(order_id=session['order_no']).first()
     steps = Department.query.all()
@@ -328,6 +333,17 @@ def talk_with_the_customer():
     return render_template('talk_with_the_customer.html', order=order, steps=steps, formChat=formChat, messages=messages)
 
 
+@app.route('/upload_file_customer', methods=['POST', 'GET'])
+def upload_file_customer():
+    if request.method =='POST':
+        file = request.files['file[]']
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+            return flash('File uploaded','success')
+    return render_template('upload_file_customer.html')
+
+
 @app.route('/talk_with_departments', methods=['POST', 'GET'])
 def talk_with_departments():
     order = Order.query.filter_by(order_id=session['order_no']).first()
@@ -345,6 +361,17 @@ def talk_with_departments():
         db.session.commit()
         return redirect('talk_with_departments')
     return render_template('talk_with_departments.html', order=order, steps=steps, formChat=formChat, messages=messages)
+
+
+@app.route('/upload_file_departments', methods=['POST', 'GET'])
+def upload_file_departments():
+    if request.method =='POST':
+        file = request.files['file[]']
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+            flash('File uploaded','success')
+    return render_template('upload_file_departments.html')
 
 
 @app.route('/register_product', methods=['POST', 'GET'])
