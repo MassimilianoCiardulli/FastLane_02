@@ -340,7 +340,8 @@ def upload_file_customer():
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-            return flash('File uploaded','success')
+            flash("File Uploaded", "Success")
+        return render_template('upload_file_customer.html')
     return render_template('upload_file_customer.html')
 
 
@@ -370,7 +371,8 @@ def upload_file_departments():
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-            flash('File uploaded','success')
+            flash("File Uploaded","Success")
+        return render_template('upload_file_departments.html')
     return render_template('upload_file_departments.html')
 
 
