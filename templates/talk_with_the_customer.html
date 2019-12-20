@@ -73,35 +73,36 @@
         <div class="col-md-1"></div>
     <!-- ****************** ORDER STATUS ****************** -->
         <div class="col-md-5" style="width:50%; height:100%; float:left;">
-        <h4>The steps of the order</h4>
 
+            <div style="padding-top: 12%;" class="order-status">
 
-            <ul class="nav">
-                    <li class="active">
-                        <div class="btn">
-                            <span>
-                                <p><img src="/static/img/Hourglass-512.png" height="80px" width="80px"></p>
-                                <div class="text-light">To be started</div>
-                            </span>
-                        </div>
-                    </li>
-                {% for step in steps %}
-                    <li rel-index="{{ loop.index }}" class="active">
-                        <div class="btn">
-                            <span>
-                                {% if loop.index == 1 %}
-                                    <p><img src="/static/img/design_icon.png" height="80px" width="80px"></p>
-                                {% elif loop.index == 2 %}
-                                    <p><img src="/static/img/production_icon.png" height="80px" width="80px"></p>
-                                {% elif loop.index == 3 %}
-                                    <p><img src="/static/img/testing_icon.png" height="80px" width="80px"></p>
-                                {% endif %}
-                                <div class="text-light">{{ step.department_name }}</div>
-                            </span>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
+                <div class="order-status-timeline">
+                    <!-- class names: c0 c1 c2 c3 and c4 -->
+                    <div class="order-status-timeline-completion c3"></div>
+                </div>
+
+                <div class="image-order-status image-order-status-new active img-circle">
+                    <span class="status">To be started</span>
+                    <div class="icon"><img class="icon" src="/static/img/Hourglass-512.png"></div>
+                </div>
+                <div class="image-order-status image-order-status-active active img-circle">
+                    <span class="status">Design</span>
+                    <div class="icon"><img class="icon" src="/static/img/design_icon.png"></div>
+                </div>
+                <div class="image-order-status image-order-status-intransit active img-circle">
+                    <span class="status">Production</span>
+                    <div class="icon"><img class="icon" src="/static/img/production_icon.png"></div>
+                </div>
+                <div class="image-order-status image-order-status-delivered active img-circle">
+                    <span class="status">Prototype</span>
+                    <div class="icon"><img class="icon" src="/static/img/testing_icon.png"></div>
+                </div>
+                <div class="image-order-status image-order-status-completed active img-circle">
+                    <span class="status">Completed</span>
+                    <div class="icon"><img class="icon" src="/static/img/completed.png"></div>
+                </div>
+
+            </div>
 
         </div>
 

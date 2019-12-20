@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 
 app.config['SECRET_KEY'] = 'ldjashfjahef;jhasef;jhase;jfhae;'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fastlane.db'
-UPLOAD_FOLDER = 'C:/Users/Marina/PycharmProjects/FastLane_02/static/uploaded_file'
+UPLOAD_FOLDER = os.getcwd()+'/static/uploaded_file'
 
 Bootstrap(app)
 bcrypt = Bcrypt(app)
@@ -370,8 +370,8 @@ def upload_file_departments():
         file = request.files['file[]']
         if file:
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-            flash("File Uploaded","Success")
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            flash("File Uploaded", "Success")
         return render_template('upload_file_departments.html')
     return render_template('upload_file_departments.html')
 
