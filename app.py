@@ -274,22 +274,26 @@ def update_status(order_no):
         if formNextStep.is_submitted():
             return redirect('order')
     elif session['type'] == 'PRIVATE':
-        orders = Order.query.filter_by(order_private_customer=session['id_user']).all()
-
-    if not os.path.exists('static/' + str(session.get('id'))):
-        os.makedirs('static/' + str(session.get('id')))
-    file_url = os.listdir('static/' + str(session.get('id')))
-    file_url = [str(session.get('id')) + "/" + file for file in file_url]
+        orders = Order.query.filter_by(order_private_customer=session['username']).all()
+    try:
+        if not os.path.exists('static/' + str(session.get('name_employee'))):
+            os.makedirs('static/' + str(session.get('name_employee')))
+        file_url = os.listdir('static/' + str(session.get('name_employee')))
+        file_url = [str(session.get('name_employee')) + "/" + file for file in file_url]
+    except KeyError:
+        if not os.path.exists('static/' + str(session.get('id_user'))):
+            os.makedirs('static/' + str(session.get('id_user')))
+        file_url = os.listdir('static/' + str(session.get('id_user')))
+        file_url = [str(session.get('id_user')) + "/" + file for file in file_url]
     formUpload = UploadForm()
     if formUpload.validate_on_submit():
         try:
-            filename = photos.save(formUpload.file.data, name=str(session.get('id_user')) + '.jpg',
-                                   folder=str(session.get('id_user')))
-        except KeyError:
             filename = photos.save(formUpload.file.data, name=str(session.get('name_employee')) + '.jpg',
                                    folder=str(session.get('name_employee')))
+        except KeyError:
+            filename = photos.save(formUpload.file.data, name=str(session.get('id_user')) + '.jpg',
+                                   folder=str(session.get('id_user')))
         file_url.append(filename)
-    flash('warning', filename)
     return render_template('order.html', orders=orders, formNextStep=formNextStep, formupload=formUpload, filelist=file_url)
 
 
