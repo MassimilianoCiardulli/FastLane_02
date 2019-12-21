@@ -2,40 +2,6 @@
 
 {% block content %}
 
-<style>
-
-
-.sender{
-  border: 2px solid #dedede;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  padding: 2%;
-  padding-left: 2%;
-  margin: 4% 0;
-}
-
-.receiver{
-
-  border: 2px solid #dedede;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  padding: 2%;
-  margin: 2% 0;
-  border-color: #ccc;
-  background-color: #ddd;
-}
-
-
-.time {
-    float: right;
-  color: #aaa;
-}
-
-.sender_name{
-    font-weight: bold;
-}
-</style>
-
 <div>
     <!-- ****************** ORDER DETAILS ****************** -->
     <div class="row" style="padding-left: 2%">
@@ -155,7 +121,7 @@
         <div class="col-md-6" style="width:50%; height:100%; float:left;">
             <h4>Chat with customer</h4>
 
-
+            <div class="scrollbar" id="style-4">
                     {% for message in messages %}
                         {% if message.sender == (session.get('name_employee')|string+' - '+session['id_user']|string) or message.sender == session.get('id_user') %}
                             <div class="sender">
@@ -173,11 +139,13 @@
 
                     {% endfor %}
 
-
+            </div>
+             <div style="margin-left:2%; margin-right: 3%">
              <form action="" method="post">
                 {{ formChat.message(class='form-control', placeholder='Write here your message...') }}
                  <div style="padding-top:1% !important;">{{ formChat.submit(class='btn btn-lg btn-warning btn-block') }}</div>
              </form>
+            </div>
 
         </div>
         <div class="col-md-1"></div>
