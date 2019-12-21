@@ -132,7 +132,7 @@ def login():
                     session['email'] = customer_selected.email.upper()
                     session['id_user'] = customer_selected.name_company.upper()
                     session['type'] = 'COMPANY'
-                    return redirect('register_company_employee')
+                    return redirect('login_company_employee')
                 else:
                     error = 'ERROR: username or password should be incorrect. Please Try again'
                     return redirect('login')

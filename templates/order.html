@@ -25,16 +25,16 @@
 
 
 <div class="row">
-    <div class="col-sm-3" style="padding-left: 4%; border-right: 1px inset #333; padding-bottom: 3%">
+    <div class="col-sm-3" style="border-right: 1px inset #333; padding-bottom: 3%; text-align: center; display: inline-block">
 
             {% if session.get('email') and session['type'] == 'COMPANY' and session.get('username_user') %}
-                <h4 style=" padding-bottom: 3%">Welcome {{ session['name_employee'] }}</h4>
+                <h5 style=" padding-bottom: 3%">Welcome {{ session['name_employee'] }}</h5>
             {% elif session.get('email') and session['type'] == 'PRIVATE' %}
-                <h4 style=" padding-bottom: 3%">Welcome {{ session['id_user'] }}</h4>
+                <h5 style=" padding-bottom: 3%">Welcome {{ session['id_user'] }}</h5>
             {% endif %}
 
                 <!-- ***************** PROFILE PIC *************** -->
-            <div style="padding-left: 8%">
+            <div>
                 {% for file in filelist %}
                     {% if file==session.get('id_user')+'/'+session.get('id_user') + '.jpg' %}
                         <img src='{{ url_for("static",filename=file) }}' class="widthset heightset img-circle">
