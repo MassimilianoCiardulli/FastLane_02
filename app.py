@@ -384,16 +384,16 @@ def talk_with_departments():
         return redirect('talk_with_departments')
     return render_template('talk_with_departments.html', order=order, steps=steps, formChat=formChat, messages=messages)
 
-
-@app.route('/upload_file_departments', methods=['POST', 'GET'])
-def upload_file_departments():
+#todo: non funziona perche bisogna passare alla pagina talk_with department l'order_no
+@app.route('/upload_file_departments/<int:order_no>', methods=['POST', 'GET'])
+def upload_file_departments(order_no):
     if request.method =='POST':
         file = request.files['file[]']
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             flash("File Uploaded", "Success")
-        return render_template('upload_file_departments.html')
+        return render_template('talk_with_departments.html', order_no=order_no, file=file)
     return render_template('upload_file_departments.html')
 
 
@@ -433,6 +433,16 @@ def upload():
         file_url.append(filename)
     flash('warning', filename)
     return render_template("upload_image.html", formupload=formUpload, filelist=file_url)
+
+
+@app.route('/company_communications')
+def communications():
+    return render_template("company_communications.html")
+
+
+@app.route('/upload_report/<string:type>')
+def upload_report(type):
+    return render_template("upload_report.html")
 
 
 @app.route('/')

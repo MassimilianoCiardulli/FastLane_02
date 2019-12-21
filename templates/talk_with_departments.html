@@ -158,8 +158,9 @@
         <div class="col-md-1"></div>
         <!-- ****************** DOCUMENT SHARED ****************** -->
           <div class="col-md-5  text-light">
-        <p>Click <a href="/upload_file_customer" style="color: goldenrod">here</a> to upload a file</p>
+        <p>Click <a href="{{ url_for('upload_file_departments',order_no=order.order_id) }}" style="color: goldenrod">here</a> to upload a file</p>
 
+              {{ file }}
 
           </div>
         </div>
