@@ -36,7 +36,7 @@
                 <!-- ***************** PROFILE PIC *************** -->
             <div>
                 {% for file in filelist %}
-                    {% if file==session.get('id_user')+'/'+session.get('id_user') + '.jpg' %}
+                    {% if file==session.get('id_user')|string+'/'+session.get('id_user')|string + '.jpg' %}
                         <img src='{{ url_for("static",filename=file) }}' class="widthset heightset img-circle">
                     {% elif file==session.get('name_employee')|string+'/'+session.get('name_employee')|string + '.jpg' %}
                         <img src='{{ url_for("static",filename=file) }}' class="widthset heightset img-circle">

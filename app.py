@@ -219,22 +219,22 @@ def order():
             return redirect('order')
     elif session['type'] == 'PRIVATE':
         orders = Order.query.filter_by(order_private_customer=session['username']).all()
-    try:
+    if session.get('name_employee') is not None:
         if not os.path.exists('static/' + str(session.get('name_employee'))):
             os.makedirs('static/' + str(session.get('name_employee')))
         file_url = os.listdir('static/' + str(session.get('name_employee')))
         file_url = [str(session.get('name_employee')) + "/" + file for file in file_url]
-    except KeyError:
+    else:
         if not os.path.exists('static/' + str(session.get('id_user'))):
             os.makedirs('static/' + str(session.get('id_user')))
         file_url = os.listdir('static/' + str(session.get('id_user')))
         file_url = [str(session.get('id_user')) + "/" + file for file in file_url]
     formUpload = UploadForm()
     if formUpload.validate_on_submit():
-        try:
+        if session.get('name_employee') is not None:
             filename = photos.save(formUpload.file.data, name=str(session.get('name_employee')) + '.jpg',
                                    folder=str(session.get('name_employee')))
-        except KeyError:
+        else:
             filename = photos.save(formUpload.file.data, name=str(session.get('id_user')) + '.jpg',
                                    folder=str(session.get('id_user')))
         file_url.append(filename)
@@ -413,12 +413,12 @@ def register_product():
 
 @app.route("/upload", methods=["POST", "GET"])
 def upload():
-    try:
+    if session.get('name_employee') is not None:
         if not os.path.exists('static/' + str(session.get('name_employee'))):
             os.makedirs('static/' + str(session.get('name_employee')))
         file_url = os.listdir('static/' + str(session.get('name_employee')))
         file_url = [str(session.get('name_employee')) + "/" + file for file in file_url]
-    except KeyError:
+    else:
         if not os.path.exists('static/' + str(session.get('id_user'))):
             os.makedirs('static/' + str(session.get('id_user')))
         file_url = os.listdir('static/' + str(session.get('id_user')))
@@ -426,12 +426,12 @@ def upload():
     formUpload = UploadForm()
     filename=''
     if formUpload.validate_on_submit():
-        try:
+        if session.get('name_employee') is not None:
             filename = photos.save(formUpload.file.data, name=str(session.get('name_employee')) + '.jpg', folder=str(session.get('name_employee')))
-        except KeyError:
+        else:
             filename = photos.save(formUpload.file.data, name=str(session.get('id_user')) + '.jpg', folder=str(session.get('id_user')))
         file_url.append(filename)
-    flash('warning', session.get('id_user'))
+    flash('warning', filename)
     return render_template("upload_image.html", formupload=formUpload, filelist=file_url)
 
 
