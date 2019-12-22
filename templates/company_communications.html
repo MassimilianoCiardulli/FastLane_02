@@ -4,17 +4,17 @@
     <div class="row">
         <!--********************** ISTITUTIONAL REPORT ******************** -->
         <div class="col card text-center" style="margin-right: 2%; margin-left: 2%">
-            <h5 class="card-header" style="color: red">ISTITUTIONAL REPORT</h5>
+            <h5 class="card-header" style="color: red">INSTITUTIONAL REPORT</h5>
             <h6 style="color: red">For external target</h6>
             <div class="card-body">
                 {% for file in filelist %}
 
-                    {% if 'istitutional/' in file %}
+                    {% if 'institutional/' in file %}
                         <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
                     {% endif %}
 
                 {% endfor %}
-                <a class='btn btn-sm btn-warning btn-block' href="{{ url_for('upload_report',type='istitutional') }}">Upload a report</a>
+                <a class='btn btn-sm btn-warning btn-block' href="{{ url_for('upload_report',type='institutional') }}">Upload a report</a>
             </div>
         </div>
 
