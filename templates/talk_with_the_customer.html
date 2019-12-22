@@ -4,18 +4,21 @@
 
 <div>
     <!-- ****************** ORDER DETAILS ****************** -->
-    <div class="row" style="padding-left: 2%">
-        <div class="col-md-6" style="width:50%; height:100%; float:left;">
-            <h4>Order details</h4>
+    <div class="row" style="margin-left: 3%; margin-right: 3%; text-align: center">
+            <h4 style="padding-bottom: 2%">Order details</h4>
 
-            <table class="table table-sm table-striped table-hover" style="background-color: floralwhite; border: #16181b;">
-                  <thead style="background-color: black; color: floralwhite; font-size: 0.9em; text-align: center">
+            <table class="table table-sm table-bordered" style="background-color: floralwhite; border: #16181b;">
+                  <thead style="background-color: #ffc107; color: black; font-size: 0.9em;">
                     <tr>
                       <th scope="col">ID</th>
                       <th scope="col">Description</th>
                       <th scope="col">User</th>
                       <th scope="col">Customer</th>
                       <th scope="col">Delivery date</th>
+                      <th scope="col">Delivery time</th>
+                      <th scope="col">Delivery type</th>
+                      <th scope="col">Delivery company</th>
+                      <th scope="col">Date of request</th>
                       <th scope="col">Status</th>
                     </tr>
                   </thead>
@@ -30,17 +33,20 @@
                             {{ order.order_company_customer }}
                         {% endif %}</td>
                     <td>{{ order.order_delivery_date }}</td>
+                    <td>{{ order.order_delivery_time }}</td>
+                    <td>{{ order.order_delivery_type }}</td>
+                    <td>{{ order.order_delivery_company }}</td>
+                    <td>{{ order.date_request }}</td>
                     <td>{{ order.order_state }}</td></tr>
 
                 </tbody>
             </table>
 
-        </div>
-
+    </div>
     <!-- ****************** ORDER STATUS ****************** -->
-        <div class="col-md-6">
-
-        <div style="padding-top: 10%;" class="order-status">
+        <div class="row" style="margin-left: 3%; padding-top: 7%; margin-right: 3%; padding-bottom: 4%">
+        <div class="col-12">
+        <div class="order-status">
                 {% if order.order_state == 'TO BE STARTED' %}
                 <div class="order-status-timeline0">
                 {% elif order.order_state == 'Design' %}
@@ -110,10 +116,9 @@
                 {% endif %}
 
             </div>
-
+        </div>
         </div>
 
-    </div>
 
     <div class="row" style="padding-left: 2%; padding-top: 5%">
 

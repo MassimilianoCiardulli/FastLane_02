@@ -12,12 +12,44 @@
         max-height: 200px;
     }
 
-    tbody{
+    table tr:nth-child(even) > td:nth-child(1){
+        background-color: #ffc107;
+    }
+    table tr:nth-child(odd) > td:nth-child(1){
+        background-color: #ffc107;
+    }
+    table tr:nth-child(even) > td:nth-child(2){
+        background-color: #e1c699;
+    }
+    table tr:nth-child(odd) > td:nth-child(2){
         background-color: white;
     }
-
-    tr:nth-child(even){
-        background-color: lightgray;
+    table tr:nth-child(even) > td:nth-child(3){
+        background-color: #e1c699;
+    }
+    table tr:nth-child(odd) > td:nth-child(3){
+        background-color: white;
+    }
+    table tr:nth-child(even) > td:nth-child(4){
+        background-color: #e1c699;
+    }
+    table tr:nth-child(odd) > td:nth-child(4){
+        background-color: white;
+    }
+    table tr:nth-child(even) > td:nth-child(5){
+        background-color: #e1c699;
+    }
+    table tr:nth-child(odd) > td:nth-child(5){
+        background-color: white;
+    }
+    table tr:nth-child(even) > td:nth-child(6){
+        background-color: #e1c699;
+    }
+    table tr:nth-child(odd) > td:nth-child(6){
+        background-color: white;
+    }
+    table {
+        font-size: 0.92em;
     }
 
 
@@ -64,38 +96,34 @@
     <form action="" method="post">
         <div class="table-sm">
         <table class="table table-borderless text-center">
-              <colgroup>
-                  <col span="6">
-                  <col style="background-color:transparent!important;">
-              </colgroup>
-                <tr>
-                  <th style="background-color: #ffc107;">ID</th>
-                  <th style="background-color: #ffc107;">Description</th>
-                  <th style="background-color: #ffc107;">User</th>
-                  <th style="background-color: #ffc107;">Customer</th>
-                  <th style="background-color: #ffc107;">Delivery date</th>
-                  <th style="background-color: #ffc107;">Status</th>
+                <tr style="background-color: #ffc107;">
+                  <th>ID</th>
+                  <th>Description</th>
+                  <th>User</th>
+                  <th>Customer</th>
+                  <th>Delivery date</th>
+                  <th>Status</th>
                 </tr>
 
-            <tbody>
+            <tbody style="color: black;">
             {% for order in orders %}
-                <tr><th style="color: black;">{{ order.order_id }}</th>
-                <td style="color: black;">{{ order.order_description }}</td>
-                <td style="color: black;">{{ order.user }}</td>
-                <td style="color: black;">{% if order.order_private_customer %}
+                <tr><td>{{ order.order_id }}</td>
+                <td>{{ order.order_description }}</td>
+                <td>{{ order.user }}</td>
+                <td>{% if order.order_private_customer %}
                         {{ order.order_private_customer }}
                     {% elif order.order_company_customer %}
                         {{ order.order_company_customer }}
                     {% endif %}
                 </td>
-                <td style="color: black;">{{ order.order_delivery_date }}</td>
-                <td style="color: black;">{{ order.order_state }}</td>
+                <td>{{ order.order_delivery_date }}</td>
+                <td>{{ order.order_state }}</td>
                 {% if session['type'] == 'COMPANY' %}
                     <td class="btn-table"><a class="btn btn-sm btn-warning btn-block" href="{{ url_for('order_management_menu',order_no=order.order_id) }}">Manage it</a></td>
                 {% elif session['type'] == 'PRIVATE' %}
                     <td class="btn-table"><a class="btn btn-sm btn-warning btn-block" href="{{ url_for('talk_with_the_customer',order_no=order.order_id) }}">Manage it</a></td>
                 {% endif %}
-                <td>
+                <td style="background-color: transparent!important;">
                 {% if session.get('name_employee') %}
                     {% if order.order_state == 'FINISHED' %}
                         <a class="btn btn-sm btn-warning btn-block disabled">Next Step</a></td></tr>
@@ -112,11 +140,11 @@
 
         <!-- *********************** CREATE NEW  ORDER BUTTON ************************* -->
 
-                <div style="margin: 0px 2px 0px 2px;"></div> <!-- doesnt work -->
+                <div style="margin-right: 4%;">
                 {% if session['type'] == 'COMPANY' %}
-                    <a class="btn btn-lg btn-warning btn-block' pull-right" href="/order_creation">Create new order</a>
+                    <a class="btn btn-sm btn-warning btn-block' pull-right" href="/order_creation">Create new order</a>
                 {% endif %}
-
+                </div>
 </div>
 </div>
 

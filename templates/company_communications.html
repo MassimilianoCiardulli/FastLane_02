@@ -41,7 +41,7 @@
             <div class="card-body">
                 {% for file in filelist %}
 
-                    {% if type == 'management' %}
+                    {% if 'management/' in file %}
                         <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
                     {% endif %}
 
