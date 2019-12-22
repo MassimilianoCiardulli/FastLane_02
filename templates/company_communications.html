@@ -9,8 +9,8 @@
             <div class="card-body">
                 {% for file in filelist %}
 
-                    {% if type == 'istitutional' %}
-                        <object data='{{ file }}'></object>
+                    {% if 'istitutional/' in file %}
+                        <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
                     {% endif %}
 
                 {% endfor %}
@@ -21,12 +21,12 @@
         <!--********************** OPERATIONAL REPORT ******************** -->
         <div class="col card text-center" style="margin-right: 2%; margin-left: 2%">
             <h5 class="card-header" style="color: red">OPERATIONAL REPORT</h5>
-            <h6 style="color: red">For lower-level executive authorities</h6>
+            <h6 style="color: red">Day-to-day deliverables</h6>
             <div class="card-body">
                 {% for file in filelist %}
 
-                    {% if type == 'operational' %}
-                        <object data='{{ file }}' width="50px" height="50px"></object>
+                    {% if 'operational/' in file %}
+                        <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
                     {% endif %}
 
                 {% endfor %}
@@ -42,7 +42,7 @@
                 {% for file in filelist %}
 
                     {% if type == 'management' %}
-                        <object data='{{ file }}' width="50px" height="50px"></object>
+                        <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
                     {% endif %}
 
                 {% endfor %}

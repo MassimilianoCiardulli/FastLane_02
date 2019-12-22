@@ -441,11 +441,6 @@ def upload():
 def communications():
     return render_template("company_communications.html")
 
-
-@app.route('/company_communications/<string:type>')
-def report_updated(type):
-    return render_template("company_communications.html", type=type)
-
 #todo
 @app.route('/upload_report/<string:type>', methods=['POST', 'GET'])
 def upload_report(type):
@@ -462,7 +457,7 @@ def upload_report(type):
             file.save(os.path.join(app.config['UPLOAD_REPORT'], filename))
             file_url.append(filename)
             flash('warning', file_url)
-        return render_template("company_communications.html", filelist=file_url, type=type)
+        return render_template("company_communications.html", filelist=file_url)
     # if request.method =='POST':
     #     file = request.files['file[]']
     #     if file:
