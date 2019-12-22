@@ -7,6 +7,13 @@
             <h5 class="card-header" style="color: red">ISTITUTIONAL REPORT</h5>
             <h6 style="color: red">For external target</h6>
             <div class="card-body">
+                {% for file in filelist %}
+
+                    {% if type == 'istitutional' %}
+                        <object data='{{ file }}'></object>
+                    {% endif %}
+
+                {% endfor %}
                 <a class='btn btn-sm btn-warning btn-block' href="{{ url_for('upload_report',type='istitutional') }}">Upload a report</a>
             </div>
         </div>
@@ -16,6 +23,13 @@
             <h5 class="card-header" style="color: red">OPERATIONAL REPORT</h5>
             <h6 style="color: red">For lower-level executive authorities</h6>
             <div class="card-body">
+                {% for file in filelist %}
+
+                    {% if type == 'operational' %}
+                        <object data='{{ file }}' width="50px" height="50px"></object>
+                    {% endif %}
+
+                {% endfor %}
                 <a class='btn btn-sm btn-warning btn-block' href="{{ url_for('upload_report',type='operational') }}">Upload a report</a>
             </div>
         </div>
@@ -25,6 +39,13 @@
             <h5 class="card-header" style="color: red">MANAGEMENT REPORT</h5>
             <h6 style="color: red">About the trend of the management </h6>
             <div class="card-body">
+                {% for file in filelist %}
+
+                    {% if type == 'management' %}
+                        <object data='{{ file }}' width="50px" height="50px"></object>
+                    {% endif %}
+
+                {% endfor %}
                 <a class='btn btn-sm btn-warning btn-block' href="{{ url_for('upload_report',type='management') }}">Upload a report</a>
             </div>
         </div>

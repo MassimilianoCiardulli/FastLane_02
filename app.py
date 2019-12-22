@@ -15,12 +15,14 @@ from werkzeug.utils import secure_filename
 app.config['SECRET_KEY'] = 'ldjashfjahef;jhasef;jhase;jfhae;'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fastlane.db'
 UPLOAD_FOLDER = os.getcwd()+'/static/uploaded_file'
+UPLOAD_REPORT = os.getcwd()+'/static/report'
 
 Bootstrap(app)
 bcrypt = Bcrypt(app)
 
 app.config['UPLOADED_PHOTOS_DEST'] = os.getcwd()+"/static"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_REPORT'] = UPLOAD_REPORT
 
 photos = UploadSet('photos', IMAGES)
 #media = UploadSet('media', default_dest=lambda app: app.instance_path)
@@ -424,7 +426,7 @@ def upload():
         file_url = os.listdir('static/' + str(session.get('id_user')))
         file_url = [str(session.get('id_user')) + "/" + file for file in file_url]
     formUpload = UploadForm()
-    filename=''
+    filename = ''
     if formUpload.validate_on_submit():
         if session.get('name_employee') is not None:
             filename = photos.save(formUpload.file.data, name=str(session.get('name_employee')) + '.jpg', folder=str(session.get('name_employee')))
@@ -440,8 +442,34 @@ def communications():
     return render_template("company_communications.html")
 
 
-@app.route('/upload_report/<string:type>')
+@app.route('/company_communications/<string:type>')
+def report_updated(type):
+    return render_template("company_communications.html", type=type)
+
+#todo
+@app.route('/upload_report/<string:type>', methods=['POST', 'GET'])
 def upload_report(type):
+    if not os.path.exists('static/report/' + str(type)):
+        os.makedirs('static/report/' + str(type))
+    file_url = os.listdir('static/report/' + str(type))
+    file_url = [type + "/" + file for file in file_url]
+    UPLOAD_REPORT = os.getcwd()+'/static/report/' + str(type)
+    app.config['UPLOAD_REPORT'] = UPLOAD_REPORT
+    if request.method == 'POST':
+        file = request.files['file[]']
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_REPORT'], filename))
+            file_url.append(filename)
+            flash('warning', file_url)
+        return render_template("company_communications.html", filelist=file_url, type=type)
+    # if request.method =='POST':
+    #     file = request.files['file[]']
+    #     if file:
+    #         filename = secure_filename(file.filename)
+    #         file.save(os.path.join(app.config['UPLOAD_REPORT'], filename))
+    #         flash("File Uploaded", "Success")
+    #     return render_template('communication.html', type=type, file=file)
     return render_template("upload_report.html")
 
 
