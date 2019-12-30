@@ -1,0 +1,17 @@
+.navbar .nav > .current {
+  color:#fff;
+  -webkit-border-radius: 25px;
+     -moz-border-radius: 25px;
+          border-radius: 25px;
+}
+
+.navbar .nav > .current a:focus, .navbar .nav > .current a:hover  {
+  color:#fff;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index:100;
+}

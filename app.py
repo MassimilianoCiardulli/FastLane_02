@@ -465,7 +465,7 @@ def upload_report(type):
     #         file.save(os.path.join(app.config['UPLOAD_REPORT'], filename))
     #         flash("File Uploaded", "Success")
     #     return render_template('communication.html', type=type, file=file)
-    return render_template("upload_report.html")
+    return render_template("upload_report.html", type=type)
 
 
 @app.route('/')
