@@ -13,41 +13,112 @@
     }
 
     table tr:nth-child(even) > td:nth-child(1){
-        background-color: #ffc107;
+        background-color: transparent; /* vecchio colore: background-color: #ffc107;*/
+        border-left: black;
+        border-style: solid;
+        border-width: thin;
+        border-top-style: none;
+        border-bottom-style: none;
+        border-right-style: none;
     }
     table tr:nth-child(odd) > td:nth-child(1){
-        background-color: #ffc107;
+        background-color: rgb(255, 196, 138); /* vecchio colore: background-color: #ffc107;*/
+        border-left: black;
+        border-style: solid;
+        border-width: thin;
+        border-top-style: none;
+        border-bottom-style: none;
+        border-right-style: none;
+    }
+    table tr:last-child > td:nth-child(1){
+        border-bottom: black;
+        border-style: solid;
+        border-width: thin;
+        border-top-style: none;
+        border-right-style: none;
     }
     table tr:nth-child(even) > td:nth-child(2){
-        background-color: #e1c699;
+        background-color: transparent; /*background-color: #e1c699;*/
     }
     table tr:nth-child(odd) > td:nth-child(2){
-        background-color: white;
+        background-color: rgb(255, 196, 138);
+    }
+    table tr:last-child > td:nth-child(2){
+        border-bottom: black;
+        border-style: solid;
+        border-width: thin;
+        border-top-style: none;
+        border-left-style: none;
+        border-right-style: none;
     }
     table tr:nth-child(even) > td:nth-child(3){
-        background-color: #e1c699;
+        background-color: transparent;
     }
     table tr:nth-child(odd) > td:nth-child(3){
-        background-color: white;
+        background-color: rgb(255, 196, 138);
+    }
+    table tr:last-child > td:nth-child(3){
+        border-bottom: black;
+        border-style: solid;
+        border-width: thin;
+        border-top-style: none;
+        border-left-style: none;
+        border-right-style: none;
     }
     table tr:nth-child(even) > td:nth-child(4){
-        background-color: #e1c699;
+        background-color: transparent;
     }
     table tr:nth-child(odd) > td:nth-child(4){
-        background-color: white;
+        background-color: rgb(255, 196, 138);
+    }
+    table tr:last-child > td:nth-child(4){
+        border-bottom: black;
+        border-style: solid;
+        border-width: thin;
+        border-top-style: none;
+        border-left-style: none;
+        border-right-style: none;
     }
     table tr:nth-child(even) > td:nth-child(5){
-        background-color: #e1c699;
+        background-color: transparent;
     }
     table tr:nth-child(odd) > td:nth-child(5){
-        background-color: white;
+        background-color: rgb(255, 196, 138);
+    }
+    table tr:last-child > td:nth-child(5){
+        border-bottom: black;
+        border-style: solid;
+        border-width: thin;
+        border-top-style: none;
+        border-left-style: none;
+        border-right-style: none;
     }
     table tr:nth-child(even) > td:nth-child(6){
-        background-color: #e1c699;
+        background-color: transparent;
+        border-right: black;
+        border-style: solid;
+        border-width: thin;
+        border-top-style: none;
+        border-bottom-style: none;
+        border-left-style: none;
     }
     table tr:nth-child(odd) > td:nth-child(6){
-        background-color: white;
+        background-color: rgb(255, 196, 138);
+        border-right: black;
+        border-style: solid;
+        border-width: thin;
+        border-top-style: none;
+        border-bottom-style: none;
+        border-left-style: none;
     }
+    table tr:last-child > td:nth-child(6){
+        border-bottom: black;
+        border-style: solid;
+        border-width: thin;
+        border-top-style: none;
+        border-left-style: none;
+    }
+
     table {
         font-size: 0.92em;
     }
@@ -60,9 +131,9 @@
     <div class="col-sm-3" style="border-right: 1px inset #333; padding-bottom: 3%; text-align: center; display: inline-block">
 
             {% if session.get('email') and session['type'] == 'COMPANY' and session.get('username_user') %}
-                <h5 style=" padding-bottom: 3%">Welcome {{ session['name_employee'] }}</h5>
+                <h5 style=" padding-bottom: 3%; color: black">Welcome {{ session['name_employee'] }}</h5>
             {% elif session.get('email') and session['type'] == 'PRIVATE' %}
-                <h5 style=" padding-bottom: 3%">Welcome {{ session['id_user'] }}</h5>
+                <h5 style=" padding-bottom: 3%; color: black">Welcome {{ session['id_user'] }}</h5>
             {% endif %}
 
                 <!-- ***************** PROFILE PIC *************** -->
@@ -92,11 +163,11 @@
 
         <!-- *********************** ORDERS TABLE ************************* -->
 
-        <h3 style="padding-bottom: 3%">{{ session.get('id_user') }} - Your current orders</h3>
+        <h3 style="padding-bottom: 3%; color: darkred">{{ session.get('id_user') }} - Your current orders</h3>
     <form action="" method="post">
         <div class="table-sm">
         <table class="table table-borderless text-center">
-                <tr style="background-color: #ffc107;">
+                <tr> <!--colore di prima: background-color: #ffc107;-->
                   <th>ID</th>
                   <th>Description</th>
                   <th>User</th>

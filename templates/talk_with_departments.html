@@ -160,7 +160,9 @@
           <div class="col-md-5  text-light">
         <p>Click <a href="{{ url_for('upload_file_departments',order_no=order.order_id) }}" style="color: goldenrod">here</a> to upload a file</p>
 
-              {{ file }}
+              {% for file in file_url_read %}
+                        <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
+                {% endfor %}
 
           </div>
         </div>

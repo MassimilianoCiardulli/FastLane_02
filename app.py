@@ -376,6 +376,8 @@ def talk_with_departments():
     messages = MessageWithDepartment.query.filter_by(order_product_id=session['order_no']).all()
     formChat = FormChat()
     employee_department = CompanyUser.query.filter_by(username=session['username_user']).first().department
+    file_url_read = os.listdir('static/report/' + str(session['order_no']))
+    file_url_read = [str(session['order_no']) + "/" + file for file in file_url_read]
     if formChat.is_submitted():
         if session['type'] == 'COMPANY':
             new_message = MessageWithDepartment(order_product_id=session['order_no'], company_user=session['username_user']+' - '+employee_department,
@@ -384,18 +386,26 @@ def talk_with_departments():
         db.session.add(new_message)
         db.session.commit()
         return redirect('talk_with_departments')
-    return render_template('talk_with_departments.html', order=order, steps=steps, formChat=formChat, messages=messages)
+    return render_template('talk_with_departments.html', order=order, steps=steps, formChat=formChat, messages=messages, file_url_read=file_url_read)
 
-#todo: non funziona perche bisogna passare alla pagina talk_with department l'order_no
+
 @app.route('/upload_file_departments/<int:order_no>', methods=['POST', 'GET'])
 def upload_file_departments(order_no):
-    if request.method =='POST':
+    if not os.path.exists('static/uploaded_file/' + str(order_no)):
+        os.makedirs('static/uploaded_file/' + str(order_no))
+    file_url = os.listdir('static/uploaded_file/' + str(order_no))
+    file_url = [str(order_no) + "/" + file for file in file_url]
+    file_url_read = os.listdir('static/uploaded_file/' + str(order_no))
+    file_url_read = [str(order_no) + "/" + file for file in file_url_read]
+    UPLOAD_FOLDER = os.getcwd()+'/static/uploaded_file/' + str(order_no)
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    if request.method == 'POST':
         file = request.files['file[]']
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            flash("File Uploaded", "Success")
-        return render_template('talk_with_departments.html', order_no=order_no, file=file)
+            file_url.append(filename)
+        return render_template("talk_with_departments.html", file_url_read=file_url_read)
     return render_template('upload_file_departments.html')
 
 
@@ -439,7 +449,13 @@ def upload():
 
 @app.route('/company_communications')
 def communications():
-    return render_template("company_communications.html")
+    file_url_institutional = os.listdir('static/report/' + 'institutional')
+    file_url_institutional = ['institutional' + "/" + file for file in file_url_institutional]
+    file_url_operational = os.listdir('static/report/' + 'operational')
+    file_url_operational = ['operational' + "/" + file for file in file_url_operational]
+    file_url_management = os.listdir('static/report/' + 'management')
+    file_url_management = ['management' + "/" + file for file in file_url_management]
+    return render_template("company_communications.html", file_url_management=file_url_management, file_url_operational=file_url_operational, file_url_institutional=file_url_institutional)
 
 #todo
 @app.route('/upload_report/<string:type>', methods=['POST', 'GET'])
@@ -448,8 +464,15 @@ def upload_report(type):
         os.makedirs('static/report/' + str(type))
     file_url = os.listdir('static/report/' + str(type))
     file_url = [type + "/" + file for file in file_url]
+    file_url_institutional = os.listdir('static/report/' + 'institutional')
+    file_url_institutional = ['institutional' + "/" + file for file in file_url_institutional]
+    file_url_operational = os.listdir('static/report/' + 'operational')
+    file_url_operational = ['operational' + "/" + file for file in file_url_operational]
+    file_url_management = os.listdir('static/report/' + 'management')
+    file_url_management = ['management' + "/" + file for file in file_url_management]
     UPLOAD_REPORT = os.getcwd()+'/static/report/' + str(type)
     app.config['UPLOAD_REPORT'] = UPLOAD_REPORT
+    file = os.listdir(UPLOAD_REPORT)
     if request.method == 'POST':
         file = request.files['file[]']
         if file:
@@ -457,14 +480,7 @@ def upload_report(type):
             file.save(os.path.join(app.config['UPLOAD_REPORT'], filename))
             file_url.append(filename)
             flash('warning', file_url)
-        return render_template("company_communications.html", filelist=file_url)
-    # if request.method =='POST':
-    #     file = request.files['file[]']
-    #     if file:
-    #         filename = secure_filename(file.filename)
-    #         file.save(os.path.join(app.config['UPLOAD_REPORT'], filename))
-    #         flash("File Uploaded", "Success")
-    #     return render_template('communication.html', type=type, file=file)
+        return render_template("company_communications.html", file_url_institutional=file_url_institutional, file_url_operational=file_url_operational, file_url_management=file_url_management)
     return render_template("upload_report.html", type=type)
 
 
