@@ -20,19 +20,19 @@
   font-weight: 400;
   line-height: 1;
   text-shadow:
-    0.04em 0 dimgrey,
-        0 0.04em dimgrey,
-        -0.04em 0 dimgrey,
-        0 -0.04em dimgrey,
-        -0.04em -0.04em dimgrey,
-        -0.04em 0.04em dimgrey,
-        0.04em -0.04em dimgrey,
-        0.04em 0.04em dimgrey;
+    0.045em 0 #264aca,
+        0 0.045em #264aca,
+        -0.045em 0 #264aca,
+        0 -0.045em #264aca,
+        -0.045em -0.045em #264aca,
+        -0.045em 0.045em #264aca,
+        0.045em -0.045em #264aca,
+        0.045em 0.045em #264aca;
 }
 
 .font-min{
     font-family: Arial, Helvetica, sans-serif !important;
-    font-size: 1.5em;
+    font-size: 1.2em;
   font-weight: 400;
   line-height: 1;
     text-align: justify;
@@ -51,4 +51,10 @@
 
 a{
     color: blue;
+}
+
+.subtitle{
+    font-weight: bold;
+    font-style: italic;
+    font-family: Arial, Helvetica, sans-serif !important;
 }

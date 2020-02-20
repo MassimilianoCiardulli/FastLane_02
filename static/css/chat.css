@@ -49,12 +49,12 @@ margin-left: 2%;
 
 #style-4::-webkit-scrollbar
 {
-	width: 7px;
+	width: 4px;
 	background-color: transparent;
 }
 
 #style-4::-webkit-scrollbar-thumb
 {
-	background-color: goldenrod;
+	background-color: #5e81ff;
 	border: 1px solid transparent;
 }

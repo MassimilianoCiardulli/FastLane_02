@@ -14,18 +14,13 @@ from werkzeug.utils import secure_filename
 
 app.config['SECRET_KEY'] = 'ldjashfjahef;jhasef;jhase;jfhae;'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fastlane.db'
-UPLOAD_FOLDER = os.getcwd()+'/static/uploaded_file'
-UPLOAD_REPORT = os.getcwd()+'/static/report'
 
 Bootstrap(app)
 bcrypt = Bcrypt(app)
 
 app.config['UPLOADED_PHOTOS_DEST'] = os.getcwd()+"/static"
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['UPLOAD_REPORT'] = UPLOAD_REPORT
 
 photos = UploadSet('photos', IMAGES)
-#media = UploadSet('media', default_dest=lambda app: app.instance_path)
 configure_uploads(app, photos)
 patch_request_class(app)
 
@@ -332,8 +327,9 @@ def order_management_menu(order_no):
 
 
 @app.route('/talk_with_the_customer', methods=['POST', 'GET'])
-
 def talk_with_the_customer():
+    if not os.path.exists('static/report/' + str(session['order_no'])):
+        os.makedirs('static/report/' + str(session['order_no']))
     order = Order.query.filter_by(order_id=session['order_no']).first()
     steps = Department.query.all()
     messages = MessageWithCustomer.query.filter_by(order_product_id=session['order_no']).all()
@@ -354,18 +350,28 @@ def talk_with_the_customer():
         db.session.add(new_message)
         db.session.commit()
         return redirect('talk_with_the_customer')
-    return render_template('talk_with_the_customer.html', order=order, steps=steps, formChat=formChat, messages=messages)
+    file_url = os.listdir('static/uploaded_file/' + str(session['order_no']))
+    file_url = ["/" + file for file in file_url]
+    return render_template('talk_with_the_customer.html', order=order, steps=steps, formChat=formChat, messages=messages, file_url=file_url)
 
 
 @app.route('/upload_file_customer', methods=['POST', 'GET'])
 def upload_file_customer():
-    if request.method =='POST':
+    if not os.path.exists('static/uploaded_file/' + str(session['order_no'])):
+        os.makedirs('static/uploaded_file/' + str(session['order_no']))
+    file_url = os.listdir('static/uploaded_file/' + str(session['order_no']))
+    file_url = ["/" + file for file in file_url]
+    UPLOAD_FILE = os.getcwd()+'/static/uploaded_file/' + str(session['order_no'])
+    app.config['UPLOAD_FILE'] = UPLOAD_FILE
+    #file = os.listdir(UPLOAD_FILE)
+    if request.method == 'POST':
         file = request.files['file[]']
         if file:
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-            flash("File Uploaded", "Success")
-        return render_template('upload_file_customer.html')
+            file.save(os.path.join(app.config['UPLOAD_FILE'], filename))
+            file_url.append(filename)
+            flash('warning', file_url)
+        return redirect('talk_with_the_customer')
     return render_template('upload_file_customer.html')
 
 
@@ -388,42 +394,28 @@ def talk_with_departments():
         db.session.add(new_message)
         db.session.commit()
         return redirect('talk_with_departments')
-    return render_template('talk_with_departments.html', order=order, steps=steps, formChat=formChat, messages=messages, file_url_read=file_url_read)
+    file_url = os.listdir('static/uploaded_file_department/' + str(session['order_no']))
+    file_url = [str(session['order_no']) + "/" + file for file in file_url]
+    return render_template('talk_with_departments.html', order=order, steps=steps, formChat=formChat, messages=messages, file_url=file_url)
 
 
-@app.route('/upload_file_departments/<int:order_no>', methods=['POST', 'GET'])
-def upload_file_departments(order_no):
-    if not os.path.exists('static/uploaded_file/' + str(order_no)):
-        os.makedirs('static/uploaded_file/' + str(order_no))
-    order = Order.query.filter_by(order_id=session['order_no']).first()
-    steps = Department.query.all()
-    messages = MessageWithDepartment.query.filter_by(order_product_id=session['order_no']).all()
-    formChat = FormChat()
-    employee_department = CompanyUser.query.filter_by(username=session['username_user']).first().department
-    file_url_read = os.listdir('static/report/' + str(session['order_no']))
-    file_url_read = [str(session['order_no']) + "/" + file for file in file_url_read]
-    if formChat.is_submitted():
-        if session['type'] == 'COMPANY':
-            new_message = MessageWithDepartment(order_product_id=session['order_no'],
-                                                company_user=session['username_user'] + ' - ' + employee_department,
-                                                department=employee_department, message=formChat.message.data,
-                                                datetime=datetime.datetime.now())
-        db.session.add(new_message)
-        db.session.commit()
-        return redirect('talk_with_departments')
-    file_url = os.listdir('static/uploaded_file/' + str(order_no))
-    file_url = [str(order_no) + "/" + file for file in file_url]
-    file_url_read = os.listdir('static/uploaded_file/' + str(order_no))
-    file_url_read = [str(order_no) + "/" + file for file in file_url_read]
-    UPLOAD_FOLDER = os.getcwd()+'/static/uploaded_file/' + str(order_no)
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+@app.route('/upload_file_departments', methods=['POST', 'GET'])
+def upload_file_departments():
+    if not os.path.exists('static/uploaded_file_department/' + str(session['order_no'])):
+        os.makedirs('static/uploaded_file_department/' + str(session['order_no']))
+    file_url = os.listdir('static/uploaded_file_department/' + str(session['order_no']))
+    file_url = [str(session['order_no']) + "/" + file for file in file_url]
+    UPLOAD_FILE = os.getcwd() + '/static/uploaded_file_department/' + str(session['order_no'])
+    app.config['UPLOAD_FILE'] = UPLOAD_FILE
+    # file = os.listdir(UPLOAD_FILE)
     if request.method == 'POST':
         file = request.files['file[]']
         if file:
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(app.config['UPLOAD_FILE'], filename))
             file_url.append(filename)
-        return render_template('talk_with_departments.html', order=order, steps=steps, formChat=formChat, messages=messages, file_url_read=file_url_read)
+            flash('warning', file_url)
+        return redirect('talk_with_departments')
     return render_template('upload_file_departments.html')
 
 
@@ -461,7 +453,6 @@ def upload():
         else:
             filename = photos.save(formUpload.file.data, name=str(session.get('id_user')) + '.jpg', folder=str(session.get('id_user')))
         file_url.append(filename)
-    flash('warning', filename)
     return render_template("upload_image.html", formupload=formUpload, filelist=file_url)
 
 

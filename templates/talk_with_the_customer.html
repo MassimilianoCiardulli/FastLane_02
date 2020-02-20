@@ -161,10 +161,10 @@
               <div class="col card text-center" style="margin-right: 2%; padding-right: 4%">
             <h5 class="card-header">FILE UPLOADED</h5>
             <div class="card-body">
-                {% for file in file_url_institutional %}
-                        <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
+                {% for file in file_url %}
+                        <p><object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object></p>
                 {% endfor %}
-                <a class='btn btn-warning btn-block' href="{{ url_for('upload_report',type='institutional') }}">Upload a report</a>
+                <a class='btn btn-warning btn-block' href="{{ url_for('upload_file_customer') }}">Upload a report</a>
             </div>
         </div>
 

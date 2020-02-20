@@ -1,15 +1,18 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div style="padding-top: 3%">
 {% if session['id_user'] %}
     <div style="padding-left: 7%; padding-right: 7%;">
 
        <div class="row">
         <div class="col"></div>
         <div class="col">
-
+<div class="col card text-center" style="margin-right: 2%; padding-right: 4%">
+    <div class="card-body">
     <div class="col-sm-11 form-group">
         <div class="row">
+
             <p class="form-group">How do you rate your overall experience?</p></br>
             <div class="col">
               <div class="star-rating">
@@ -59,6 +62,8 @@
 
 
     </div>
+</div>
+</div>
           <div class="col"></div>
 
         </div>
@@ -72,4 +77,5 @@
         <div class="col-sm"></div>
     </div>
 {% endif %}
+</div>
 {% endblock content %}
