@@ -1,42 +1,44 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div style="padding-top: 3%">
 
     <div class="row">
         <!--********************** ISTITUTIONAL REPORT ******************** -->
         <div class="col card text-center" style="margin-right: 2%; margin-left: 2%">
-            <h5 class="card-header" style="color: red">INSTITUTIONAL REPORT</h5>
-            <h6 style="color: red">For external target</h6>
+            <h5 class="card-header">INSTITUTIONAL REPORT</h5>
+            <h6>For external target</h6>
             <div class="card-body">
                 {% for file in file_url_institutional %}
                         <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
                 {% endfor %}
-                <a class='btn btn-sm btn-warning btn-block' href="{{ url_for('upload_report',type='institutional') }}">Upload a report</a>
+                <a class='btn btn-sm btn-warning btn-block' style="position: absolute; bottom: 7%; width: 82%;" href="{{ url_for('upload_report',type='institutional') }}">Upload a report</a>
             </div>
         </div>
 
         <!--********************** OPERATIONAL REPORT ******************** -->
         <div class="col card text-center" style="margin-right: 2%; margin-left: 2%">
-            <h5 class="card-header" style="color: red">OPERATIONAL REPORT</h5>
-            <h6 style="color: red">Day-to-day deliverables</h6>
+            <h5 class="card-header">OPERATIONAL REPORT</h5>
+            <h6>Day-to-day deliverables</h6>
             <div class="card-body">
                 {% for file in file_url_operational %}
                         <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
                 {% endfor %}
-                <a class='btn btn-sm btn-warning btn-block' href="{{ url_for('upload_report',type='operational') }}">Upload a report</a>
+                <a class='btn btn-sm btn-warning btn-block' style="position: absolute; bottom: 7%; width: 82%;" href="{{ url_for('upload_report',type='operational') }}">Upload a report</a>
             </div>
         </div>
 
         <!--********************** MANAGEMENT REPORT ******************** -->
         <div class="col card text-center" style="margin-right: 2%; margin-left: 2%">
-            <h5 class="card-header" style="color: red">MANAGEMENT REPORT</h5>
-            <h6 style="color: red">About the trend of the management </h6>
+            <h5 class="card-header">MANAGEMENT REPORT</h5>
+            <h6>About the trend of the management </h6>
             <div class="card-body">
                 {% for file in file_url_management %}
                         <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
                 {% endfor %}
-                <a class='btn btn-sm btn-warning btn-block' href="{{ url_for('upload_report',type='management') }}">Upload a report</a>
+                <a class='btn btn-sm btn-warning btn-block' style="position: absolute; bottom: 7%; width: 82%;" href="{{ url_for('upload_report',type='management') }}">Upload a report</a>
             </div>
         </div>
     </div>
+</div>
 {% endblock content %}

@@ -14,109 +14,56 @@
 
     table tr:nth-child(even) > td:nth-child(1){
         background-color: transparent; /* vecchio colore: background-color: #ffc107;*/
-        border-left: black;
-        border-style: solid;
-        border-width: thin;
-        border-top-style: none;
-        border-bottom-style: none;
-        border-right-style: none;
     }
     table tr:nth-child(odd) > td:nth-child(1){
-        background-color: rgb(255, 196, 138); /* vecchio colore: background-color: #ffc107;*/
-        border-left: black;
-        border-style: solid;
-        border-width: thin;
-        border-top-style: none;
-        border-bottom-style: none;
-        border-right-style: none;
+        background-color: #5e81ff; /* vecchio colore: background-color: #ffc107;*/
+                color: white;
+
     }
-    table tr:last-child > td:nth-child(1){
-        border-bottom: black;
-        border-style: solid;
-        border-width: thin;
-        border-top-style: none;
-        border-right-style: none;
-    }
+
     table tr:nth-child(even) > td:nth-child(2){
         background-color: transparent; /*background-color: #e1c699;*/
     }
     table tr:nth-child(odd) > td:nth-child(2){
-        background-color: rgb(255, 196, 138);
+        background-color: #5e81ff;
+                color: white;
+
     }
-    table tr:last-child > td:nth-child(2){
-        border-bottom: black;
-        border-style: solid;
-        border-width: thin;
-        border-top-style: none;
-        border-left-style: none;
-        border-right-style: none;
-    }
+
     table tr:nth-child(even) > td:nth-child(3){
         background-color: transparent;
     }
     table tr:nth-child(odd) > td:nth-child(3){
-        background-color: rgb(255, 196, 138);
+        background-color: #5e81ff;
+                color: white;
+
     }
-    table tr:last-child > td:nth-child(3){
-        border-bottom: black;
-        border-style: solid;
-        border-width: thin;
-        border-top-style: none;
-        border-left-style: none;
-        border-right-style: none;
-    }
+
     table tr:nth-child(even) > td:nth-child(4){
         background-color: transparent;
     }
     table tr:nth-child(odd) > td:nth-child(4){
-        background-color: rgb(255, 196, 138);
+        background-color: #5e81ff;
+                color: white;
+
     }
-    table tr:last-child > td:nth-child(4){
-        border-bottom: black;
-        border-style: solid;
-        border-width: thin;
-        border-top-style: none;
-        border-left-style: none;
-        border-right-style: none;
-    }
+
     table tr:nth-child(even) > td:nth-child(5){
         background-color: transparent;
     }
     table tr:nth-child(odd) > td:nth-child(5){
-        background-color: rgb(255, 196, 138);
+        background-color: #5e81ff;
+                color: white;
+
     }
-    table tr:last-child > td:nth-child(5){
-        border-bottom: black;
-        border-style: solid;
-        border-width: thin;
-        border-top-style: none;
-        border-left-style: none;
-        border-right-style: none;
-    }
+
     table tr:nth-child(even) > td:nth-child(6){
         background-color: transparent;
-        border-right: black;
-        border-style: solid;
-        border-width: thin;
-        border-top-style: none;
-        border-bottom-style: none;
-        border-left-style: none;
     }
     table tr:nth-child(odd) > td:nth-child(6){
-        background-color: rgb(255, 196, 138);
-        border-right: black;
-        border-style: solid;
-        border-width: thin;
-        border-top-style: none;
-        border-bottom-style: none;
-        border-left-style: none;
-    }
-    table tr:last-child > td:nth-child(6){
-        border-bottom: black;
-        border-style: solid;
-        border-width: thin;
-        border-top-style: none;
-        border-left-style: none;
+        background-color: #5e81ff;
+                color: white;
+
     }
 
     table {
@@ -126,9 +73,9 @@
 
         </style>
 
-
+<div style="padding-top: 3%">
 <div class="row">
-    <div class="col-sm-3" style="border-right: 1px inset #333; padding-bottom: 3%; text-align: center; display: inline-block">
+    <div class="col-sm-3" style="border-right: 1px inset #333; padding-bottom: 3%; text-align: center; display: inline-block;">
 
             {% if session.get('email') and session['type'] == 'COMPANY' and session.get('username_user') %}
                 <h5 style=" padding-bottom: 3%; color: black">Welcome {{ session['name_employee'] }}</h5>
@@ -146,15 +93,18 @@
                     {% endif %}
 
                 {% endfor %}
-                <form method="post" enctype="multipart/form-data" action="">
+                {#<form method="post" enctype="multipart/form-data" action="">
                     {{ formupload.hidden_tag() }}
                     <label class="btn btn-sm btn-warning btn-block'" style="margin-top: 0.5rem">
                         Choose file <input type="file" class="btn btn-sm btn-warning btn-block'" style="display: none;">
                         {{ formupload.file(style="display: none;") }}
                     </label>
                     {{ formupload.upload(class="btn btn-sm btn-warning btn-block'") }}
-                </form>
+                </form>#}
             </div>
+        <div style="padding-left: 22%">
+            <a class='btn btn-sm btn-warning btn-block' style="margin-top: 0.5rem; width: 70%;" href="{{ url_for('upload') }}">Upload your image</a>
+        </div>
 
     </div>
 
@@ -218,5 +168,5 @@
                 </div>
 </div>
 </div>
-
+</div>
 {% endblock %}

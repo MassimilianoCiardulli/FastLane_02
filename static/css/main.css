@@ -9,3 +9,46 @@
 .header{
     background-color: #abdde5;
 }
+
+.font-max{
+    font-family: Arial, Helvetica, sans-serif !important;
+    /*font-weight:bold !important;
+    color: black !important;
+    font-size: 2em;*/
+    font-size: 2.7em;
+    color: white !important;
+  font-weight: 400;
+  line-height: 1;
+  text-shadow:
+    0.04em 0 dimgrey,
+        0 0.04em dimgrey,
+        -0.04em 0 dimgrey,
+        0 -0.04em dimgrey,
+        -0.04em -0.04em dimgrey,
+        -0.04em 0.04em dimgrey,
+        0.04em -0.04em dimgrey,
+        0.04em 0.04em dimgrey;
+}
+
+.font-min{
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 1.5em;
+  font-weight: 400;
+  line-height: 1;
+    text-align: justify;
+    text-justify: inter-word;
+
+}
+
+.team-title{
+    color: dimgrey;
+    font-family: "Lucida Calligraphy";
+}
+
+.team-desc{
+    color: dimgrey !important;
+}
+
+a{
+    color: blue;
+}

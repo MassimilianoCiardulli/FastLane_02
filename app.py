@@ -371,6 +371,8 @@ def upload_file_customer():
 
 @app.route('/talk_with_departments', methods=['POST', 'GET'])
 def talk_with_departments():
+    if not os.path.exists('static/report/' + str(session['order_no'])):
+        os.makedirs('static/report/' + str(session['order_no']))
     order = Order.query.filter_by(order_id=session['order_no']).first()
     steps = Department.query.all()
     messages = MessageWithDepartment.query.filter_by(order_product_id=session['order_no']).all()
@@ -393,6 +395,22 @@ def talk_with_departments():
 def upload_file_departments(order_no):
     if not os.path.exists('static/uploaded_file/' + str(order_no)):
         os.makedirs('static/uploaded_file/' + str(order_no))
+    order = Order.query.filter_by(order_id=session['order_no']).first()
+    steps = Department.query.all()
+    messages = MessageWithDepartment.query.filter_by(order_product_id=session['order_no']).all()
+    formChat = FormChat()
+    employee_department = CompanyUser.query.filter_by(username=session['username_user']).first().department
+    file_url_read = os.listdir('static/report/' + str(session['order_no']))
+    file_url_read = [str(session['order_no']) + "/" + file for file in file_url_read]
+    if formChat.is_submitted():
+        if session['type'] == 'COMPANY':
+            new_message = MessageWithDepartment(order_product_id=session['order_no'],
+                                                company_user=session['username_user'] + ' - ' + employee_department,
+                                                department=employee_department, message=formChat.message.data,
+                                                datetime=datetime.datetime.now())
+        db.session.add(new_message)
+        db.session.commit()
+        return redirect('talk_with_departments')
     file_url = os.listdir('static/uploaded_file/' + str(order_no))
     file_url = [str(order_no) + "/" + file for file in file_url]
     file_url_read = os.listdir('static/uploaded_file/' + str(order_no))
@@ -405,7 +423,7 @@ def upload_file_departments(order_no):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file_url.append(filename)
-        return render_template("talk_with_departments.html", file_url_read=file_url_read)
+        return render_template('talk_with_departments.html', order=order, steps=steps, formChat=formChat, messages=messages, file_url_read=file_url_read)
     return render_template('upload_file_departments.html')
 
 
@@ -457,7 +475,7 @@ def communications():
     file_url_management = ['management' + "/" + file for file in file_url_management]
     return render_template("company_communications.html", file_url_management=file_url_management, file_url_operational=file_url_operational, file_url_institutional=file_url_institutional)
 
-#todo
+
 @app.route('/upload_report/<string:type>', methods=['POST', 'GET'])
 def upload_report(type):
     if not os.path.exists('static/report/' + str(type)):

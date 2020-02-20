@@ -4,7 +4,10 @@
 
 <style>
 body{
-    background-image: url("/static/img/sfondo_rosso.png")!important;
+    background-image: url("/static/img/sfondo_blu.jpg")!important;
+      background-repeat: no-repeat;
+  background-size: cover; /* Resize the background image to cover the entire container */
+
 }
 </style>
 
@@ -12,6 +15,8 @@ body{
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
 <header>
+
+
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
       <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -27,7 +32,7 @@ body{
         </div>
       </div>
       <!-- Slide Two - Set the background image for this slide in the line below -->
-      <div class="carousel-item"> <img src="/static/img/teamwork.jpg" >
+      <div class="carousel-item"> <img src="/static/img/teamwork.jpg">
         <div class="carousel-caption d-none d-md-block">
           <h3 class="display-4">Internal Cohesion</h3>
           <p class="lead">Organization. Effective Communication. Now it's everything in one place.</p>
@@ -54,7 +59,7 @@ body{
 
   <div class="container mt-5">
   <div class="row" style="padding-top: 5%">
-      <h4 class="col-12 text-center">COMMUNICATION</h4>
+      <h4 class="col-12 text-center font-max">COMMUNICATION</h4>
   </div>
   <div class="row" style="padding-top: 3%">
     <div class="col-2"></div>
@@ -62,14 +67,14 @@ body{
         <img src="/static/img/communication.png" class="img-fluid" height="350px" width="350px">
     </div>
     <div class="col-3">
-        <span class="lead" style="padding-top: 6%;">For the companies, we believe that an effective communication is the key point to reach your organizational goals. Talking with your customer has never been this easy. Create a path that links all your department involved in you processes.
+        <span style="padding-top: 6%;" class="font-min">For the companies, we believe that an effective communication is the key point to reach your organizational goals. Talking with your customer has never been this easy. Create a path that links all your department involved in you processes.
         For the private, this is your instrument to talk with your company. Your service available 24/7.</span>
     </div>
   </div>
   </div>
     <div class="container mt-5">
     <div class="row" style="padding-top: 5%">
-      <h4 class="col-12 text-center">ORDER MONITORING</h4>
+      <h4 class="col-12 text-center font-max">ORDER MONITORING</h4>
   </div>
   <div class="row" style="padding-top: 3%">
     <div class="col-2"></div>
@@ -77,15 +82,15 @@ body{
         <img src="/static/img/order_monitoring.png" class="img-fluid" height="350px" width="350px">
     </div>
     <div class="col-3">
-        <span class="lead" style="padding-top: 6%;">We help you to know exactly where is your product in the production chain. Is it to be accepted? Or is it finished? Just <a href="/login" style="color: goldenrod">Sign in</a> to discover it.</span>
+        <span class="font-min" style="padding-top: 6%;">We help you to know exactly where is your product in the production chain. Is it to be accepted? Or is it finished? Just <a href="/login" style="color: blue">Sign in</a> to discover it.</span>
     </div>
   </div>
   <div class="row" style="padding-top: 5%">
-      <h5 class="col-12 text-center">The Info 6tem team</h5>
+      <h5 class="col-12 text-center team-title">The Info 6tem team</h5>
   </div>
   <div class="row" style="padding-top: 3%">
     <div class="col-3"></div>
-      <div class="col-6 text-center text-light"> We are a group of six members, students at the Polytechnic of Turin at the Master's Degree Course in Engineering and Management. This project was born from an idea for the "Information System" course held by Professor G. De Martini, with the aim of solving a management problem through an innovative solution implemented with a web application. <p style="font-size: 0.9em"></br>Daniele Benevento, Massimiliano Ciardulli, Diletta Petroselli, Elisa Riccio, Eleonora Rossetto, Marianna Stragiotti.</p>
+      <div class="col-6 text-center team-desc"> We are a group of six members, students at the Polytechnic of Turin at the Master's Degree Course in Engineering and Management. This project was born from an idea for the "Information System" course held by Professor G. De Martini, with the aim of solving a management problem through an innovative solution implemented with a web application. <p style="font-size: 0.9em"></br>Daniele Benevento, Massimiliano Ciardulli, Diletta Petroselli, Elisa Riccio, Eleonora Rossetto, Marianna Stragiotti.</p>
     </div>
     <div class="col-3"></div>
     <div class="col-3">
@@ -96,7 +101,7 @@ body{
 
     <!--Feedback received-->
     <hr>
-    <h5 style="padding-bottom: 3%;"><span class="glyphicon glyphicon-user col d-flex justify-content-center">What people say about us</span></h5>
+    <h5 style="padding-bottom: 3%;"><span class="col d-flex justify-content-center font-min">What people say about us</span></h5>
   <div class="container" style="padding-top: 15px;">
 
 	<div class="row text-center">
@@ -111,7 +116,7 @@ body{
 								<span style="color:yellow">&#9733;</span>
 							</div>
 							<h4 style="padding-top: 10px;">Google</h4>
-							<p style="color: white; font-style: oblique;">Excellent platform!</p>
+							<p style="color: black; font-style: oblique;">Excellent platform!</p>
 
 						</div>
 					</div> <!-- End Col -->
@@ -127,7 +132,7 @@ body{
 								<span>&#9733;</span>
 							</div>
 							<h4 style="padding-top: 10px;">Yahoo!</h4>
-							<p style="color: white; font-style: oblique;">We love it.</p>
+							<p style="color: black; font-style: oblique;">We love it.</p>
 
 						</div>
 					</div> <!-- End Col -->
@@ -143,7 +148,7 @@ body{
 								<span style="color:yellow">&#9733;</span>
 							</div>
 							<h4 style="padding-top: 10px;">Bill Gates</h4>
-							<p style="color: white; font-style: oblique;">I wish it was my idea</p>
+							<p style="color: black; font-style: oblique;">I wish it was my idea</p>
 
 						</div>
 					</div> <!-- End Col -->
@@ -160,7 +165,7 @@ body{
     <div class="container" style="align-content: center !important;">
 
             <div class="text-center">
-             <a class="nav-item nav-link" href="/feedback">Give us your feedback!</a>
+             <a class="nav-item nav-link" style="color: blue!important;" href="/feedback">Give us your feedback!</a>
 
 	        </div>
     </div>

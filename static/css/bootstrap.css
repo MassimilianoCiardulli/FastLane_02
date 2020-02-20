@@ -366,7 +366,6 @@ h1, h2, h3, h4, h5, h6,
   margin-bottom: 0.5rem;
   font-weight: 500;
   line-height: 1.2;
-  color: white;
 }
 
 h1, .h1 {
@@ -395,7 +394,7 @@ h6, .h6 {
 
 .lead {
   font-size: 1.25rem;
-  font-weight: 300;
+  font-weight: 600;
   text-shadow:
         0.04em 0 black,
         0 0.04em black,
@@ -412,6 +411,7 @@ h6, .h6 {
   font-style: italic;
   font-size: 1.7rem;
   font-weight: 500;
+  line-height: 4.3;
   text-shadow:
         0.03em 0 white,
         0 0.03em white,
@@ -442,7 +442,7 @@ h6, .h6 {
 .display-3 {
   font-size: 4.5rem;
   font-weight: 400;
-  line-height: 1.2;
+  line-height: 1;
   text-shadow:
     0.03em 0 black,
         0 0.03em black,
@@ -2041,7 +2041,7 @@ textarea.form-control {
 
 .form-group {
   margin-bottom: 1rem;
-  color:whitesmoke !important;
+  color:dimgrey !important;
 }
 
 .form-text {
@@ -3026,6 +3026,7 @@ fieldset:disabled a.btn {
   font-size: 0.875rem;
   line-height: 1.5;
   border-radius: 0.2rem;
+  color: black!important;
 }
 
 .btn-block {
@@ -6314,7 +6315,7 @@ a.close.disabled {
 .carousel-item-next,
 .carousel-item-prev {
   display: block;
-        height: 50vh!important;
+        height: 70vh!important;
 
 }
 
@@ -6342,7 +6343,7 @@ a.close.disabled {
 .carousel-fade .carousel-item-prev.carousel-item-right {
   z-index: 1;
   opacity: 1;
-  height: 50vh!important;
+  height: 70vh!important;
 }
 
 .carousel-fade .active.carousel-item-left,

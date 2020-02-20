@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
+<div style="padding-top: 3%">
 <div>
     <!-- ****************** ORDER DETAILS ****************** -->
     <div class="row" style="margin-left: 3%; margin-right: 3%; text-align: center">
-            <h4 style="padding-bottom: 2%">Order details</h4>
+            <h2 style="padding-bottom: 2%;">Order details</h2>
 
             <table class="table table-sm table-bordered" style="background-color: floralwhite; border: #16181b;">
                   <thead style="background-color: #ffc107; color: black; font-size: 0.9em;">
@@ -68,7 +68,7 @@
                 </div>
 
                 {% if order.order_state == 'FINISHED' or order.order_state == 'Prototype' or order.order_state == 'Production' or order.order_state == 'Design'%}
-                <div class="image-order-status image-order-status-active active img-circle" style="background-color: goldenrod">
+                <div class="image-order-status image-order-status-active active img-circle" style="background-color: #5e81ff">
                     <span class="status">Design</span>
                     <div class="icon"><img class="icon" src="/static/img/design_icon.png"></div>
                 </div>
@@ -80,7 +80,7 @@
                 {% endif %}
 
                 {% if order.order_state == 'FINISHED' or order.order_state == 'Prototype' or order.order_state == 'Production' %}
-                <div class="image-order-status image-order-status-intransit active img-circle" style="background-color: goldenrod">
+                <div class="image-order-status image-order-status-intransit active img-circle" style="background-color: #5e81ff">
                     <span class="status">Production</span>
                     <div class="icon"><img class="icon" src="/static/img/production_icon.png"></div>
                 </div>
@@ -92,7 +92,7 @@
                 {% endif %}
 
                 {% if order.order_state == 'FINISHED' or order.order_state == 'Prototype' %}
-                <div class="image-order-status image-order-status-delivered active img-circle" style="background-color: goldenrod">
+                <div class="image-order-status image-order-status-delivered active img-circle" style="background-color: #5e81ff">
                     <span class="status">Prototype</span>
                     <div class="icon"><img class="icon" src="/static/img/testing_icon.png"></div>
                 </div>
@@ -104,7 +104,7 @@
                 {% endif %}
 
                 {% if order.order_state == 'FINISHED' %}
-                    <div class="image-order-status image-order-status-completed active img-circle" style="background-color: goldenrod">
+                    <div class="image-order-status image-order-status-completed active img-circle" style="background-color: #5e81ff">
                     <span class="status">Finished</span>
                     <div class="icon"><img class="icon" src="/static/img/completed.png"></div>
                 </div>
@@ -124,7 +124,7 @@
 
         <!-- ****************** CHAT WITH CUSTOMER ****************** -->
         <div class="col-md-6" style="width:50%; height:100%; float:left;">
-            <h4>Chat with customer</h4>
+            <h2>Chat with customer</h2>
 
             <div class="scrollbar" id="style-4">
                     {% for message in messages %}
@@ -153,16 +153,27 @@
             </div>
 
         </div>
-        <div class="col-md-1"></div>
+        {#<div class="col-md-1"></div>#}
         <!-- ****************** DOCUMENT SHARED ****************** -->
-        <div class="col-md-5 text-light">
-        <p>Click <a href="/upload_file_customer" style="color: goldenrod">here</a> to upload a file</p>
+        <div class="col-md-5">
+        {#<p>Click <a href="/upload_file_customer">here</a> to upload a file</p>#}
+        <h2 style="padding-bottom: 4.5%"> Upload a file</h2>
+              <div class="col card text-center" style="margin-right: 2%; padding-right: 4%">
+            <h5 class="card-header">FILE UPLOADED</h5>
+            <div class="card-body">
+                {% for file in file_url_institutional %}
+                        <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
+                {% endfor %}
+                <a class='btn btn-warning btn-block' href="{{ url_for('upload_report',type='institutional') }}">Upload a report</a>
+            </div>
+        </div>
 
 
           </div>
         </div>
         </div>
     </div>
+</div>
 </div>
 
 

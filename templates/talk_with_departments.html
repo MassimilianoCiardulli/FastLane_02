@@ -1,29 +1,25 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
-<style>
-
-
-
-
-</style>
-
+<div style="padding-top: 3%">
 
 <div>
     <!-- ****************** ORDER DETAILS ****************** -->
-    <div class="row" style="padding-left: 2%">
-        <div class="col-md-6" style="width:50%; height:100%; float:left;">
-            <h4>Order details</h4>
+    <div class="row" style="margin-left: 3%; margin-right: 3%; text-align: center">
+            <h2 style="padding-bottom: 2%;">Order details</h2>
 
-            <table class="table table-sm table-striped table-hover" style="background-color: floralwhite; border: #16181b;">
-                  <thead style="background-color: black; color: floralwhite; font-size: 0.9em; text-align: center">
+            <table class="table table-sm table-bordered" style="background-color: floralwhite; border: #16181b;">
+                  <thead style="background-color: #ffc107; color: black; font-size: 0.9em;">
                     <tr>
                       <th scope="col">ID</th>
                       <th scope="col">Description</th>
                       <th scope="col">User</th>
                       <th scope="col">Customer</th>
                       <th scope="col">Delivery date</th>
+                      <th scope="col">Delivery time</th>
+                      <th scope="col">Delivery type</th>
+                      <th scope="col">Delivery company</th>
+                      <th scope="col">Date of request</th>
                       <th scope="col">Status</th>
                     </tr>
                   </thead>
@@ -38,18 +34,21 @@
                             {{ order.order_company_customer }}
                         {% endif %}</td>
                     <td>{{ order.order_delivery_date }}</td>
+                    <td>{{ order.order_delivery_time }}</td>
+                    <td>{{ order.order_delivery_type }}</td>
+                    <td>{{ order.order_delivery_company }}</td>
+                    <td>{{ order.date_request }}</td>
                     <td>{{ order.order_state }}</td></tr>
 
                 </tbody>
             </table>
 
-        </div>
+    </div>
 
     <!-- ****************** ORDER STATUS ****************** -->
-        <div class="col-md-6">
-        <!--<h4>The steps of the order</h4>-->
-
-            <div style="padding-top: 10%;" class="order-status">
+        <div class="row" style="margin-left: 3%; padding-top: 7%; margin-right: 3%; padding-bottom: 4%">
+        <div class="col-12">
+        <div class="order-status">
                 {% if order.order_state == 'TO BE STARTED' %}
                 <div class="order-status-timeline0">
                 {% elif order.order_state == 'Design' %}
@@ -71,7 +70,7 @@
                 </div>
 
                 {% if order.order_state == 'FINISHED' or order.order_state == 'Prototype' or order.order_state == 'Production' or order.order_state == 'Design'%}
-                <div class="image-order-status image-order-status-active active img-circle" style="background-color: goldenrod">
+                <div class="image-order-status image-order-status-active active img-circle" style="background-color: #5e81ff">
                     <span class="status">Design</span>
                     <div class="icon"><img class="icon" src="/static/img/design_icon.png"></div>
                 </div>
@@ -83,7 +82,7 @@
                 {% endif %}
 
                 {% if order.order_state == 'FINISHED' or order.order_state == 'Prototype' or order.order_state == 'Production' %}
-                <div class="image-order-status image-order-status-intransit active img-circle" style="background-color: goldenrod">
+                <div class="image-order-status image-order-status-intransit active img-circle" style="background-color: #5e81ff">
                     <span class="status">Production</span>
                     <div class="icon"><img class="icon" src="/static/img/production_icon.png"></div>
                 </div>
@@ -95,7 +94,7 @@
                 {% endif %}
 
                 {% if order.order_state == 'FINISHED' or order.order_state == 'Prototype' %}
-                <div class="image-order-status image-order-status-delivered active img-circle" style="background-color: goldenrod">
+                <div class="image-order-status image-order-status-delivered active img-circle" style="background-color: #5e81ff">
                     <span class="status">Prototype</span>
                     <div class="icon"><img class="icon" src="/static/img/testing_icon.png"></div>
                 </div>
@@ -107,8 +106,8 @@
                 {% endif %}
 
                 {% if order.order_state == 'FINISHED' %}
-                    <div class="image-order-status image-order-status-completed active img-circle" style="background-color: goldenrod">
-                    <span class="status">To be started</span>
+                    <div class="image-order-status image-order-status-completed active img-circle" style="background-color: #5e81ff">
+                    <span class="status">Finished</span>
                     <div class="icon"><img class="icon" src="/static/img/completed.png"></div>
                 </div>
                 {% else %}
@@ -119,7 +118,7 @@
                 {% endif %}
 
             </div>
-
+        </div>
         </div>
 
     </div>
@@ -128,7 +127,7 @@
 
         <!-- ****************** CHAT WITH DEPARTMENTS ****************** -->
         <div class="col-md-6" style="width:50%; height:100%; float:left;">
-            <h4>Chat with other departments</h4>
+            <h2>Chat with other departments</h2>
 
                 <div class="scrollbar" id="style-4">
                     {% for message in messages %}
@@ -155,16 +154,23 @@
              </form>
             </div>
         </div>
-        <div class="col-md-1"></div>
         <!-- ****************** DOCUMENT SHARED ****************** -->
-          <div class="col-md-5  text-light">
-        <p>Click <a href="{{ url_for('upload_file_departments',order_no=order.order_id) }}" style="color: goldenrod">here</a> to upload a file</p>
-
-              {% for file in file_url_read %}
+          <div class="col-md-5">
+        {#<p>Click <a href="/upload_file_customer">here</a> to upload a file</p>#}
+        <h2 style="padding-bottom: 4.5%"> Upload a file</h2>
+              <div class="col card text-center" style="margin-right: 2%; padding-right: 4%">
+            <h5 class="card-header">FILE UPLOADED</h5>
+            <div class="card-body">
+                {% for file in file_url_institutional %}
                         <object type="application/pdf" data="{{ file }}"><a href="{{ file }}">{{ file }}</a></object>
                 {% endfor %}
+                <a class='btn btn-warning btn-block' href="{{ url_for('upload_report',type='institutional') }}">Upload a report</a>
+            </div>
+        </div>
+
 
           </div>
+        </div>
         </div>
         </div>
     </div>
