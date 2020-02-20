@@ -405,7 +405,6 @@ def upload_file_departments():
     file_url = [str(session['order_no']) + "/" + file for file in file_url]
     UPLOAD_FILE = os.getcwd() + '/static/uploaded_file_department/' + str(session['order_no'])
     app.config['UPLOAD_FILE'] = UPLOAD_FILE
-    # file = os.listdir(UPLOAD_FILE)
     if request.method == 'POST':
         file = request.files['file[]']
         if file:
@@ -444,13 +443,13 @@ def upload():
         file_url = os.listdir('static/' + str(session.get('id_user')))
         file_url = [str(session.get('id_user')) + "/" + file for file in file_url]
     formUpload = UploadForm()
-    filename = ''
     if formUpload.validate_on_submit():
         if session.get('name_employee') is not None:
             filename = photos.save(formUpload.file.data, name=str(session.get('name_employee')) + '.jpg', folder=str(session.get('name_employee')))
         else:
             filename = photos.save(formUpload.file.data, name=str(session.get('id_user')) + '.jpg', folder=str(session.get('id_user')))
         file_url.append(filename)
+        return redirect('order')
     return render_template("upload_image.html", formupload=formUpload, filelist=file_url)
 
 
@@ -471,6 +470,12 @@ def upload_report(type):
         os.makedirs('static/report/' + str(type))
     file_url = os.listdir('static/report/' + str(type))
     file_url = [type + "/" + file for file in file_url]
+    file_url_institutional = os.listdir('static/report/' + 'institutional')
+    file_url_institutional = ['institutional' + "/" + file for file in file_url_institutional]
+    file_url_operational = os.listdir('static/report/' + 'operational')
+    file_url_operational = ['operational' + "/" + file for file in file_url_operational]
+    file_url_management = os.listdir('static/report/' + 'management')
+    file_url_management = ['management' + "/" + file for file in file_url_management]
     UPLOAD_REPORT = os.getcwd()+'/static/report/' + str(type)
     app.config['UPLOAD_REPORT'] = UPLOAD_REPORT
     if request.method == 'POST':
@@ -479,8 +484,8 @@ def upload_report(type):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_REPORT'], filename))
             file_url.append(filename)
-        return redirect('company_communications')
-        #return render_template("company_communications.html", file_url_institutional=file_url_institutional, file_url_operational=file_url_operational, file_url_management=file_url_management)
+        #return redirect('company_communications')
+        return render_template("company_communications.html", file_url_institutional=file_url_institutional, file_url_operational=file_url_operational, file_url_management=file_url_management)
     return render_template("upload_report.html", type=type)
 
 

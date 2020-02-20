@@ -91,16 +91,7 @@
                     {% elif file==session.get('name_employee')|string+'/'+session.get('name_employee')|string + '.jpg' %}
                         <img src='{{ url_for("static",filename=file) }}' class="widthset heightset img-circle">
                     {% endif %}
-
                 {% endfor %}
-                {#<form method="post" enctype="multipart/form-data" action="">
-                    {{ formupload.hidden_tag() }}
-                    <label class="btn btn-sm btn-warning btn-block'" style="margin-top: 0.5rem">
-                        Choose file <input type="file" class="btn btn-sm btn-warning btn-block'" style="display: none;">
-                        {{ formupload.file(style="display: none;") }}
-                    </label>
-                    {{ formupload.upload(class="btn btn-sm btn-warning btn-block'") }}
-                </form>#}
             </div>
         <div style="padding-left: 22%">
             <a class='btn btn-sm btn-warning btn-block' style="margin-top: 0.5rem; width: 70%;" href="{{ url_for('upload') }}">Upload your image</a>

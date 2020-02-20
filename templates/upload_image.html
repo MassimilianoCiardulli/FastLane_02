@@ -8,14 +8,14 @@
         {{ formupload.hidden_tag() }}
         <h2>{{ formupload.file.label }}</h2>
         <label class="btn btn-xs btn-warning btn-block'" style="margin-top: 0.5rem">
-                        Choose file <input type="file" class="btn btn-xs btn-warning btn-block'" style="display: none;">
-                        {{ formupload.file(style="display: none;") }}
+                        <input type="file" class="btn btn-xs btn-warning btn-block'" style="display: none;">
+                        {{ formupload.file }}
                     </label>
                     {{ formupload.upload(class="btn btn-xs btn-warning btn-block'") }}
     </form>
-    {#{% for file in filelist %}
+    {% for file in filelist %}
         <img src='{{ url_for("static",filename=file) }}' height="300px" width="300px">
-    {% endfor %}#}
+    {% endfor %}
     </div>
     <div class="col"></div>
     </div>
