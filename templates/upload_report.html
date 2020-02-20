@@ -3,7 +3,7 @@
 {% block content %}
 <div class="text-center" style="padding-top: 3%">
     <h5>Upload your {{ type }} report</h5>
-    <form action='' method="POST" enctype="multipart/form-data">
+    <form action='' method="POST, GET" enctype="multipart/form-data">
         <label class="btn btn-sm btn-warning btn-block'" style="margin-top: 0.5rem">
             Choose file<input type='file' name='file[]' multiple='true' style="display: none;">
         </label>

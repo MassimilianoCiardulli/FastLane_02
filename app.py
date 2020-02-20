@@ -384,8 +384,6 @@ def talk_with_departments():
     messages = MessageWithDepartment.query.filter_by(order_product_id=session['order_no']).all()
     formChat = FormChat()
     employee_department = CompanyUser.query.filter_by(username=session['username_user']).first().department
-    file_url_read = os.listdir('static/report/' + str(session['order_no']))
-    file_url_read = [str(session['order_no']) + "/" + file for file in file_url_read]
     if formChat.is_submitted():
         if session['type'] == 'COMPANY':
             new_message = MessageWithDepartment(order_product_id=session['order_no'], company_user=session['username_user']+' - '+employee_department,
@@ -473,23 +471,16 @@ def upload_report(type):
         os.makedirs('static/report/' + str(type))
     file_url = os.listdir('static/report/' + str(type))
     file_url = [type + "/" + file for file in file_url]
-    file_url_institutional = os.listdir('static/report/' + 'institutional')
-    file_url_institutional = ['institutional' + "/" + file for file in file_url_institutional]
-    file_url_operational = os.listdir('static/report/' + 'operational')
-    file_url_operational = ['operational' + "/" + file for file in file_url_operational]
-    file_url_management = os.listdir('static/report/' + 'management')
-    file_url_management = ['management' + "/" + file for file in file_url_management]
     UPLOAD_REPORT = os.getcwd()+'/static/report/' + str(type)
     app.config['UPLOAD_REPORT'] = UPLOAD_REPORT
-    file = os.listdir(UPLOAD_REPORT)
     if request.method == 'POST':
         file = request.files['file[]']
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_REPORT'], filename))
             file_url.append(filename)
-            flash('warning', file_url)
-        return render_template("company_communications.html", file_url_institutional=file_url_institutional, file_url_operational=file_url_operational, file_url_management=file_url_management)
+        return redirect('company_communications')
+        #return render_template("company_communications.html", file_url_institutional=file_url_institutional, file_url_operational=file_url_operational, file_url_management=file_url_management)
     return render_template("upload_report.html", type=type)
 
 
