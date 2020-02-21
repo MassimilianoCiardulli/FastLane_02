@@ -124,7 +124,11 @@
 
         <!-- ****************** CHAT WITH CUSTOMER ****************** -->
         <div class="col-md-6" style="width:50%; height:100%; float:left;">
-            <h2>Chat with customer</h2>
+            {% if session['type'] == 'COMPANY' %}
+                <h2>Chat with customer</h2>
+            {% elif session['type'] == 'PRIVATE' %}
+                <h2>Chat with the company</h2>
+            {% endif %}
 
             <div class="scrollbar" id="style-4">
                     {% for message in messages %}

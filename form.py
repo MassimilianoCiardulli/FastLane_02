@@ -8,9 +8,9 @@ from app import CompanyCustomer
 from models import PrivateCustomer
 from utilities import COUNTRIES, TYPES
 
-
-def load_company_customer(id_company):
-    return CompanyCustomer.query.get(int(id_company))
+#
+# def load_company_customer(id_company):
+#     return CompanyCustomer.query.get(int(id_company))
 
 
 class RegistrationFormPrivate(FlaskForm):

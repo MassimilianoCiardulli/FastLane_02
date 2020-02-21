@@ -314,6 +314,12 @@ def order_creation():
     return render_template('order_creation.html', form_order_creation=form_order_creation, customers=CUSTOMERS)
 
 
+@app.route('/create_session/<int:order_no>')
+def create_session(order_no):
+    session['order_no'] = order_no
+    return redirect('/talk_with_the_customer')
+
+
 @app.route('/order_management_menu/<int:order_no>')
 def order_management_menu(order_no):
     session['order_no'] = order_no

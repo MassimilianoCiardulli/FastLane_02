@@ -136,7 +136,7 @@
                 {% if session['type'] == 'COMPANY' %}
                     <td class="btn-table"><a class="btn btn-sm btn-warning btn-block" href="{{ url_for('order_management_menu',order_no=order.order_id) }}">Manage it</a></td>
                 {% elif session['type'] == 'PRIVATE' %}
-                    <td class="btn-table"><a class="btn btn-sm btn-warning btn-block" href="{{ url_for('talk_with_the_customer',order_no=order.order_id) }}">Manage it</a></td>
+                    <td class="btn-table"><a class="btn btn-sm btn-warning btn-block" href="{{ url_for('create_session',order_no=order.order_id) }}">Manage it</a></td>
                 {% endif %}
                 <td style="background-color: transparent!important;">
                 {% if session.get('name_employee') %}
