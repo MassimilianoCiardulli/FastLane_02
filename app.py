@@ -1,12 +1,12 @@
 import os, datetime
-from flask import render_template, redirect, session, flash, request, url_for
+from flask import render_template, redirect, session, flash, request
 from flask_bootstrap import Bootstrap
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy_utils import database_exists
 from flask_bcrypt import Bcrypt
-from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Product, Order, CompanyUser, Department, \
+from models import app, db, CompanyCustomer, PrivateCustomer, Rating, Order, CompanyUser, Department, \
     MessageWithCustomer, MessageWithDepartment
-from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, RatingForm, RegistrationProduct, \
+from form import RegistrationFormPrivate, loginForm, RegistrationFormCompany, RatingForm, \
     OrderCreation, subRegistrationForm, loginEmployeeForm, UploadForm, FormNextStep, FormChat
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 from sqlalchemy import or_
@@ -39,8 +39,6 @@ def create_all():
 
 @app.route('/register_private', methods=['POST', 'GET'])
 def register():
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('home'))
     form_private = RegistrationFormPrivate()
     if form_private.validate_on_submit():
         hashed_pwd = bcrypt.generate_password_hash(form_private.password.data)
@@ -58,8 +56,6 @@ def register():
 
 @app.route('/register_company', methods=['POST', 'GET'])
 def register_company():
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('home'))
     form_company = RegistrationFormCompany()
     if form_company.validate_on_submit():
         hashed_pwd = bcrypt.generate_password_hash(form_company.password.data)
@@ -409,20 +405,6 @@ def upload_file_departments():
             file_url.append(filename)
         return redirect('talk_with_departments')
     return render_template('upload_file_departments.html')
-
-
-@app.route('/register_product', methods=['POST', 'GET'])
-def register_product():
-    form_product = RegistrationProduct()
-    if form_product.validate_on_submit():
-        new_product = Product(name=form_product.name.data.upper(), quantity=form_product.quantity.data,
-                              price=form_product.price.data,
-                              availability=form_product.availability.data,
-                              type=form_product.type.data.upper())
-        db.session.add(new_product)
-        db.session.commit()
-        return redirect('order.html')
-    return render_template('reg_product.html', formReg=form_product)
 
 
 @app.route("/upload", methods=["POST", "GET"])

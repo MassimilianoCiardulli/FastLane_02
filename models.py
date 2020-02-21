@@ -57,7 +57,6 @@ class CompanyUser(db.Model):
     surname = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(128), nullable=False)
     role = db.Column(db.String(64), nullable=False)
- #   department = db.Column(db.String(64), nullable=False)
     department = db.Column(db.Integer, db.ForeignKey('departments.id'))
     company_user_msg_department = db.relationship('MessageWithDepartment', backref='company_employee')
     company_user_msg_customer = db.relationship('MessageWithCustomer', backref='company_employee')
@@ -79,20 +78,6 @@ class Rating(db.Model):
         return '<Review %s>' % self.id_review
 
 
-class Product(db.Model):
-    __tablename__ = 'products'
-    product_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    product_name = db.Column(db.String(64), nullable=False)
-    product_quantity = db.Column(db.Integer, nullable=True, index=True)
-    product_price = db.Column(db.Integer, nullable=False, index=True)
-    product_type = db.Column(db.String, index=True) #raw material, ecc
-    product_availability = db.Column(db.Boolean, default=False)
-    order_product_id = db.Column(db.Integer, db.ForeignKey('order_product.id'))
-
-    def __repr__(self):
-        return '<Product %s>' % self.product_name
-
-
 class Order(db.Model):
     __tablename__ = 'orders'
     order_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -109,22 +94,9 @@ class Order(db.Model):
     company = db.Column(db.String(64), nullable=False)
     date_insert = db.Column(db.DateTime, nullable=False)
     date_request = db.Column(db.DateTime, nullable=False)
-    order_product_id = db.Column(db.Integer, db.ForeignKey('order_product.id'))
 
     def __repr__(self):
         return '<Order %s>' % self.order_id
-
-
-class OrderProduct(db.Model):
-    __tablename__ = 'order_product'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    order_id = db.relationship('Order', backref='order_product')
-    product_id = db.relationship('Product', backref='order_product')
-    message_department = db.relationship('MessageWithDepartment', backref='order_product')
-    message_customer = db.relationship('MessageWithCustomer', backref='order_product')
-
-    def __repr__(self):
-        return '<Order_Product %s>' % self.id
 
 
 class Department(db.Model):
@@ -141,7 +113,7 @@ class Department(db.Model):
 class MessageWithCustomer(db.Model):
     __tablename__='messages_with_customer'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    order_product_id = db.Column(db.Integer, db.ForeignKey('order_product.id'))
+    order_product_id = db.Column(db.Integer)
     company_user = db.Column(db.Integer, db.ForeignKey('company_employee.username'))
     customer = db.Column(db.Integer, nullable=False)
     message = db.Column(db.String(128), index=True)
@@ -155,7 +127,7 @@ class MessageWithCustomer(db.Model):
 class MessageWithDepartment(db.Model):
     __tablename__='messages_with_department'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    order_product_id = db.Column(db.Integer, db.ForeignKey('order_product.id'))
+    order_product_id = db.Column(db.Integer)
     company_user = db.Column(db.Integer, db.ForeignKey('company_employee.username'))
     department = db.Column(db.String(64), db.ForeignKey('departments.id'))
     message = db.Column(db.String(128), index=True)

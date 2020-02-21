@@ -1,12 +1,11 @@
 from flask import request
 from flask_wtf import FlaskForm
-from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, ValidationError, IntegerField, SelectField, \
-    TextAreaField, FloatField, BooleanField, FileField, FieldList, FormField
-from wtforms.fields.html5 import EmailField, URLField, DateTimeField, DateField, TimeField
+    TextAreaField, BooleanField, FileField
+from wtforms.fields.html5 import EmailField, URLField, DateField, TimeField
 from wtforms.validators import DataRequired, Length, Email, Optional, InputRequired, EqualTo
 from app import CompanyCustomer
-from models import Product, PrivateCustomer
+from models import PrivateCustomer
 from utilities import COUNTRIES, TYPES
 
 
@@ -89,19 +88,6 @@ class RatingForm(FlaskForm):
     def validate_reviewer(self, id_reviewer):
         if not PrivateCustomer.query.filter_by(username=self.id_reviewer.data).first() and not CompanyCustomer.query.filter_by(name_company=self.id_reviewer.data).first():
             ValidationError('"%s" does not exist, please insert a valid name or username' % id_reviewer.data)
-
-
-class RegistrationProduct(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
-    quantity = IntegerField('Quantity', validators=[DataRequired()])
-    type = StringField('Type', validators=[DataRequired()])
-    availability = BooleanField('Availability', validators=[DataRequired()])
-    price = FloatField('Price',validators=[DataRequired()])
-    submit = SubmitField('Register')
-
-    def validate_product(self, name):
-        if Product.query.filter_by(username=self.name.data).first():
-            ValidationError('"%s" already exists' % name.data)
 
 
 class OrderCreation(FlaskForm):
