@@ -260,8 +260,6 @@ def update_status(order_no):
                 i = i+1
     order.order_state = order_status
     db.session.commit()
-
-    #ToDo: come rimuovere codice duplicato? se scrivo return order() mi da errore
     formNextStep = FormNextStep()
     if session['type'] == 'COMPANY':
         orders = Order.query.filter(or_(Order.user == session['id_user'],
@@ -328,8 +326,8 @@ def order_management_menu(order_no):
 
 @app.route('/talk_with_the_customer', methods=['POST', 'GET'])
 def talk_with_the_customer():
-    if not os.path.exists('static/report/' + str(session['order_no'])):
-        os.makedirs('static/report/' + str(session['order_no']))
+    if not os.path.exists('static/uploaded_file/' + str(session['order_no'])):
+        os.makedirs('static/uploaded_file/' + str(session['order_no']))
     order = Order.query.filter_by(order_id=session['order_no']).first()
     steps = Department.query.all()
     messages = MessageWithCustomer.query.filter_by(order_product_id=session['order_no']).all()
@@ -363,22 +361,20 @@ def upload_file_customer():
     file_url = ["/" + file for file in file_url]
     UPLOAD_FILE = os.getcwd()+'/static/uploaded_file/' + str(session['order_no'])
     app.config['UPLOAD_FILE'] = UPLOAD_FILE
-    #file = os.listdir(UPLOAD_FILE)
     if request.method == 'POST':
         file = request.files['file[]']
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FILE'], filename))
             file_url.append(filename)
-            flash('warning', file_url)
         return redirect('talk_with_the_customer')
     return render_template('upload_file_customer.html')
 
 
 @app.route('/talk_with_departments', methods=['POST', 'GET'])
 def talk_with_departments():
-    if not os.path.exists('static/report/' + str(session['order_no'])):
-        os.makedirs('static/report/' + str(session['order_no']))
+    if not os.path.exists('static/uploaded_file_department/' + str(session['order_no'])):
+        os.makedirs('static/uploaded_file_department/' + str(session['order_no']))
     order = Order.query.filter_by(order_id=session['order_no']).first()
     steps = Department.query.all()
     messages = MessageWithDepartment.query.filter_by(order_product_id=session['order_no']).all()
