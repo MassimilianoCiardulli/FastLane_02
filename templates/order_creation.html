@@ -29,7 +29,12 @@
         <div class="form-group">
             <select name="customerId" class='form-control'>
                 {% for customer in customers %}
-                    <option value={{ customer['username'] }}> {{ customer['name'] }} </option>
+                    {% if customer['name'] != None and customer['username']!=None %}
+                        <option value={{ customer['username'] }}> {{ customer['name'] }} </option>
+                    {% endif %}
+                    {% if customer['name_company'] !=None and customer['customer']==1 %}
+                        <option value={{ customer['name_company'] }}> {{ customer['name_company'] }} </option>
+                    {% endif %}
                 {% endfor %}
             </select>
           </div>

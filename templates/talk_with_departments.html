@@ -159,12 +159,12 @@
         {#<p>Click <a href="/upload_file_customer">here</a> to upload a file</p>#}
         <h2 style="padding-bottom: 4.5%"> Upload a file</h2>
               <div class="col card text-center" style="margin-right: 2%; padding-right: 4%">
-            <h5 class="card-header">FILE UPLOADED</h5>
+            <h5 class="card-header" style="background-color: transparent!important;">FILE UPLOADED</h5>
             <div class="card-body">
                 {% for file in file_url %}
                         <p><object type="application/pdf" data="{{ file }}"><a href="/static/uploaded_file_department/{{ session['order_no'] }}/{{ file }}">{{ file }}</a></object></p>
                 {% endfor %}
-                <a class='btn btn-warning btn-block' href="{{ url_for('upload_file_departments') }}">Upload a report</a>
+                <a class='btn btn-warning btn-block' href="{{ url_for('upload_file_departments') }}">Upload your file</a>
             </div>
         </div>
 

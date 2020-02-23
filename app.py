@@ -36,18 +36,29 @@ def create_all():
         db.session.add(Department(department_name='Prototype'))
         db.session.commit()
 
-
+#ToDo: agiungere controlli anche alle altre registrazioni
 @app.route('/register_private', methods=['POST', 'GET'])
 def register():
     form_private = RegistrationFormPrivate()
     if form_private.validate_on_submit():
         hashed_pwd = bcrypt.generate_password_hash(form_private.password.data)
-        new_customer = PrivateCustomer(name=form_private.name.data.upper(), username=form_private.username.data.upper(),
-                                       password=hashed_pwd, email=form_private.email.data.upper(),
-                                       phone_num=form_private.phone.data,
-                                       address=form_private.address.data.upper(),
-                                       country=form_private.country.data,
-                                       type='Private')
+        check_email = PrivateCustomer.query.filter_by(email=form_private.email.data.upper()).first()
+        check_phone = PrivateCustomer.query.filter_by(phone_num=form_private.phone.data).first()
+        if check_email:
+            error = 'Error: a user with this email already exists. Please change it.'
+            flash(error, 'warning')
+            return redirect('/register_private')
+        elif check_phone:
+            error = 'Error: a user with this phone number already exists. Please change it.'
+            flash(error, 'warning')
+            return redirect('/register_private')
+        else:
+            new_customer = PrivateCustomer(name=form_private.name.data.upper(), username=form_private.username.data.upper(),
+                                           password=hashed_pwd, email=form_private.email.data.upper(),
+                                           phone_num=form_private.phone.data,
+                                           address=form_private.address.data.upper(),
+                                           country=form_private.country.data,
+                                           type='Private')
         db.session.add(new_customer)
         db.session.commit()
         return redirect('login')
@@ -109,6 +120,7 @@ def login_employee():
             return redirect('order')
         else:
             error = 'ERROR: username or password should be incorrect. Please Try again'
+            flash(error, 'warning')
     return render_template('sublogin_company.html', form_login_employee=form_login_employee)
 
 
@@ -128,6 +140,7 @@ def login():
                     return redirect('login_company_employee')
                 else:
                     error = 'ERROR: username or password should be incorrect. Please Try again'
+                    flash(error, 'warning')
                     return redirect('login')
             elif PrivateCustomer.query.filter_by(email=formLog.email.data.upper()).first():
                 customer_selected = PrivateCustomer.query.filter_by(email=formLog.email.data.upper()).first()
@@ -139,7 +152,10 @@ def login():
                     return redirect('order')
                 else:
                     error = 'ERROR: username or password should be incorrect. Please Try again'
+                    flash(error, 'warning')
                     return redirect('login')
+            else:
+                flash('User not found', 'warning')
         return render_template('login.html', formLog=formLog)
 
 
@@ -192,7 +208,11 @@ def company_member_logout():
 def feedback():
     form_rating = RatingForm()
     if form_rating.is_submitted():
-        new_review = Rating(id_reviewer=form_rating.id_reviewer.data.upper(), type=form_rating.type.data,
+        if session['type']=='PRIVATE':
+            new_review = Rating(private_id=form_rating.id_reviewer.data.upper(), type=form_rating.type.data,
+                            review=form_rating.review.data)
+        if session['type']=='COMPANY':
+            new_review = Rating(company_id=form_rating.id_reviewer.data.upper(), type=form_rating.type.data,
                             review=form_rating.review.data)
         db.session.add(new_review)
         db.session.commit()
@@ -292,6 +312,7 @@ def update_status(order_no):
 def order_creation():
     form_order_creation = OrderCreation()
     CUSTOMERS = PrivateCustomer.query.all()
+    CUSTOMERS += CompanyCustomer.query.all()
     if form_order_creation.is_submitted():
         customer_selected = request.form.get('customerId')
         if PrivateCustomer.query.filter_by(username=customer_selected).first() is not None:
