@@ -36,7 +36,7 @@ def create_all():
         db.session.add(Department(department_name='Prototype'))
         db.session.commit()
 
-#ToDo: agiungere controlli anche alle altre registrazioni
+
 @app.route('/register_private', methods=['POST', 'GET'])
 def register():
     form_private = RegistrationFormPrivate()
@@ -70,13 +70,39 @@ def register_company():
     form_company = RegistrationFormCompany()
     if form_company.validate_on_submit():
         hashed_pwd = bcrypt.generate_password_hash(form_company.password.data)
-        new_customer = CompanyCustomer(name_company=form_company.name_company.data.upper(), password=hashed_pwd,
-                                       email=form_company.email.data.upper(), phone_num=form_company.phone.data,
-                                       city=form_company.city.data,
-                                       address=form_company.address.data.upper(), vat_code=form_company.vat_code.data,
-                                       country=form_company.country.data,
-                                       web_site=form_company.web_site.data, email_amm=form_company.email_admin.data.upper(),
-                                       type='Company', supplier=form_company.supplier.data, customer=form_company.customer.data)
+        check_vat = CompanyCustomer.query.filter_by(vat_code=form_company.vat_code.data).first()
+        check_website = CompanyCustomer.query.filter_by(web_site=form_company.web_site.data).first()
+        check_phone = CompanyCustomer.query.filter_by(phone_num=form_company.phone.data).first()
+        check_email = CompanyCustomer.query.filter_by(email=form_company.email.data.upper()).first()
+        check_email_admin = CompanyCustomer.query.filter_by(email_amm=form_company.email_admin.data.upper()).first()
+        if check_vat:
+            error = 'Error: a company with this VAT code already exists. Please change it.'
+            flash(error, 'warning')
+            return redirect('/register_company')
+        elif check_website:
+            error = 'Error: a company with this web site already exists. Please change it.'
+            flash(error, 'warning')
+            return redirect('/register_company')
+        elif check_phone:
+            error = 'Error: a company with this phone number already exists. Please change it.'
+            flash(error, 'warning')
+            return redirect('/register_company')
+        elif check_email:
+            error = 'Error: a company with this email already exists. Please change it.'
+            flash(error, 'warning')
+            return redirect('/register_company')
+        elif check_email_admin:
+            error = 'Error: an administrator with this email already exists. Please change it.'
+            flash(error, 'warning')
+            return redirect('/register_company')
+        else:
+            new_customer = CompanyCustomer(name_company=form_company.name_company.data.upper(), password=hashed_pwd,
+                                           email=form_company.email.data.upper(), phone_num=form_company.phone.data,
+                                           city=form_company.city.data,
+                                           address=form_company.address.data.upper(), vat_code=form_company.vat_code.data,
+                                           country=form_company.country.data,
+                                           web_site=form_company.web_site.data, email_amm=form_company.email_admin.data.upper(),
+                                           type='Company', supplier=form_company.supplier.data, customer=form_company.customer.data)
         db.session.add(new_customer)
         try:
             db.session.commit()
@@ -94,6 +120,11 @@ def register_company():
 def register_employee():
     form_employee = subRegistrationForm()
     if form_employee.is_submitted():
+        check_username = CompanyUser.query.filter_by(username=form_employee.username.data.upper()).first()
+        if check_username:
+            error = 'Error: an employee with this username already exists. Please change it.'
+            flash(error, 'warning')
+            return redirect('/register_company_employee')
         hashed_pwd = bcrypt.generate_password_hash(form_employee.password.data)
         new_employee = CompanyUser(username=form_employee.username.data.upper(), password=hashed_pwd,
                                        company_id=session['id_user'],
