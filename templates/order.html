@@ -140,11 +140,21 @@
                 {% endif %}
                 <td style="background-color: transparent!important;">
                 {% if session.get('name_employee') %}
-                    {% if order.order_state == 'FINISHED' %}
-                        <a class="btn btn-sm btn-warning btn-block disabled">Next Step</a></td></tr>
-                    {% else %}
+
+                    {% set ns = namespace(found=false) %}
+                    {% for key,value in order_boolean_dictionary %}
+                        {% if key == order.order_id and value==False %}
+                            <a class="btn btn-sm btn-warning btn-block disabled">Next Step</a></td></tr>
+                            {% set ns.found = True %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if ns.found==False and order.order_state != 'FINISHED' %}
                         <a class="btn btn-sm btn-warning btn-block" href="{{ url_for('update_status',order_no=order.order_id) }}">Next Step</a></td></tr>
+                    {% elif ns.found == False and order.order_state == 'FINISHED' %}
+                        <a class="btn btn-sm btn-warning btn-block disabled">Next Step</a></td></tr>
                     {% endif %}
+
                 {% endif %}
             {% endfor %}
 

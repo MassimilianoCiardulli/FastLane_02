@@ -255,10 +255,19 @@ def feedback():
 def order():
     formNextStep = FormNextStep()
     if session['type'] == 'COMPANY':
+        order_boolean_dictionary = dict()
         orders = Order.query.filter(or_(Order.user == session['id_user'],
                                         Order.user == session['username_user'],
                                         Order.order_company_customer == session['id_user'],
                                         Order.company == session['id_user'])).all()
+        current_company_id = CompanyCustomer.query.with_entities(CompanyCustomer.name_company).filter_by(name_company=session['id_user']).all()
+        for order in orders:
+            other_company_id = CompanyUser.query.filter_by(username=order.user).with_entities(CompanyUser.company_id).all()
+            if current_company_id == other_company_id:
+                boolean = True
+            else:
+                boolean = False
+            order_boolean_dictionary.update({order.order_id : boolean})
         if formNextStep.is_submitted():
             return redirect('order')
     elif session['type'] == 'PRIVATE':
@@ -282,7 +291,7 @@ def order():
             filename = photos.save(formUpload.file.data, name=str(session.get('id_user')) + '.jpg',
                                    folder=str(session.get('id_user')))
         file_url.append(filename)
-    return render_template('order.html', orders=orders, formNextStep=formNextStep, formupload=formUpload, filelist=file_url)
+    return render_template('order.html', orders=orders, formNextStep=formNextStep, formupload=formUpload, filelist=file_url, order_boolean_dictionary=order_boolean_dictionary.items())
 
 
 @app.route('/order/<int:order_no>', methods=['POST', 'GET'])
@@ -309,10 +318,19 @@ def update_status(order_no):
     db.session.commit()
     formNextStep = FormNextStep()
     if session['type'] == 'COMPANY':
+        order_boolean_dictionary = dict()
         orders = Order.query.filter(or_(Order.user == session['id_user'],
                                         Order.user == session['username_user'],
                                         Order.order_company_customer == session['id_user'],
                                         Order.company == session['id_user'])).all()
+        current_company_id = CompanyCustomer.query.with_entities(CompanyCustomer.name_company).filter_by(name_company=session['id_user']).all()
+        for order in orders:
+            other_company_id = CompanyUser.query.filter_by(username=order.user).with_entities(CompanyUser.company_id).all()
+            if current_company_id == other_company_id:
+                boolean = True
+            else:
+                boolean = False
+            order_boolean_dictionary.update({order.order_id : boolean})
         if formNextStep.is_submitted():
             return redirect('order')
     elif session['type'] == 'PRIVATE':
@@ -336,7 +354,7 @@ def update_status(order_no):
             filename = photos.save(formUpload.file.data, name=str(session.get('id_user')) + '.jpg',
                                    folder=str(session.get('id_user')))
         file_url.append(filename)
-    return render_template('order.html', orders=orders, formNextStep=formNextStep, formupload=formUpload, filelist=file_url)
+    return render_template('order.html', orders=orders, formNextStep=formNextStep, formupload=formUpload, filelist=file_url, order_boolean_dictionary=order_boolean_dictionary.items())
 
 
 @app.route('/order_creation', methods=['POST', 'GET'])
